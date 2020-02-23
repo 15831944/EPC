@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<AttburiteConfig>
+  <!--Standard 在图框中属性为  Lable；
+  例如如果图纸名称需要分两行并且用的是单行属性则在图框中的属性为
+  Lable+count；图纸名称1，图纸名称2；
+  -->
+   <Standard>
+     <Attburite Name="DrawingCode" Label="图号" Count ="1"/>
+     <Attburite Name="DrawingName" Label="图纸名称" Count ="2"/>
+     <Attburite Name="WhichPage" Label="第几页" Count ="1"/>
+     <Attburite Name="AllPage" Label="共几页" Count ="1"/>
+     <Attburite Name="FrameSize" Label="图幅" Count ="1"/>
+     <Attburite Name="ConstructionUnit" Label="建设单位" Count ="2"/>
+     <Attburite Name="ProjectCode" Label="设计号" Count ="1"/>
+     <Attburite Name="ProjectName" Label="项目名称" Count ="2"/>
+     <Attburite Name="ProjectPhase" Label="阶段" Count ="1"/>
+     <Attburite Name="ProjectMajor" Label="专业" Count ="1"/>
+     <Attburite Name="Date" Label="日期" Count ="1"/>
+     <Attburite Name="Scale" Label="比例" Count ="1"/>
+     <Attburite Name="Version" Label="版本" Count ="1"/>
+     <Attburite Name="Index" Label="序号" Count ="1"/>
+     <Attburite Name="Remark" Label="备注" Count ="1"/>
+     <Attburite Name="Plan" Label="规划" Count ="1"/>
+     <Attburite Name="FireControl" Label="消防" Count ="1"/>
+     <Attburite Name="CivilDefence" Label="人防" Count ="1"/>
+     <Attburite Name="EIA" Label="环评" Count ="1"/>
+     <Attburite Name="lightningProtection" Label="防雷" Count ="1"/>
+     <Attburite Name="Drawing" Label="制图人" Count ="1"/>
+     <Attburite Name="Design" Label="设计人" Count ="1"/>
+     <Attburite Name="Collate" Label="校对人" Count ="1"/>
+     <Attburite Name="Audit" Label="审核人" Count ="1"/>
+     <Attburite Name="Approve" Label="审定人" Count ="1"/>
+     <Attburite Name="OnMajorPrinciple" Label="专业负责人" Count ="1"/>
+     <Attburite Name="OnDesignManager" Label="项目总负责人" Count ="1"/>
+   </Standard>
+  
+  <!--以下属性在图框中体现为定位属性，属性都是隐藏的-->
+  
+  <!--Sign 在图框中属性为  Lable+count+"签名"；
+  例如签名人有N个OnDrawing在图框的属性为:制图人N签名 
+  如果需要签专业则图框中的属性为制图人N签名专业
+  如果需要签日期则图框中的属性为制图人N签名日期
+  -->
+  <Sign>
+    <Attburite Name="OnDrawing" Label="制图人" Count ="1" IsNeedDate="否"/>
+    <Attburite Name="OnDesign" Label="设计人" Count ="1" IsNeedDate="否"/>
+    <Attburite Name="OnCollate" Label="校对人" Count ="1" IsNeedDate="否"/>
+    <Attburite Name="OnAudit" Label="审核人" Count ="1" IsNeedDate="否"/>
+    <Attburite Name="OnApprove" Label="审定人" Count ="1" IsNeedDate="否"/>
+    <Attburite Name="OnMajorPrinciple" Label="专业负责人" Count ="1" IsNeedDate="否"/>
+    <Attburite Name="OnProjectManager" Label="项目负责人" Count ="1" IsNeedDate="否"/>
+    <Attburite Name="OnDeptManager" Label="部门负责人" Count ="1" IsNeedDate="否"/>
+    <Attburite Name="OnDesignManager" Label="项目总负责人" Count ="1" IsNeedDate="否"/>
+    <Attburite Name="OnMajorEngineer" Label="专业总工程师" Count ="1" IsNeedDate="否"/>
+  </Sign>
+  <!--CoSign 在图框中属性为  Lable+count+"签名"；
+  例如签名人有N个OnCoSign在图框的属性为:会签人N签名 
+  如果需要签专业则图框中的属性为会签人N签名专业
+  如果需要签日期则图框中的属性为会签人N签名日期
+  -->
+  <CoSign>
+    <Attburite Name="OnCoSign" Label="会签人" Count ="6" IsNeedDate="是" IsNeedMajor="否"/>
+  </CoSign>
+  <Barcode>
+    <Attburite Name="Barcode" Label="条码" Count ="1"/>
+  </Barcode>
+  <QRcode>
+    <Attburite Name="QRcode" Label="二维码" Count ="1"/>
+  </QRcode>
+  <Stamp>
+    <Attburite Name="Stamp" Label="图章" Count ="2"/>
+  </Stamp>
+</AttburiteConfig>

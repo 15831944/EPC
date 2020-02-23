@@ -1,0 +1,34 @@
+﻿@{
+    ViewBag.Title = "DeptIndicatorInfoTab";
+}
+
+<div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                年份:
+                <input name="BelongYear" class="mini-combobox" style="width: 100px;" textfield="text" valuefield="value"
+                       data="YearEnum" allowinput="false" value="@DateTime.Now.Year" onvaluechanged="onSelectChanged" />
+            </td>
+            <td style="white-space: nowrap;"></td>
+        </tr>
+    </table>
+</div>
+
+<div class="mini-fit" style="padding-top: 0px;">
+    <div id="mainTab" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;" showheader="false">
+        <div name="mTab" title="@DateTime.Now.Year" url="DeptIndicatorInfo?BelongYear=@DateTime.Now.Year">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum("YearEnum")
+</script>
+
+<script type="text/javascript">
+    function onSelectChanged(e) {
+        var mainTab = mini.get("mainTab");
+        var mTab = mainTab.getTab("mTab");
+        mainTab.loadTab("DeptIndicatorInfo?BelongYear=" + e.value, mTab);
+    }
+</script>

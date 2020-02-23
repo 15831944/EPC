@@ -1,0 +1,202 @@
+﻿@{
+    ViewBag.Title = "到款对账";
+}
+<div id="mainlayout" class="mini-layout" style="width: 100%; height: 100%;" splitsize="3">
+    <div title="north" region="north" showheader="false" height="300" expanded="true"
+        showspliticon="false">
+        <div class="mini-toolbar" style="padding: 0px;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        <a class="mini-button" iconcls="icon-add" onclick="setWriteOff();" plain="true">对账</a>
+                    </td>
+                    <td style="white-space: nowrap;">
+                        <input class="mini-buttonedit searchbox" id="key" emptytext="请输入合同名称或合同编号" style="width: 250px;"
+                            onenter="quickSearch('ContractName,ContractCode');" onbuttonclick="quickSearch('ContractName,ContractCode');" />
+                        <a class="mini-button" onclick="showWindow('queryWindow')" iconcls="icon-find" plain="true">
+                            详细查询</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="mini-fit">
+            <div id="dataGrid" url="GetWriteOffList" class="mini-datagrid" style="width: 100%;
+                height: 100%;" idfield="ID" multiselect="false" borderstyle="border-top: 0;border-bottom: 0;"
+                onselectionchanged="onSelectionChanged">
+                <div property="columns">
+                    <div type="checkcolumn">
+                    </div>
+                    <div field="ContractName" width="250" headeralign="center" allowsort="true">
+                        合同名称</div>
+                    <div field="ContractCode" width="120" headeralign="center" allowsort="true">
+                        合同编号</div>
+                    <div field="Code" width="150" headeralign="center" allowsort="true" align="center">
+                        收款编号</div>
+                    <div field="ArrivedDate" width="90" headeralign="center" dateformat="yyyy-MM-dd"
+                        allowsort="true" align="center">
+                        收款日期</div>
+                    <div field="Amount" headeralign="center" datatype="currency" width="90" allowsort="true"
+                        align="right">
+                        收款金额（元）</div>
+                    <div field="InvoiceRelationValue" datatype="currency" headeralign="center" width="120"
+                        allowsort="true" align="right">
+                        发票关联金额（元）</div>
+                    <div field="RemainInvoiceValue" datatype="currency" headeralign="center" width="120"
+                        allowsort="true" align="right">
+                        剩余发票金额（元）</div>
+                    <div field="PlanRelationValue" datatype="currency" headeralign="center" width="120"
+                        allowsort="true" align="right">
+                        计划关联金额（元）</div>
+                    <div field="RemainPlanValue" datatype="currency" headeralign="center" width="120"
+                        allowsort="true" align="right">
+                        剩余计划金额（元）</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div title="center" region="center" style="border-top: 0; border-bottom: 0;">
+        <div id="subLayout" class="mini-layout" style="width: 100%; height: 100%;" splitsize="3">
+            <div title="west" region="west" width="630" showheader="false" expanded="true" showspliticon="false">
+                <div class="mini-fit">
+                    <div id="invoiceGrid" url="" class="mini-datagrid" style="width: 100%; height: 100%;"
+                        idfield="ID" multiselect="false" borderstyle="border:0" showpager="false">
+                        <div property="columns">
+                            <div type="checkcolumn">
+                            </div>
+                            <div field="InvoiceDate" width="90" headeralign="center" dateformat="yyyy-MM-dd"
+                                allowsort="true" align="center">
+                                开票日期</div>
+                            <div field="Amount" width="100" datatype="currency" headeralign="center" allowsort="true"
+                                align="center">
+                                发票金额（元）</div>
+                            <div field="SumRelationValue" datatype="currency" headeralign="center" width="100"
+                                allowsort="true" align="center">
+                                已收款（元）</div>
+                            <div field="RemainRelationValue" datatype="currency" width="100" headeralign="center"
+                                allowsort="true" align="center">
+                                未收款（元）</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div title="center" region="center">
+                <div class="mini-fit">
+                    <div id="receiptObjectGrid" url="" class="mini-datagrid" style="width: 100%; height: 100%;"
+                        idfield="ID" multiselect="false" borderstyle="border:0" showpager="false">
+                        <div property="columns">
+                            <div type="checkcolumn">
+                            </div>
+                            <div field="Code" width="120" headeralign="center" allowsort="true" align="center">
+                                收款项编号</div>
+                            <div field="Name" width="200" headeralign="center" allowsort="true">
+                                收款项名称</div>
+                            <div field="PlanFinishDate" width="90" headeralign="center" dateformat="yyyy-MM"
+                                allowsort="true" align="center">
+                                计划日期</div>
+                            <div field="ReceiptValue" width="100" headeralign="center" allowsort="true" align="center">
+                                收款金额（元）</div>
+                            <div field="FactReceiptValue" headeralign="center" width="100" allowsort="true" align="center">
+                                已到款（元）</div>
+                            <div field="FactInvoiceValue" headeralign="center" width="100" allowsort="true" align="center">
+                                已开票（元）</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="queryWindow" class="mini-window" title="详细查询" style="width: 750px;" showmodal="true"
+    allowresize="false" allowdrag="true">
+    <div class="queryDiv">
+        <form id="queryForm" method="post">
+        <table>
+            <tr>
+                <td width="10%" align="center">
+                    合同名称
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$ContractName" style="width: 85%;" class="mini-textbox" />
+                </td>
+                <td width="10%" align="center">
+                    合同编号
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$ContractCode" style="width: 85%;" class="mini-textbox" />
+                </td>
+                <td width="10%" align="center">
+                    付款单位
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$CustomerName" style="width: 85%;" class="mini-textbox" />
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    付款日期
+                </td>
+                <td align="left">
+                    <input class="mini-datepicker" name="$FR$ArrivedDate" style="width: 85%;" />
+                </td>
+                <td align="center">
+                    至
+                </td>
+                <td align="left">
+                    <input class="mini-datepicker" name="$TO$ArrivedDate" style="width: 85%;" />
+                </td>
+                <td align="center">
+                </td>
+                <td align="left">
+                </td>
+            </tr>
+        </table>
+        </form>
+        <div>
+            <a class="mini-button" onclick="search()" iconcls="icon-find" style="margin-right: 20px;">
+                查询</a> <a class="mini-button" onclick="clearQueryForm('queryForm')" iconcls="icon-undo">
+                    清空</a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function onSelectionChanged(e) {
+        var row = e.selected;
+        if (row != null) {
+            var contractInfoID = row.ContractInfoID;
+            if (contractInfoID) {
+                var planUrl = "GetReceiptObjectList?ContractInfoID=" + contractInfoID;
+                var planReceiptGrid = mini.get("receiptObjectGrid");
+                planReceiptGrid.setUrl(planUrl);
+                planReceiptGrid.reload();
+
+                var invoiceUrl = "GetInvoiceList?ContractInfoID=" + contractInfoID;
+                var invoiceGrid = mini.get("invoiceGrid");
+                invoiceGrid.setUrl(invoiceUrl);
+                invoiceGrid.reload();
+            }
+        }
+    }
+
+    function setWriteOff() {
+        var dataGrid = mini.get("dataGrid");
+        var row = dataGrid.getSelected();
+        if (!row) { msgUI("请选择收款记录"); return; }
+        var invoiceGrid = mini.get("invoiceGrid");
+        var invoices = invoiceGrid.getSelecteds();
+        var planReceiptGrid = mini.get("receiptObjectGrid");
+        var plans = planReceiptGrid.getSelecteds();
+
+
+        addExecuteParam("ReceiptData", mini.encode(row));
+        addExecuteParam("ReceiptObjectData", mini.encode(plans));
+        addExecuteParam("InvoiceData", mini.encode(invoices));
+        execute("SetWriteOff", { showLoading: true, refresh: false, onComplete: function (data) {
+            dataGrid.reload(); invoiceGrid.reload(); planReceiptGrid.reload();
+            msgUI("对账成功！");
+        }, validateForm: false
+        });
+
+    }
+
+</script>

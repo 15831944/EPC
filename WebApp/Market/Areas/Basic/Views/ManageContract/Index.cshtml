@@ -1,0 +1,33 @@
+﻿<div id="ContractTabs" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;" maskonload="false">
+</div>
+<script type="text/javascript">
+    var id = getQueryString("ID");
+    var customerID = getQueryString("CustomerID");
+    var funcType = getQueryString("FuncType");
+    initTab();
+    function initTab() {
+        mini.parse();
+
+        var tabs = mini.get("ContractTabs");
+        var contractUrl = "/Market/MarketUI/ManageContract/PageView?TmplCode=ContractInfo";
+        if (id != "") {
+            contractUrl = contractUrl + "&ID=" + id + "&FuncType=" + funcType;
+            var contractTab = { title: "合同基本信息", url: contractUrl, showCloseButton: false };
+            tabs.addTab(contractTab);
+            tabs.activeTab(contractTab);
+            var customerTab = { title: "客户信息", url: "/MvcConfig/UI/Form/PageView?TmplCode=CustomerInfo&ID=" + customerID + "&FuncType=" + funcType, showCloseButton: false };
+            tabs.addTab(customerTab);
+            var planReceiptTab = { title: "收款计划", url: "PlanReceiptList?ContractID=" + id + "&FuncType=" + funcType, showCloseButton: false };
+            tabs.addTab(planReceiptTab);
+            var receiptTab = { title: "收款记录", url: "ReceiptList?ContractID=" + id, showCloseButton: false };
+            tabs.addTab(receiptTab);
+            var scheduleTab = { title: "发票记录", url: "/MvcConfig/UI/List/PageView?TmplCode=InvoiceInfo&ContractInfoID=" + id + "&FuncType=" + funcType, showCloseButton: false };
+            tabs.addTab(scheduleTab);
+        }
+        else {
+            var contractTab = { title: "合同基本信息", url: contractUrl, showCloseButton: false };
+            tabs.addTab(contractTab);
+            tabs.activeTab(contractTab);
+        }
+    }
+</script>

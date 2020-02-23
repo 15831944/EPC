@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "NodeSelected";
+}
+
+ <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 100%;">
+                    <a class="mini-button" iconcls="icon-add" onclick=" returnValue();" plain="true">选择</a>
+                </td>
+                  <td class="gw-toolbar-right">
+                <input id="key" class="mini-buttonedit gw-searchbox" emptytext="请输入编号或名称" onenter="treesearch('mytree','key','DisplayName')"
+                    onbuttonclick="treesearch('mytree','key','DisplayName');" />
+            </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="mini-fit">
+        <ul id="mytree" class="mini-tree" url='gettreelist' style="width: 100%; height: 100%;" showtreeicon="true" textfield="DisplayName"
+            idfield="ID" enablehottrack="false" parentfield="ParentID" resultastree="false" expandonload="4"
+           >
+        </ul>
+    </div>
+<script type="text/javascript">
+    function returnValue() {
+        var tree = mini.get("mytree");
+        var node = tree.getSelectedNode();
+         closeWindow(node);
+    }
+
+    function treesearch(treeName, keyName, fieldName) {
+        if (!treeName) treeName = "mytree";
+        var tree = mini.get(treeName);
+        if (!keyName) keyName = "key";
+        if (!fieldName) fieldName = "Name";
+        var key = mini.get(keyName).getValue();
+        if (key == "") {
+            tree.clearFilter();
+        } else {
+            key = key.toLowerCase();
+            tree.filter(function (node) {
+                var text = node[fieldName] ? node[fieldName].toLowerCase() : "";
+                if (text.indexOf(key) != -1) {
+                    return true;
+                }
+            });
+        }
+    }
+</script>

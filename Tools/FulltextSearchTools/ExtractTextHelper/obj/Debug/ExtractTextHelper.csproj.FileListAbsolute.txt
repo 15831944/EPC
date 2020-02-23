@@ -1,0 +1,12 @@
+E:\产品代码\EPM\Tools\FulltextSearchTools\ExtractTextHelper\bin\Debug\ExtractTextHelper.dll
+E:\产品代码\EPM\Tools\FulltextSearchTools\ExtractTextHelper\bin\Debug\ExtractTextHelper.pdb
+E:\产品代码\EPM\Tools\FulltextSearchTools\ExtractTextHelper\bin\Debug\Aspose.Cells.dll
+E:\产品代码\EPM\Tools\FulltextSearchTools\ExtractTextHelper\bin\Debug\Aspose.Pdf.dll
+E:\产品代码\EPM\Tools\FulltextSearchTools\ExtractTextHelper\bin\Debug\Aspose.Words.dll
+E:\产品代码\EPM\Tools\FulltextSearchTools\ExtractTextHelper\bin\Debug\itextsharp.dll
+E:\产品代码\EPM\Tools\FulltextSearchTools\ExtractTextHelper\bin\Debug\Aspose.Cells.xml
+E:\产品代码\EPM\Tools\FulltextSearchTools\ExtractTextHelper\bin\Debug\Aspose.Pdf.xml
+E:\产品代码\EPM\Tools\FulltextSearchTools\ExtractTextHelper\bin\Debug\Aspose.Words.xml
+E:\产品代码\EPM\Tools\FulltextSearchTools\ExtractTextHelper\obj\Debug\ExtractTextHelper.csprojResolveAssemblyReference.cache
+E:\产品代码\EPM\Tools\FulltextSearchTools\ExtractTextHelper\obj\Debug\ExtractTextHelper.dll
+E:\产品代码\EPM\Tools\FulltextSearchTools\ExtractTextHelper\obj\Debug\ExtractTextHelper.pdb

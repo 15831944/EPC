@@ -1,0 +1,613 @@
+﻿@{
+    ViewBag.Title = "Config";
+}
+
+<div class="mini-toolbar" id="btnDiv" style="width: 100%; position: fixed; top: 0; left: 0; z-index: 100;">
+    <table>
+        <tr>
+            <td>
+                <a id="btnSave" class="mini-button" plain="true" iconcls="icon-save" onclick="saveForm('BasicSetForm');">保存</a>
+            </td>
+            <td id="btnRight"></td>
+        </tr>
+    </table>
+</div>
+<form id="dataForm" method="post" align="center">
+    <input name="ID" class="mini-hidden" />
+    <input name="SpaceID" class="mini-hidden" />
+    <div class="formDiv" id="BasicSetForm">
+
+        <div align="top" style="margin-top: 36px; text-align: left; height: 22px; line-height: 22px; margin-left: 20px; font-weight: bold; font-size: 15px; padding: 0px; border-left: 5px solid #345a80; color: #375b81; position: relative;">
+            <h4 style="margin: 0px; padding: 0px 20px; background-color: #fff; min-width: 60px; display: inline-block; z-index: 99; position: absolute;">基本设置
+            </h4>
+            <em style="height: 0px; border-bottom: #ccc solid 1px; position: absolute; top: 12px; width: 100%; z-index: 98;"></em>
+        </div>
+        <div style="text-align: left; line-height: 22px; margin-left: 20px;">
+
+
+            <table class="ke-zeroborder" style="width: 100%; margin-top: 1%;" cellpadding="6" border="0">
+                <tbody>
+
+                    <tr>
+                        <td>使用应用整编区</td>
+                        <td colspan="3">
+                            <input name="Enabled" class="mini-combobox" style="width: 15%; float: left; margin-left: 5px" textfield="text"
+                                valuefield="value" data="TrueFalse" allowinput="false" shownullitem="true" required="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>整编方式：</td>
+                        <td colspan="3">
+                            <div id="PhysicalType" name="PhysicalType" class="mini-radiobuttonlist" repeatitems="1" repeatlayout="table" repeatdirection="vertical"
+                                textfield="text" valuefield="id" onvaluechanged="onReorganizeTypeChange"
+                                data="PhysicalTypeEnum">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>打印按钮选择</td>
+                        <td colspan="3">
+                            <div id="PhysicalButtons" name="PhysicalButtons" class="mini-checkboxlist" repeatitems="2" repeatlayout="table" repeatdirection="vertical"
+                                textfield="text" valuefield="text" data="PhysicalButtonsEnum">
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="formDiv" style="height: 60%; width: 92%">
+        <div align="top" style="text-align: left; height: 22px; line-height: 22px; margin-left: 20px; font-weight: bold; font-size: 15px; padding: 0px; border-left: 5px solid #345a80; color: #375b81; position: relative;">
+            <h4 style="margin: 0px; padding: 0px 20px; background-color: #fff; min-width: 60px; display: inline-block; z-index: 99; position: absolute;">清单配置
+            </h4>
+            <em style="height: 0px; border-bottom: #ccc solid 1px; position: absolute; top: 12px; width: 100%; z-index: 98;"></em>
+        </div>
+        <div style="height: 100%; width: 98%; float: left; margin-left: 2%; margin-left: 2%; margin-top: 2%;">
+            <div id="mainTab" class="mini-tabs" activeindex="0" style="width: calc(100%-4px); height: 580px; overflow: scroll; overflow-y: hidden; overflow-x: hidden">
+                <div title="清单配置(电子)">
+                     <div class="mini-toolbar" style="padding: 0px; border-left: 0; border-top: 0; border-right: 0;">
+                                        <table style="width: 100%;">
+                                            <tr>
+                                                <td style="width: 100%;">
+                                                    <a class="mini-button" plain="true" iconcls="icon-save" onclick="saveForm('DetailElectronForm')">保存</a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                        </div>
+                    <div id="DetailElectronForm">
+                       <table border="0" style="width: 100%">
+                           <tr>
+                               <td>
+                                   <div style="margin-top: 2%">
+                                       <span>表单编号</span>
+                                       <input id="ElectronicMainFormCode" name="ElectronicMainFormCode" required="true" class="mini-textbox" style="margin-left: 10%; width: 30%" emptytext="请输入归档清单编号" vtype="text" />
+                                       <a href="javascript:PageLink()" style="margin-left: 10%">跳转到表单定义</a>
+                                   </div>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>
+                                   <div>
+                                       <p>说明：</p>
+                                   </div>
+                                   <div>
+                                       <p>1.归档清单通过表单定义配置，若要增减、调整字段，请在表单定义中修改；</p>
+                                   </div>
+                               </td>
+                           </tr>
+                           <tr>
+
+                               <td>
+                                   <div>
+                                       2.归档签收单含有固有字段，固有字段必填、且对应的<span style="font-weight: bold; font-size: 15px;">控件编号</span>不可修改；
+                                       <p><span class="control">控件编号和固有字段说明</span></p>
+                                       <ul>
+                                           <li>TaskName【归档清单名称】、Code【归档清单编号】、SendUser【送归档人】、SendDate【送归档日期】、子表（Name【文件名称】、Code【文件编号】、PageCount【页数】、MainFile【文件】、PDFFile【PDF文件】、Attachments【附件】）、SpaceID【图档实例库，默认值为签收登记时的实例库ID{SpaceID}】</li>
+                                       </ul>
+                                   </div>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>3.归档清单列表是固定的，不可配置。
+                               </td>
+                           </tr>
+                       </table>
+                    </div>
+                </div>
+                <div title="清单配置(实物)" style="height: calc(100%-60px)">
+                    <div class="mini-layout" style="width: 100%; height: 100%;">
+                        <div region="west" style="border-top: 0; border-bottom: 0; border-left: 0;">
+                            <div class="mini-fit">
+                                <div id="mygrid" data="ArchivePhysicalData" onselectionchanged="ArchivePhysicalToggle" class="mini-datagrid"
+                                    style="width: 100%; height: 100%;" idfield="ID" showreloadbutton="false" multiselect="false" allowunselect='false'
+                                    borderstyle="border:0px;" selectonload='true' showpager="false" showpageinfo="false" virtualscroll="false">
+                                    <div property="columns">
+                                        <div type="checkcolumn">
+                                        </div>
+                                        <div field="Name" width="*" headeralign="center" allowsort="false">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div title="center" align="center" style="border-top: 0px; border-bottom: 0px; border-right: 0px;">
+                            <div class="mini-layout" style="width: 100%; height: 100%;">
+                                <div region="north" height="32" showspliticon="false" showheader="false" allowresize="false"
+                                    splitsize="0" style="border-bottom: 1px solid  #ccc;">
+                                    <div class="mini-toolbar" style="padding: 0px; border-left: 0; border-top: 0; border-right: 0;">
+                                        <table style="width: 100%;" id="saveDetailPhysicalForm_Archive">
+                                            <tr>
+                                                <td style="width: 100%;">
+                                                    <a class="mini-button" plain="true" iconcls="icon-save" onclick="saveForm('DetailPhysicalForm_Archive')">保存</a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table style="width: 100%;" id="saveDetailPhysicalForm_RegisterFile">
+                                            <tr>
+                                                <td style="width: 100%;">
+                                                    <a class="mini-button" plain="true" iconcls="icon-save" onclick="saveForm('DetailPhysicalForm_RegisterFile')">保存</a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table style="width: 100%;" id="saveDetailPhysicalForm_RegisterNode">
+                                            <tr>
+                                                <td style="width: 100%;">
+                                                    <a class="mini-button" plain="true" iconcls="icon-save" onclick="saveForm('DetailPhysicalForm_RegisterNode')">保存</a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div align="center" style="padding: 0px; border: 0;">
+                                    <div id="ListCofing" style="height: auto; width: 100%; float: left;">
+                                        <div style="width: 100%; float: left;">
+
+                                            <table style="width: 100%;" border="0">
+                                                <tr>
+                                                    <td style="width: 100%">
+                                                        <div id="DetailPhysicalForm_Archive">
+                                                            <table id="ArchiveForm" border="0" style="width: 100%">
+                                                                <tr>
+                                                                    <td>
+                                                                        <div style="margin-top: 2%">
+                                                                            <span>表单编号</span>
+                                                                            <input id="PhysicalMainFormCode" name="PhysicalMainFormCode" required="true" class="mini-textbox" style="margin-left: 10%; width: 30%" emptytext="请输入归档签收单编号" vtype="text" />
+                                                                            <a href="javascript:PageLink()" style="margin-left: 10%">跳转到表单定义</a>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div>
+                                                                            <p>说明：</p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <p>1.归档签收单通过表单定义配置，若要增减、调整字段，请在表单定义中修改；</p>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+
+                                                                    <td>
+                                                                        <div>
+                                                                            2.归档签收单含有固有字段，固有字段必填、且对应的<span style="font-weight: bold; font-size: 15px;">控件编号</span>不可修改；
+                                                                            <p><span class="control">控件编号和固有字段说明</span></p>
+                                                                            <ul>
+                                                                                <li>Code【签收单编号】，Name【签收单名称】，DefaultNodes【归档目录选择】，SendUser【送归档人】，SendDate【送归档时间】，ReceiveUser【签收人】，ReceiveDate【签收时间】SpaceID【图档实例库，默认值为签收登记时的实例库ID{SpaceID}】；</li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>3.归档签收单列表是固定的，不可配置。
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div id="DetailPhysicalForm_RegisterFile">
+                                                            <table id="PhysicalFormReg" style="display: none">
+                                                                <tr>
+                                                                    <td>
+                                                                        <div style="margin-top: 2%">
+                                                                            <span>列表编号</span>
+                                                                            <input id="PhysicalMainListCode" name="PhysicalMainListCode" required="true" class="mini-textbox" style="margin-left: 3%; width: 30%; margin-top: 5px" emptytext="请输入实物归档清单列表定义编号" vtype="text" />
+                                                                            <a href="javascript:PageListLink()" style="margin-left: 10%;">跳转到列表定义</a>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div>
+                                                                            <span>表单编号</span>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div id="dataGridPhysicalMainForm" url="FileConfigGetList" class="mini-datagrid" style="width: 100%; height: 100%;" allowcellvalid="true" multiselect="true" allowcelledit="true" allowcellselect="true"
+                                                                            showpager="false" ondrawcell="drawcellAddColumn">
+                                                                            <div property="columns">
+                                                                                <div type="checkcolumn" headeralign="center">
+                                                                                </div>
+                                                                                <div field="Name" headeralign="center">
+                                                                                    文件类型
+                                                                                </div>
+                                                                                <div field="FormCode" width="150">
+                                                                                    对应表单
+                                                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                                                                </div>
+                                                                                <div field="link" width="100" align="center">
+                                                                                    跳转到对应表单
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <p>说明：</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <p>1.实物登记单类型与<span style="font-weight: bold; font-size: 15px;">文件定义</span>中保持一致，每类实物登记单通过表单定义配置，若要增减、调整字段，请在其对应的表单定义中修改；</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>2.实物登记单含有固有字段，固有字段必填，且对应的<span style="font-weight: bold; font-size: 15px;">控件编号</span>不可修改;
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <p><span class="control">控件编号及固有字段说明</span></p>
+                                                                    
+                                                                        <ul>
+                                                                            <li>
+                                                                                <div id="explanation" virtualscroll="false" data="explanData" class="mini-datagrid" style="width: 100%;" allowcellvalid="true" multiselect="true" allowcelledit="true" allowcellselect="true"
+                                                                                    showpager="false" allowcellwrap="true">
+                                                                                    <div property="columns">
+                                                                                        <div type="indexcolumn" width="5">
+                                                                                        </div>
+                                                                                        <div field="FileName" width="15">
+                                                                                            实物登记单
+                                                                                        </div>
+                                                                                        <div field="text">
+                                                                                            内容
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>3.实物档案整编界面的<span style="font-weight: bold; font-size: 15px;">待归档实物文件清单</span>，即实物登记单的列表界面，通过列表定义配置，若要增减、调整字段，请在列表定义中修改；
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td>
+                                                                        <p>4.实物登记单的列表界面含有固有字段，固有字段必填，且对应的<span style="font-weight: bold; font-size: 15px;">控件编号</span>不可修改</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <label><span class="control">控件编号及固有字段说明</span></label>
+                                                                        <ul>
+                                                                            <li>ReorganizePath【归档目录】，Code【文件编号】，Name【文件名称】，FileType【文件类型】，Media【载体】，PageCount【页数】，Quantity【份数】，SecretLevel【密级】，KeepYear【保管期限】</li>
+                                                                        </ul>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div id="DetailPhysicalForm_RegisterNode">
+                                                            <table id="PhysicalFormVolume" style="display: none">
+                                                                <tr>
+                                                                     <td>
+                                                                         <div style="margin-top: 2%">
+                                                                             <span>列表编号</span>
+                                                                             <input id="PhysicalVolumnListCode" name="PhysicalVolumnListCode" required="true" class="mini-textbox" style="margin-left: 3%; width: 30%; margin-top: 5px" emptytext="请输入实物归档清单列表定义编号" vtype="text" />
+                                                                             <a href="javascript:PageListLink()" style="margin-left: 10%;">跳转到列表定义</a>
+                                                                         </div>
+                                                                     </td>
+                                                                 </tr>
+                                                                 <tr>
+                                                                     <td>
+                                                                         <div>
+                                                                             <span>表单编号</span>
+                                                                         </div>
+                                                                     </td>
+                                                                 </tr>
+                                                                 <tr>
+                                                                     <td>
+                                                                         <div id="dataGridPhysicalVolumeForm" url="NodeConfigGetList" class="mini-datagrid" style="width: 100%; height: 100%;" allowcellvalid="true" multiselect="true" allowcelledit="true" allowcellselect="true"
+                                                                          showpager="false" ondrawcell="drawcellAddColumn">
+                                                                         <div property="columns">
+                                                                            <div type="checkcolumn" headeralign="center">
+                                                                            </div>
+                                                                            <div field="Name" headeralign="center">
+                                                                                卷册类型
+                                                                            </div>
+                                                                            <div field="FormCode" width="150" headeralign="center">
+                                                                                对应表单
+                                                                                <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                                                            </div>
+                                                                            <div field="link" width="100" align="center" headeralign="center">
+                                                                                跳转到对应表单
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                  </td>
+                                                                </tr>
+                                                                 <tr>
+                                                                    <td>
+                                                                        <p>说明：</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <p>1.实物登记单类型与“实物编目节点”中“存储类型”为“实物案卷”的实物编目节点保持一致，每类实物登记单通过表单定义配置，若要增减、调整字段，请在其对应的表单定义中修改；</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>2.实物登记单含有固有字段，固有字段必填，且对应的<span style="font-weight: bold; font-size: 15px;">控件编号</span>不可修改;
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <p><span class="control">控件编号及固有字段说明</span></p>
+                                                                    
+                                                                        <ul>
+                                                                            <li>
+                                                                                <div id="explanVolumn" virtualscroll="false" data="explanVolumnData" class="mini-datagrid" style="width: 100%;" allowcellvalid="true" multiselect="true" allowcelledit="true" allowcellselect="true"
+                                                                                    showpager="false" allowcellwrap="true">
+                                                                                    <div property="columns">
+                                                                                        <div type="indexcolumn" width="5">
+                                                                                        </div>
+                                                                                        <div field="FileName" width="15">
+                                                                                            实物登记单
+                                                                                        </div>
+                                                                                        <div field="text">
+                                                                                            内容
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </td>
+                                                                </tr>
+                                                               <tr>
+                                                                    <td>3.实物档案整编界面的<span style="font-weight: bold; font-size: 15px;">待归档实物卷册清单</span>，即实物登记单的列表界面，通过列表定义配置，若要增减、调整字段，请在列表定义中修改；
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <p>4.实物登记单的列表界面含有固有字段，固有字段必填，且对应的<span style="font-weight: bold; font-size: 15px;">控件编号</span>不可修改</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <label><span class="control">控件编号及固有字段说明</span></label>
+                                                                        <ul>
+                                                                            <li>ReorganizePath【归档目录】，Name【名称】，DocumentCode【档号】，SecretLevel【密级】，KeepYear【保管期限】，ArchivePeople【归档人】，ArchiveDepartment【归档部门】，ArchiveDate【归档日期】，RackNumber【柜架号】，StorageRoom【库房名称】</li>
+                                                                        </ul>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    //清单配置（实物）卷和件类型对应表单跳转链接
+    function drawcellAddColumn(e) {
+        if (e.field == "link")
+            e.cellHtml = '<a href="javascript:PageLink()">跳转到表单页面</a>'
+    }
+</script>
+<script language="javascript" type="text/javascript">
+    @Html.GetEnum("System.TrueFalse")
+</script>
+<!--清单配置电子表按钮-->
+<script type="text/javascript">
+    var align = [{ value: 'left', text: '靠左' }, { value: 'center', text: '居中' }, { value: 'right', text: '靠右' }];
+    function moveUp() {
+        var dataGrid = mini.get("#dataGrid");
+        var rows = dataGrid.getSelecteds();
+        dataGrid.moveUp(rows);
+    }
+
+    function moveDown() {
+        var dataGrid = mini.get("#dataGrid");
+        var rows = dataGrid.getSelecteds();
+        dataGrid.moveDown(rows);
+    }
+
+    addGridButton("dataGrid", "Settings", {
+        linkText: '列格式', onButtonClick: function (row) {
+            var url = "SettingsField";
+            var title = "列格式";
+            openWindow(url, {
+                width: 350, title: title, data: row["Settings"], onDestroy: function (data) {
+                    if (data != "close")
+                        row["Settings"] = mini.encode(data);
+                }
+            });
+        }
+    });
+</script>
+<!--（实物）固有字段说明样式-->
+<style type="text/css">
+    li
+    {
+        list-style: none;
+        display: none;
+    }
+    .control
+    {
+        color: blue;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        cursor: pointer;
+    }
+</style>
+<script type="text/javascript">
+    //固有字段说明，详情的显示和隐藏
+    $("span.control").click(function () {
+        $(this).parent().nextAll().children().toggle();
+    });
+</script>
+<script type="text/javascript">
+    //整编方式单选添加数据
+    var PhysicalTypeEnum = [{id:"Node", text: "按卷整编" }, {id:"File",text: "按件整编" }];
+    //打印按钮多选值
+    var PhysicalButtonsEnum = [{ text: "归档文件目录" },
+        { text: "卷内目录" }, { text: "归档文件目录封面" },
+        { text: "卷内备考表" }, { text: "档案盒封面" },
+       { text: "案卷目录" }, { text: "档案盒盒脊" },
+       { text: "案卷脊背" }, { text: "档案盒底边" },
+       { text: "案卷封面" }, { text: "档案盒备考表" }];
+
+    var MainFormRequiredFields = [{ text: "签收单编号", value: "Code" }];
+    //跳转表单定义
+    function PageLink() {
+        var url = "/Base/UI/Form/List";
+        openWindow(url, { title: "表单配置" });
+
+    }
+    //跳转列表定义
+    function PageListLink() {
+        var url = "/Base/UI/List/List";
+        openWindow(url, { title: "列表配置" });
+
+    }
+    //保存
+    var saveBase = save;
+    save = function (execSettings) {
+        execSettings.onComplete = function () {
+            msgUI("保存成功！");
+            mini.get('dataGridPhysicalMainForm').reload();//
+            mini.get('dataGridPhysicalVolumeForm').reload()
+        }
+        saveBase(execSettings);
+
+    }
+    //点击保存时，传递参数id和spaceid
+    function saveForm(formID) {
+        var id = mini.getbyName("ID").value;
+        var spaceID = mini.getbyName("SpaceID").value;
+        save({ closeWindow: false, formId: formID, execParams: { id: id, SpaceID: spaceID } });
+
+    }
+    var ArchivePhysicalData = [{ ID: "0", Name: "归档签收单" }, { ID: "1", Name: "实物登记单" }];
+    function pageLoad() {
+        //基本设置样式修改
+        $('.mini-radiobuttonlist-td:eq(0)').css({ "float": "left", "margin-left": "5px" });
+        $('.mini-radiobuttonlist-td:gt(0)').css({ "float": "left", "margin-left": "32px" });
+        var num = PhysicalButtonsEnum.length / 2;
+        $("table.mini-checkboxlist-table").prop({ "cellpadding": "5", "": "" });
+        explanData = [{ FileName: "设计图纸", text: "Name【图纸名称】，Code【图纸编号】，Media【载体】，PageCount【页数】，Quantity【份数】，SecretLevel【密级】，KeepYear【保管期限】，ArchivePeople【归档人】，ArchiveDepartment【归档部门】，ArchiveDate【归档时间】" },
+                      { FileName: "ISO表单", text: "Name【ISO表单名称】，Code【ISO表单编号】，Media【载体】，PageCount【页数】，Quantity【份数】，SecretLevel【密级】，KeepYear【保管期限】，ArchivePeople【归档人】，ArchiveDepartment【归档部门】，ArchiveDate【归档时间】" },
+                      { FileName: "设计输入", text: "Name【设计输入名称】，Code【设计输入编号】，Media【载体】，PageCount【页数】，Quantity【份数】，SecretLevel【密级】，KeepYear【保管期限】，ArchivePeople【归档人】，ArchiveDepartment【归档部门】，ArchiveDate【归档时间】" },
+                      { FileName: "其他相关资料", text: "Name【其他相关资料名称】，Code【其他相关资料编号】，Media【载体】，PageCount【页数】，Quantity【份数】，SecretLevel【密级】，KeepYear【保管期限】，ArchivePeople【归档人】，ArchiveDepartment【归档部门】，ArchiveDate【归档时间】" },
+                      { FileName: "以上都包含", text: "S_R_PhysicalReorganizeID【签收单ID(用于点击整编时用于数据的筛选)】，FileConfigID【FileConfigID(资料整编页，确定左边数据所属文件定义)】，ReorganizePath【整编目录(用来显示，整编之后文件所在节点)】，ReorganizeFullID【整编目录全路径(用来查找该节点以上或以下的文件)】，ArchiveFileID【整编文件ID(整编之后的文件，在fileinfo表中所在)】，FromCode【FromCode(用于选中数据进行编辑)】" }
+        ];
+
+        explanVolumnData = [{ FileName: "卷册", text: "Name【卷册名称】、DocumentCode【档号】、Mutual【互见号】、ArchiveDepartment【归档部门】、ArchivePeople【归档人】、ArchiveDate【归档日期】、SecretLevel【密级】、KeepYear【保管期限】、RackNumber【柜架号】、StorageRoom【库房名称】、PhysicalPageCount【卷内实物总页数】、PhysicalCount【卷内实物总数】、Quantity【份数】" },
+        ];
+
+        mini.get("explanation").setData(explanData);
+        mini.get("explanVolumn").setData(explanVolumnData);
+        $(".mini-grid-vscroll").hide();
+        //去掉页面中水平方向的滚动条
+        $('body').css({ "overflow": "scroll", "overflow-x": "hidden" });
+        //实物清单配置中去掉滚动条
+       // $("#ListCofing").parent().css({ "overflow": "scroll", "overflow-x": "hidden", "overflow-y": "hidden" });
+        var grid = mini.get("mygrid");
+        grid.setData(mini.decode(ArchivePhysicalData));
+        grid.select('0');
+    }
+
+    function onFormSetData(data) {
+        ReorganizeTypeChange(data.PhysicalType);
+    }
+
+
+    //清单配置（实物）菜单切换
+    function ArchivePhysicalToggle() {
+        var grid = mini.get("mygrid");
+        var row = grid.getSelected();
+        if (row.ID == '0') {//ArchiveFormVolume
+            $('#ArchiveForm').css({ "display": "table" });
+            //$('#ArchiveFormVolume').css({ "display": "none" });
+            $('#PhysicalFormReg').css("display", "none");
+            $("#PhysicalFormVolume").hide();
+            $('#saveDetailPhysicalForm_Archive').css("display", "table")
+                .nextAll('#saveDetailPhysicalForm_RegisterFile').css("display", "none")
+                .nextAll('#saveDetailPhysicalForm_RegisterNode').css("display", "none");
+        } else if (row.ID == '1') {
+            $('#ArchiveForm').css("display", "none");
+           // $('#ArchiveFormVolume').css({ "display": "none" });
+            $("#PhysicalFormVolume").hide();
+            $("#PhysicalFormReg").css("display", "table");
+            $('#saveDetailPhysicalForm_Archive').css("display", "none")
+                .nextAll('#saveDetailPhysicalForm_RegisterFile').css("display", "table")
+                .nextAll('#saveDetailPhysicalForm_RegisterNode').css("display", "none");
+        } else if (row.ID == '2') {
+            $('#ArchiveForm').css({ "display": "table" });
+           // $('#ArchiveFormVolume').css({ "display": "table" });
+            $("#PhysicalFormVolume").css("display", "none");
+            $("#PhysicalFormReg").css("display", "none");
+            $('#saveDetailPhysicalForm_Archive').css("display", "table")
+                .nextAll('#saveDetailPhysicalForm_RegisterFile').css("display", "none")
+                .nextAll('#saveDetailPhysicalForm_RegisterNode').css("display", "none");
+        } else if (row.ID == '3') {
+            $('#ArchiveForm').css({ "display": "none" });
+           // $('#ArchiveFormVolume').css({ "display": "none" });
+            $("#PhysicalFormVolume").css("display", "table");
+            $("#PhysicalFormReg").css("display", "none");
+            $('#saveDetailPhysicalForm_Archive').css("display", "none")
+                .nextAll('#saveDetailPhysicalForm_RegisterFile').css("display", "none")
+                .nextAll('#saveDetailPhysicalForm_RegisterNode').css("display", "table");
+        }
+    }
+</script>
+<!--案卷整编-->
+<script type="text/javascript">
+    //整编方式改变时，调用整编方法
+    function onReorganizeTypeChange(e)
+    {
+        ReorganizeTypeChange(e.value);
+    }
+
+    function ReorganizeTypeChange(type) {
+        var mygrid = mini.get("mygrid");
+        if (type == "Node") {
+            ArchivePhysicalData = [{ ID: "2", Name: "归档签收单" }, { ID: "3", Name: "按卷实物登记单" }];
+            mygrid.setData(ArchivePhysicalData);
+            mygrid.select('2');
+            $("#PhysicalFormVolume").show();
+            $("#PhysicalFormReg").hide();
+        }
+        else {
+            ArchivePhysicalData = [{ ID: "0", Name: "归档签收单" }, { ID: "1", Name: "实物登记单" }];
+            mygrid.setData(ArchivePhysicalData);
+            mygrid.select('0');
+            $("#PhysicalFormVolume").hide();
+            $("#PhysicalFormReg").show();
+        }
+    }
+</script>

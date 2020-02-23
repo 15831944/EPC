@@ -1,0 +1,143 @@
+﻿@{
+    ViewBag.Title = "List";
+}
+<script src="/PortalLTE/Scripts/dist/js/vue.min.js"></script>
+<div id="pdfList" class="mini-fit">
+    <div class="mini-splitter" style="width: 100%; height: 100%;">
+        <div size="35%">
+            <div class="mini-toolbar gw-grid-toolbar" borderstyle="border-left:0px">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 10%;">
+                            <a class="mini-button" onclick="getPDF(-1)" plain="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+                        </td>
+                        <td style="width: 80%;" align="center">
+                            <span id="index">0</span>/<span id="count">0</span>
+                        </td>
+                        <td style="width: 10%;">
+                            <a class="mini-button" onclick="getPDF(1)" plain="true"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="mini-fit">
+                <div id="dataGrid" style="width: 100%; height: 100%;" class="mini-datagrid" showpager="false" onselect="onSelect"
+                     allowcelledit='true' allowcellselect='true' oncellendedit="oncellendedit">
+                    <div property="columns">
+                        <div type="indexcolumn">序号</div>
+                        <div field="Code" width="120" align="left">
+                            成果编号
+                        </div>
+                        <div field="Name" width="150" align="left">
+                            成果名称
+                        </div>
+                        @{
+                            var isApply = ViewBag.IsApply == "true";
+                            if (isApply)
+                            {
+                                var list = ViewBag.SignRolePDF as List<Formula.Helper.EnumItemInfo>;
+                                foreach (var item in list)
+                                {
+                                    <div type='checkboxcolumn' field="@item.Code" width="50" align="center" truevalue='true' falsevalue='false'>
+                                        @item.Name
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <iframe id="PDFFrame" style="width: 100%; height: 100%;"></iframe>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum("Project.SignRolePDF")
+</script>
+<script type="text/javascript">
+    var index = 0;
+    var cRow = {};
+    function onSelect(e) {
+        var row = e.record;
+        var url = "/Project/PDFViewer/Viewer?fileID=" + row.FileID + "&productID=" + row.ProductID + "&Version=" + row.Version + "&viewType=" + getQueryString("viewType") + "&ProjectInfoID=" + getQueryString("ProjectInfoID");
+        if (row.IsApply)
+            url += "&IsApply=true"
+        $("#PDFFrame").attr("src", url);
+        index = row._id;
+        $("#index").html(index);
+        cRow = row;
+    }
+
+    function getPosInfo() {
+        return cRow;
+    }
+
+    function getPDFSignRole() {
+        var rtn = {};
+        var r = mini.get("dataGrid").findRow(function (data) { if (data.ProductID == cRow.ProductID) { return true; } });
+        if (r)
+            for (var j = 0; j < SignRolePDF.length; j++) {
+                rtn[SignRolePDF[j].value] = r[SignRolePDF[j].value];
+            }
+        return rtn;
+    }
+
+    function getPDF(isNext) {
+        var dataGrid = mini.get("dataGrid");
+        var count = dataGrid.getData().length;
+        index += isNext;
+        if (index == 0)
+            index = count;
+        else if (index == count + 1)
+            index = 1;
+        var row = mini.get("dataGrid").getRow(index - 1);
+        dataGrid.select(row, true);
+    }
+
+    function oncellendedit(e) {
+        var field = e.field; var row = e.row;
+        var isShow = e.value == "true";
+        var pos = row["PDFSignPositionInfo"];
+        for (var j = 0; j < SignRolePDF.length; j++) {
+            var key = SignRolePDF[j].value;
+            if (pos["PDFSignRoleConfig"] == undefined)
+                pos["PDFSignRoleConfig"] = {};
+            pos["PDFSignRoleConfig"][key] = row[key] == "true";
+        }
+        if (top["win"].savePosition2) {
+            top["win"].savePosition2(row.ProductID, mini.encode(pos));
+        }
+
+        var pdfFrame = $("#PDFFrame");
+        if (pdfFrame.length > 0 && pdfFrame[0].contentWindow) {
+            var frame = pdfFrame[0].contentWindow;
+            if (typeof (frame.setCategoryShow) != "undefined")
+                frame.setCategoryShow(field, isShow, row.ProductID);
+        }
+    }
+
+    function setData(data) {
+        var list = [];
+        for (var i = 0; i < data.length; i++) {
+            var row = data[i];
+            for (var j = 0; j < SignRolePDF.length; j++) {
+                row[SignRolePDF[j].value] = "true";
+            }
+            if (row["PDFSignPositionInfo"]) {
+                var pdfPos = row["PDFSignPositionInfo"];
+                var PDFSignRoleConfig = pdfPos["PDFSignRoleConfig"];
+                if (PDFSignRoleConfig) {
+                    for (let key in PDFSignRoleConfig) {
+                        row[key] = PDFSignRoleConfig[key].toString();
+                    }
+                }
+            }
+            list.push(row);
+        }
+        mini.get("dataGrid").setData(list);
+        $("#count").html(data.length);
+        $("#index").html(0);
+    }
+</script>

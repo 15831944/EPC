@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "QuarterBusinessObjectiveQuery";
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+}
+<div class="mini-toolbar" style="padding: 2px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                @Html.ExportButton()
+            </td>
+          
+        </tr>
+    </table>
+</div>
+<div class="mini-fit" style="height: 100px;" id="GridArea">
+    <div id="dataGrid" url="QuarterBusinessList" class="mini-datagrid" style="width: 100%;
+        height: 100%;" idfield="ID" multiselect="false" showpager="false" frozenstartcolumn="0"
+        frozenendcolumn="1">
+        <div property="columns">
+            <div field="IndicatorName" width="120" headeralign="center" align="center">
+                指标名称</div>
+            <div field="AnnualPlan" width="60" headeralign="center" align="right" datatype="currency">
+                年度计划</div>
+            @{for (int i = 1; i < 5; i++)
+              {
+                  var AnnualPlan = "AnnualPlan" + i;
+                  var MarketPlan = "MarketPlan" + i;
+                  var MarketText = i + "季度市场计划";
+                  var CompleteCount = "CompleteCount" + i;
+                  var PlanText = i + "季度计划";
+                  var CompleteCountText = i + "季度完成";
+                  var LastYearCompleteCount = "LastYearCompleteCount" + i;
+                  var LastYearCompleteCountText = "去年" + i + "季度完成";
+                  var LastYearRate = "LastYearRate" + i;
+                  var LastYearRateText = "较去年" + i + "季度增长率";
+                  
+                <div field="@AnnualPlan" width="70" headeralign="center" align="right" datatype="currency">
+                    @PlanText</div>
+                <div field="@MarketPlan" width="85" headeralign="center" align="right" datatype="currency">
+                    @MarketText</div>
+                <div field="@CompleteCount" width="80" headeralign="center" align="right" datatype="currency">
+                    @CompleteCountText</div>
+                <div field="@LastYearCompleteCount" width="85" headeralign="center" align="right" datatype="currency">
+                    @LastYearCompleteCountText</div>
+                <div field="@LastYearRate" width="85" headeralign="center" align="right">
+                    @LastYearRateText</div>}
+            }
+        </div>
+    </div>
+</div>
+<script>
+    function cusTabSearch(tabData, normalSettings) {
+        var belongYear = 0;
+        for (var i = 0; i < tabData.length; i++) {
+            var tabDataInfo = tabData[i];
+            if (tabDataInfo.queryfield == "BelongYear") {
+                belongYear = tabDataInfo.value;
+                break;
+            }
+        }
+        var dataGrid = mini.get("dataGrid");
+        dataGrid.load({ Year: belongYear });
+    }
+</script>

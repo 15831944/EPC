@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = "XYChartZoom";
+}
+<script src="/CommonWebResource/CoreLib/HighCharts/highcharts.js" type="text/javascript"></script>
+<script src="/CommonWebResource/CoreLib/HighCharts/highcharts-3d.js" type="text/javascript"></script>
+<link href="/market/Scripts/Market.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+    .descDiv
+    {
+        width: 120px;
+        height: 20px;
+        text-align: right;
+        background-color: #eeeeee;
+        border-bottom: 1px #fff solid;
+    }
+    .valueDiv
+    {
+        line-height: 20px;
+        text-align: left;
+        padding-left: 10px;
+        margin: 0px;
+        table-layout: fixed;
+        background-color: #ffffff;
+        border-right: 1px #eeeeee solid;
+        border-bottom: 1px #eeeeee solid;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .titleDiv
+    {
+        height: 20px;
+        font-family: Microsoft YaHei, Arial, Helvetica, sans-serif;
+        padding: 0px 10px 0px 10px;
+        font-weight: bold;
+        font-size: 12px;
+        background: url(/market/Scripts/images/file_top_titlebg.gif) #eeeeee;
+        border-right: 1px #fff solid;
+        border-bottom: 1px #fff solid;
+        text-align: center;
+    }
+</style>
+<div class="file_search_bg" style="overflow: visible;">
+    &nbsp;部门&nbsp;<input class="mini-combobox" name="DeptID" style="width: 120px" valuefield="value" textfield="text" popupwidth="150"
+              value="@ViewBag.DefaultDeptID"  allowInput="false" data="ManufactureDept" onvaluechanged="UpdateYearOnYearChart()" />
+    &nbsp;年份
+    <input class="mini-combobox" name="BeginYear" style="width: 65px" valuefield="value" textfield="text"
+            value="@ViewBag.DefaultStartYear"   allowInput="false"  data="YearEnum" onvaluechanged="UpdateYearOnYearChart()" />&nbsp;
+    至
+    <input class="mini-combobox" name="EndYear" data="YearEnum" style="width: 65px" valuefield="value" textfield="text"
+             value="@ViewBag.DefaultEndYear"  allowInput="false"  onvaluechanged="UpdateYearOnYearChart()" />&nbsp;
+    月份
+    <input class="mini-combobox" name="BeginMonth" style="width: 50px" valuefield="value" textfield="text"
+        value="1" data="MonthEnum" allowinput="false" onvaluechanged="UpdateYearOnYearChart()" />
+    &nbsp;至&nbsp;
+    <input class="mini-combobox" name="EndMonth" style="width: 50px" valuefield="value" textfield="text"
+              value="@DateTime.Now.Month"  allowInput="false"  data="MonthEnum"  onvaluechanged="UpdateYearOnYearChart()" />
+    <input class="mini-combobox" name="yearOnYearAnlysisValue" style="width: 85px" valuefield="value" textfield="text"
+                data="AnlysisType" value="@Market.Logic.AnlysisType.ReceiptAmount" onvaluechanged="UpdateYearOnYearChart()" />
+</div>
+<div id="yearOnYearContainer">
+</div>
+<script type="text/javascript">
+var YearEnum=@Html.Raw(ViewBag.YearEnum);
+var MonthEnum=@Html.Raw(ViewBag.MonthEnum);
+@Html.GetEnum("System.ManufactureDept");
+@Html.GetEnum(typeof(Market.Logic.AnlysisType));
+var yearOnYearOption =  @Html.Raw(ViewBag.YearOnYearOptionOption)
+</script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        loadingChart("yearOnYearContainer", yearOnYearOption);
+    });
+
+    function UpdateYearOnYearChart() {
+        var queryData = {};
+        queryData["BeginYear"] = mini.getbyName("BeginYear").getValue();
+        queryData["EndYear"] = mini.getbyName("EndYear").getValue();
+        queryData["BeginMonth"] = mini.getbyName("BeginMonth").getValue();
+        queryData["EndMonth"] = mini.getbyName("EndMonth").getValue();
+        queryData["DeptID"] = mini.getbyName("DeptID").getValue();
+        queryData["DataType"] = mini.getbyName("yearOnYearAnlysisValue").getValue();
+        addExecuteParam("QueryData", mini.encode(queryData));
+        execute("GeXYChart", { showLoading: false, refresh: false, onComplete: function (data) {
+            loadingChart("yearOnYearContainer", data);
+        }, validateForm: false
+        });
+    }
+
+    function loadingChart(divID, option) {
+        $("#" + divID).highcharts(option);
+
+    }
+</script>

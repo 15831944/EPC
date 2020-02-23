@@ -1,0 +1,30 @@
+
+.mini-layout-split {
+    background-color: #f9f9f9
+}
+.mini-layout-region {
+	border: 1px solid #E7EAEE;}
+.mini-tabs-scrollCt {
+	border-bottom: solid 1px #e7eaee !important;}
+.mini-tabs-space {
+    border-bottom: solid 1px #e7eaee !important;
+}
+.mini-tabs-space2 {
+    border-bottom: solid 1px #e7eaee;
+}
+.mini-tab {
+	background-image: none;
+	background-color: #fff;
+    color: #333;
+    border-top: 0px solid #fff;
+	border-left: 0px solid #fff;
+	border-right: 0px solid #fff;
+	border-bottom: 1px solid #e7eaee;
+    color: black;
+    font: 10pt Tahoma;
+    padding: 6px 15px 7px 15px;
+}
+.mini-tab-active {
+    border-bottom: solid 2px #32558e;
+
+}

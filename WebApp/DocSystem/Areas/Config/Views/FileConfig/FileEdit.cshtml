@@ -1,0 +1,222 @@
+﻿@{
+    ViewBag.Title = "FileEdit";
+}
+<div class="mini-toolbar" id="btnDiv" style="width: 100%; position: fixed; top: 0;
+    left: 0; z-index: 100;">
+    <table>
+        <tr>
+            <td>
+                <a class="mini-button" id="btnSave" plain="true" iconcls="icon-save" onclick="save();">
+                    保存
+                </a> <a class="mini-button" id="btnCancel" plain="true" iconcls="icon-cancel" onclick="closeWindow()">
+                    取消
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+<form id="dataForm" method="post" style="top: 30px; position: relative;">
+    <input name="ID" class="mini-hidden" />
+    <input name="SpaceID" class="mini-hidden" />
+    <div class="formDiv">
+        <fieldset>
+            <legend>基本信息</legend>
+            <div style="padding-left: 20px; padding-top: 10px;">
+                <table width="100%" border="0" cellpadding="0" cellspacing="2">
+                    <tr>
+                        <td width="15%"></td>
+                        <td width="35%"></td>
+                        <td width="15%" align="left" style="padding-left: 20px"></td>
+                        <td width="35%"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            节点名称
+                        </td>
+                        <td colspan="3">
+                            <input name="Name" style="width: 100%" class="mini-textbox" required="true" vtype="maxLength:50" />
+                        </td>
+                        @*<td width="15%" align="left" style="padding-left: 20px">
+                                存储形式
+                            </td>
+                            <td width="35%">
+                                <input name='StorageType' class='mini-radiobuttonlist' style="width: 100%;" required='true' data='StorageType' onvaluechanged="onStorageTypeChanged" />
+                            </td>*@
+                    </tr>
+                    <tr>
+                        <td>
+                            是否借阅
+                        </td>
+                        <td>
+                            <input name='CanBorrow' class='mini-radiobuttonlist' style="width: 100%;" data='TrueFalse' onvaluechanged="onBorrowChanged" />
+                        </td>
+                        <td align="left" style="padding-left: 20px">
+                            借阅流程
+                        </td>
+                        <td>
+                            <input name='BorrowFlowKey' class='mini-combobox' style="width: 100%;" data='BorrowEnum' />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            是否下载
+                        </td>
+                        <td>
+                            <input name='CanDownload' class='mini-radiobuttonlist' style="width: 100%;" data='TrueFalse' onvaluechanged="onDownloadChanged" />
+                        </td>
+                        <td align="left" style="padding-left: 20px">
+                            下载流程
+                        </td>
+                        <td>
+                            <input name='DownloadFlowKey' class='mini-combobox' style="width: 100%;" shownullitem="true" data='DownloadEnum' />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            文件类别
+                        </td>
+                        <td>
+                            <input name="FileCategory" class="mini-combobox" style="width: 100%;" textfield="text"
+                                   valuefield="value" data="FileCategory" allowinput="false" required="true" />
+                        </td>
+                        <td align="left" style="padding-left: 20px">
+                            查询显示
+                        </td>
+                        <td>
+                            <input name='AllowDisplay' class='mini-radiobuttonlist' style="width: 100%;" data='TrueFalse' />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            快捷查询文字
+                        </td>
+                        <td colspan="3">
+                            <input name="QueryKeyText" style="width: 100%" class="mini-textbox" required="true"
+                                   vtype="maxLength:50" value="请输入编号或名称" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            前置条件
+                        </td>
+                        <td colspan="3">
+                            <input name="PreCondition" style="width: 100%" class="mini-textbox" vtype="maxLength:50" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            显示序号列
+                        </td>
+                        <td>
+                            <input name='IsShowIndex' class='mini-radiobuttonlist' style="width: 100%;" data='TrueFalse' />
+                        </td>
+                        <td align="left" style="padding-left: 20px">
+                            排序号
+                        </td>
+                        <td>
+                            <input name="SortIndex" style="width: 100%" class="mini-textbox" vtype="int" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>借阅下载车</legend>
+            <div>
+                <table>
+                    <tr class="hideRow">
+                        <td width="15%"></td>
+                        <td width="35%"></td>
+                        <td width="15%"></td>
+                        <td width="35%"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            名称显示全路径
+                        </td>
+                        <td>
+                            <input name='Ext_Car_UseFullName' class='mini-radiobuttonlist' style="width: 100%;" data='TrueFalse' />
+                        </td>
+                        <td align="left" style="padding-left: 20px">
+                            全路径分隔符
+                        </td>
+                        <td>
+                            <input name="Ext_Car_FullNameSplit" style="width: 100%" class="mini-textbox" vtype="maxLength:50" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            名称规则
+                        </td>
+                        <td>
+                            <input name="Ext_Car_NameFormat" style="width: 100%" class="mini-textbox" vtype="maxLength:50" />
+                        </td>
+                        <td colspan="2" style="padding-left: 20px"> 例如：“{FullName} > {Name}”<br />“{Name}（{FullName}）”</td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+</form>
+<script language="javascript" type="text/javascript">
+    @Html.GetEnum("System.TrueFalse")
+    @Html.GetEnum(typeof(DocSystem.Logic.FileCategory));
+    @Html.GetEnum("DocConst.BorrowDownFlowKey", "BorrowEnum", "Borrow");
+    @Html.GetEnum("DocConst.BorrowDownFlowKey", "DownloadEnum", "Download");
+    var StorageType = [{ value: "Elec", text: "电子档" }, { value: "Phyc", text: "实物案卷" }]
+</script>
+<script type="text/javascript">
+    function onFormSetData(data) {
+        if (data.ExtentionJson) {
+            var extData = mini.decode(data.ExtentionJson);
+            var form = new mini.Form("#dataForm");
+            form.setData(extData, false);
+        }
+        onStorageTypeChanged();
+    }
+
+    function onStorageTypeChanged() {
+        var StorageTypeCrl = mini.getbyName("StorageType")
+        if (StorageTypeCrl) {
+            var StorageType = StorageTypeCrl.getValue();
+            if (StorageType.indexOf("Elec") > -1) {
+                mini.getbyName("CanDownload").setEnabled(true);
+            }
+            else {
+                mini.getbyName("CanDownload").setValue("False");
+                mini.getbyName("CanDownload").setEnabled(false);
+            }
+            if (StorageType.indexOf("Phyc") > -1) {
+                mini.getbyName("CanBorrow").setEnabled(true);
+            }
+            else {
+                mini.getbyName("CanBorrow").setValue("False");
+                mini.getbyName("CanBorrow").setEnabled(false);
+            }
+        }
+        onDownloadChanged();
+        onBorrowChanged();
+    }
+
+    function onBorrowChanged() {
+        var value = mini.getbyName("CanBorrow").getValue();
+        if (value == "True") {
+            mini.getbyName("BorrowFlowKey").setEnabled(true);
+            mini.getbyName("BorrowFlowKey").setRequired(true);
+        }
+        else {
+            mini.getbyName("BorrowFlowKey").setValue("");
+            mini.getbyName("BorrowFlowKey").setEnabled(false);
+        }
+    }
+
+    function onDownloadChanged() {
+        var value = mini.getbyName("CanDownload").getValue();
+        if (value == "True") {
+            mini.getbyName("DownloadFlowKey").setEnabled(true);
+        }
+        else {
+            mini.getbyName("DownloadFlowKey").setValue("");
+            mini.getbyName("DownloadFlowKey").setEnabled(false);
+        }
+    }
+</script>

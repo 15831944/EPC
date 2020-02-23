@@ -1,0 +1,209 @@
+﻿@{
+    ViewBag.Title = "Edit";
+}
+<div class="mini-toolbar" id="btnDiv" style="width: 100%; position: fixed; top: 0;
+    left: 0; z-index: 100;">
+    <table>
+        <tr>
+            <td>
+                <a class="mini-button" id="btnSave" plain="true" iconcls="icon-save" onclick="save();">
+                    保存</a> <a class="mini-button" id="btnCancel" plain="true" iconcls="icon-cancel" onclick="closeWindow()">
+                        取消</a>
+            </td>
+            <td id="btnRight">
+                <a class="mini-button" id="btnHelp" onclick="showHelp()" iconcls="icon-help" plain="true">
+                    帮助</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<form id="dataForm" method="post" style="top: 30px; position: relative;">
+<input name="ID" class="mini-hidden" />
+    <div class="formDiv">
+        <h1 style="text-align: center">客户回访记录</h1>
+        <fieldset>
+            <legend>基本信息</legend>
+            <div>
+                <table>
+                    <tr class="hideRow">
+                        <td width="15%">
+                        </td>
+                        <td width="35%">
+                        </td>
+                        <td width="15%">
+                        </td>
+                        <td width="35%">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            回访主题
+                        </td>
+                        <td colspan="3">
+                            <input name="Name" class="mini-textbox" style="width: 100%" required="true" vtype="maxLength:200"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            登记人
+                        </td>
+                        <td>
+                            <input name="RegisterID" id="RegisterID" textname="Register" style="width: 100%"
+                                   class="mini-buttonedit"/>
+                        </td>
+                        <td style="padding-left: 20px;">
+                            登记日期
+                        </td>
+                        <td>
+                            <input name="RegisteDate" class="mini-datepicker" style="width: 100%"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            客户名称
+                        </td>
+                        <td colspan="3">
+                            <input name="CustomerID" id="CustomerID" textname="CustomerName" class="mini-buttonedit"
+                                   style="width: 100%" required="true" vtype="maxLength:200"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            拜访人员
+                        </td>
+                        <td>
+                            <input name="VisitManName" class="mini-textbox" style="width: 100%" vtype="maxLength:50"/>
+                        </td>
+                        <td style="padding-left: 20px;">
+                            部门
+                        </td>
+                        <td>
+                            <input name="DeptName" class="mini-textbox" style="width: 100%" vtype="maxLength:50"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            职务
+                        </td>
+                        <td>
+                            <input name="Duties" class="mini-textbox" style="width: 100%" vtype="maxLength:50"/>
+                        </td>
+                        <td style="padding-left: 20px;">
+                            回访人员
+                        </td>
+                        <td>
+                            <input name="ReturnVisitManID" id="ReturnVisitManID" textname="ReturnVisitManName"
+                                   style="width: 100%" class="mini-buttonedit"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            回访日期
+                        </td>
+                        <td>
+                            <input name="VisitDate" class="mini-datepicker" style="width: 100%" required="true"/>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            回访事务
+                        </td>
+                        <td colspan="3">
+                            <input name="Content" class="mini-textarea" style="width: 100%" required="true"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            回访纪要
+                        </td>
+                        <td colspan="3">
+                            <input name="Record" class="mini-textarea" style="width: 100%" required="true"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            相关资料
+                        </td>
+                        <td colspan="3">
+                            <span name="Attachment" class="mini-multifile" style="width: 100%"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            备注
+                        </td>
+                        <td colspan="3">
+                            <input name="Remark" class="mini-textarea" style="width: 100%"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+</form>
+<div id="helpWindow" class="mini-window" title="帮助" style="width: 700px; height: 230px;
+    display: none;" showmodel="true" allowresize="false" allowdrag="true">
+    <fieldset>
+        <legend style="font-weight: bold;">控件背景颜色说明</legend>
+        <table border="1" cellspacing="0" cellpadding="0" width="100%">
+            <tr>
+                <td width="12%" align="center" style="font-weight: bold;">
+                    标识颜色
+                </td>
+                <td width="15%" align="center" style="font-weight: bold;">
+                    标识说明
+                </td>
+                <td width="75%" align="center" style="font-weight: bold;">
+                    备注
+                </td>
+            </tr>
+            <tr>
+                <td style="background-color: #FFFACD;">
+                </td>
+                <td align="center">
+                    必填字段
+                </td>
+                <td>
+                    该颜色表示字段为必填字段，字段的值不可为空；
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset>
+        <legend style="font-weight: bold;">图标说明</legend>
+        <table border="1" cellspacing="0" cellpadding="0" width="100%">
+            <tr>
+                <td width="12%" align="center" style="font-weight: bold">
+                    按钮图标
+                </td>
+                <td width="15%" align="center" style="font-weight: bold">
+                    图标名称
+                </td>
+                <td width="73%" align="center" style="font-weight: bold">
+                    图标说明
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <img src="/CommonWebResource/Theme/Default/MiniUI/images/textbox/error.gif" title="警告" />
+                </td>
+                <td align="center">
+                    警告图标
+                </td>
+                <td>
+                    图标对应字段的值输入有误；
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</div>
+<script type="text/javascript">
+    addSingleUserSelector("ReturnVisitManID");
+    addSingleUserSelector("RegisterID");
+    addSelector("CustomerID", "../Selector/CustomerSingle", { relateField: "CustomerName" }); //客户
+    
+</script>

@@ -1,0 +1,161 @@
+﻿@{
+    ViewBag.Title = "DefineConfig";
+}
+
+<div id="mainLayout" class="mini-layout" style="width: 100%; height: 100%;">
+    <div title="center" region="center">
+        <div class="mini-toolbar" style="padding: 0px; border-left: 0; border-top: 0; border-right: 0;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        <a class="mini-button" iconcls="icon-save" onclick="save();" plain="true">保存</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="mini-fit">
+            <form id="dataForm">
+                <div class="formDiv">
+                    <input name="ID" class="mini-hidden" />
+                    <fieldset>
+                        <legend>基本信息</legend>
+                        <table>
+                            <tr class="hideRow">
+                                <td width="15%"></td>
+                                <td width="35%"></td>
+                                <td width="15%"></td>
+                                <td width="35%"></td>
+                            </tr>
+                            <tr>
+                                <td>名称</td>
+                                <td>
+                                    <input name="Name" style="width: 100%" class="mini-textbox" required="true" vtype="maxLength:500" />
+                                </td>
+                                <td style="padding-left:20px;">编号</td>
+                                <td>
+                                    <input name="Code" style="width: 100%" class="mini-textbox" required="true" vtype="maxLength:50" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>备注</td>
+                                <td colspan="3">
+                                    <input name="Remark" class="mini-textarea" style="width: 100%;height:100px;" vtype="maxLength:500" />
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset>
+                        <legend>参数数据源(@HR.Logic.Domain.S_W_DefineUserActualUnitPrice.ParamPre)</legend>
+                        <div>固定占位符：{@HR.Logic.Domain.S_W_DefineUserActualUnitPrice.BelongYear} 年份,{@HR.Logic.Domain.S_W_DefineUserActualUnitPrice.BelongMonth} 月份。</div>
+                        <table class="ke-zeroborder" style="width:100%;" cellpadding="2" border="0">
+                            <tr>
+                                <td>
+                                    <div class='mini-toolbar' style='height:25px;border-bottom: 0px;'>
+                                        <table>
+                                            <tr>
+                                                <td style='text-align:left;'>
+                                                    <a class="mini-button" iconcls="icon-add" onclick="addRow({}, { gridId: 'ParamSource' })" plain="true">增加</a>
+                                                    <a class="mini-button" iconcls="icon-remove" onclick="delRow({ gridId: 'ParamSource' })" plain="true">删除</a>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div id="ParamSource" url="" class="mini-datagrid" style="width: 100%; height: auto;" idfield="ID" multiselect="true" showpager="false"
+                                         allowcelledit='true' allowcellselect='true' showpager='false' allowunselect='false' sortmode='client' allowresize="false">
+                                        <div property="columns">
+                                            <div type="checkcolumn">
+                                            </div>
+                                            <div field="Code" width="150" headeralign="center" allowsort="true" align="left" vtype="required;">
+                                                编号<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div field="Name" width="150" headeralign="center" allowsort="true" align="left" vtype="required;">
+                                                名称<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                            </div>
+                                            <div type="comboboxcolumn" autoshowpopup="true" field="ConnName" width="200" headeralign="center" allowsort="false" align="center">
+                                                数据库链接<input property="editor" class="mini-combobox" valuefield="value" textfield="text" style="width:100%;" data="ConnEnum" />
+                                            </div>
+                                            <div field="SQL" width="*" headeralign="center" allowsort="true" vtype="required;">
+                                                SQL<input property="editor" class="mini-textarea" required="true"
+                                                          emptytext="查询结果必须包括人员ID(@HR.Logic.Domain.S_W_DefineUserActualUnitPrice.UserID)和计算参数(@HR.Logic.Domain.S_W_DefineUserActualUnitPrice.RelateValue),例如：select x as UserID, y as RelateValue..."
+                                                          allowinput="true" style="width:100%;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset>
+                        <legend>计算公式</legend>
+                        <input name="CalcFormula" class="mini-textarea" style="width: 100%;height:100px;" required="true" vtype="maxLength:500" />
+                    </fieldset>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum(typeof( Config.ConnEnum))
+    //var configID = getQueryString("ConfigID");
+    //var sqlCodeMirror
+    //function initialCodeMirror() {
+    //    sqlCodeMirror = CodeMirror.fromTextArea(document.getElementById('UserSQL'), {
+    //        mode: "text/sql",
+    //        lineNumbers: true,
+    //        styleActiveLine: true,
+    //        matchBrackets: true,
+    //        theme: "xq-light"
+
+    //    });
+    //    sqlCodeMirror.setSize('auto', '200px');
+    //}
+
+
+    //function pageLoad() {
+    //    //initialCodeMirror();
+    //    if (!configID) return;
+
+    //    addExecuteParam("ID", configID);
+    //    execute("GetDefineConfig", {
+    //        showLoading: true, refresh: false, onComplete: function (data) {
+    //            if (data) {
+    //                var form = new mini.Form("dataForm");
+    //                form.setData(data);
+    //                //sqlCodeMirror.setValue(data.UserSQL);
+    //                var paramSourceGrid = mini.get("ParamSource");
+    //                paramSourceGrid.clearRows();
+    //                if (data.ParamSource) {
+    //                    paramSourceGrid.setData(mini.decode(data.ParamSource));
+    //                }
+    //            }
+    //        }, validateForm: false
+    //    });
+    //}
+
+    //function saveConfig() {
+    //    var form = new mini.Form("dataForm");
+    //    form.validate();
+    //    if (form.isValid() == false) return;
+    //    var data = form.getData();
+
+    //    var paramSourceGrid = mini.get("ParamSource");
+    //    paramSourceGrid.commitEdit(); paramSourceGrid.accept();
+    //    paramSourceGrid.validate();
+    //    if (paramSourceGrid.isValid() == false) return;
+    //    data["ParamSource"] = mini.encode(paramSourceGrid.getData());
+
+    //    data["ID"] = configID;
+    //    addExecuteParam("FormData", data);
+    //    addExecuteParam("ID", configID);
+    //    execute("SaveDefineConfig", {
+    //        showLoading: true, refresh: false, onComplete: function (data) {
+    //            if (data) {
+    //                msgUI("保存成功！", 1, function () {
+    //                    closeWindow('true');
+    //                });
+    //            }
+    //        }, validateForm: false
+    //    });
+    //}
+</script>

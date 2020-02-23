@@ -1,0 +1,34 @@
+﻿@{
+    ViewBag.Title = "Edit";
+}
+<div id="formlayout" class="mini-layout" style="width: 100%; height: 100%;">
+    <div region="north" height="32" showspliticon="false" showheader="false" allowresize="false"
+        splitsize="0" style="border: 0;">
+    </div>
+    <div title="center" region="center" style="border: 0;">
+        @Html.Raw(ViewBag.FormHtml)
+    </div>
+</div>
+<script type="text/javascript">
+ @Html.GetEnum("DocSystem.CarrierType")
+</script>
+<script type="text/javascript">
+    @{
+    var enumList = ViewBag.Enums as List<string>;
+    foreach (var item in enumList)
+    {
+        @Html.GetEnum(item);
+    }
+}
+</script>
+<script type="text/javascript">
+
+    var spaceID = getQueryString("SpaceID");
+    var configID = getQueryString("ConfigID");
+    var nodeID = getQueryString("NodeID");
+    var requestData = { SpaceID: spaceID, ConfigID: configID };
+
+    mini.parse();
+    mini.getbyName("MainFile").setDownloadDisabled(true);
+    mini.getbyName("Attachments").setDownloadDisabled(true);
+</script>

@@ -1,0 +1,424 @@
+﻿@{
+    ViewBag.Title = "CustomizeAnalysisView";
+}
+
+<style>
+    .mini-list-inner div label {
+        /*width: 110px;*/
+    }
+</style>
+<div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">@Html.ExportButton()</td>
+            <td style="white-space: nowrap;">
+                 <input name='AnalysisUnit' class='mini-combobox' multiselect="false" data='' style="width:80px;display:none" onvaluechanged="thisSearch" value="" />
+                &nbsp;
+                统计维度：<input name='GroupField' class='mini-combobox' multiselect="false" data='GroupFieldType' style="width:100px" onvaluechanged="thisSearch" value="@ViewBag.DefautGroupField" />
+                &nbsp;
+                统计期间：<input name="Year" class="mini-combobox" style="width: 80px;" textfield="text" valuefield="value" value="@DateTime.Now.Year"
+                            data="YearEnum" allowinput="false" onvaluechanged="onDateValueChanged" />&nbsp;年
+                <input name="Quarter" class="mini-combobox" style="width: 50px;" textfield="text" valuefield="value" shownullitem="true" value="@((DateTime.Now.Month+2)/3)"
+                       data="Quarter" allowinput="false" onvaluechanged="onDateValueChanged" />&nbsp;季
+                <input name="Month" class="mini-combobox" style="width: 50px;" textfield="text" valuefield="value"  shownullitem="true" value="@DateTime.Now.Month"
+                       data="Month" allowinput="false" onvaluechanged="onDateValueChanged" />&nbsp;月
+                &nbsp;
+                统计数据：<input name='StatisticalDataType' style="display:inline-grid" class='mini-combobox' multiselect='true' onvaluechanged="dataTypeCheckValueChanged" data='StatisticalDataType' />
+                &nbsp;<span style=" font-weight:bolder;color:red; font-size:13px; padding-right:5px;"> 单位：元</span>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit">
+    <div id="dataGrid" url="GetCustomizeAnalysisList?BelongYear=@DateTime.Now.Year&BelongMonth=@DateTime.Now.Month&GroupField=@ViewBag.DefautGroupField" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID" multiselect="true"
+         sortmode="client" showpager="false" borderstyle="border-bottom:0px;" ondrawcell="ondrawcell" showsummaryrow='true' ondrawsummarycell='onDrawSummaryCell'>
+        <div property="columns">
+            <div type="indexcolumn">
+            </div>
+            <div field="BusinessType" name="BusinessType" width="100" headeralign="center" allowsort="false" align="center">
+                业务类型
+            </div>
+            <div field="Area" name="Area" width="100" headeralign="center" allowsort="false" align="center">
+                区域
+            </div>
+            <div header='合同额' field="Contract" headeralign='center'>
+                <div property='columns'>
+                    <div field='Contract_Current' width='100' allowsort='true' align='right' datatype='currency'>本期值</div>
+                    <div field='Contract_FinalTotal' width='100' allowsort='true' align='right' datatype='currency'>年末累计值</div>
+                    <div field='Contract_CurrentRate' width='100' allowsort='true' align='right'>本期占比（%）</div>
+                    <div field='Contract_CurrentYoY' width='100' allowsort='true' align='right'>本期同比（%）</div>
+                    <div field='Contract_CurrentRateTotal' width='100' allowsort='true' align='right'>累计占比（%）</div>
+                    <div field='Contract_CurrentYoYTotal' width='110' allowsort='true' align='right'>年末累计同比（%）</div>
+                </div>
+            </div>
+            <div header='收入' field="Income" headeralign='center'>
+                <div property='columns'>
+                    <div field='Income_Current' width='100' allowsort='true' align='right' datatype='currency'>本期值</div>
+                    <div field='Income_FinalTotal' width='100' allowsort='true' align='right' datatype='currency'>年末累计值</div>
+                    <div field='Income_CurrentRate' width='100' allowsort='true' align='right'>本期占比（%）</div>
+                    <div field='Income_CurrentYoY' width='100' allowsort='true' align='right'>本期同比（%）</div>
+                    <div field='Income_CurrentRateTotal' width='100' allowsort='true' align='right'>累计占比（%）</div>
+                    <div field='Income_CurrentYoYTotal' width='110' allowsort='true' align='right'>年末累计同比（%）</div>
+                </div>
+            </div>
+            <div header='开票' field="Invoice" headeralign='center'>
+                <div property='columns'>
+                    <div field='Invoice_Current' width='100' allowsort='true' align='right' datatype='currency'>本期值</div>
+                    <div field='Invoice_FinalTotal' width='100' allowsort='true' align='right' datatype='currency'>年末累计值</div>
+                    <div field='Invoice_CurrentRate' width='100' allowsort='true' align='right'>本期占比（%）</div>
+                    <div field='Invoice_CurrentYoY' width='100' allowsort='true' align='right'>本期同比（%）</div>
+                    <div field='Invoice_CurrentRateTotal' width='100' allowsort='true' align='right'>累计占比（%）</div>
+                    <div field='Invoice_CurrentYoYTotal' width='110' allowsort='true' align='right'>年末累计同比（%）</div>
+                </div>
+            </div>
+            <div header='到款' field="Receipt" headeralign='center'>
+                <div property='columns'>
+                    <div field='Receipt_Current' width='80' allowsort='true' align='right' datatype='currency'>本期值</div>
+                    <div field='Receipt_FinalTotal' width='80' allowsort='true' align='right' datatype='currency'>年末累计值</div>
+                    <div field='Receipt_CurrentRate' width='100' allowsort='true' align='right'>本期占比（%）</div>
+                    <div field='Receipt_CurrentYoY' width='100' allowsort='true' align='right'>本期同比（%）</div>
+                    <div field='Receipt_CurrentRateTotal' width='100' allowsort='true' align='right'>累计占比（%）</div>
+                    <div field='Receipt_CurrentYoYTotal' width='110' allowsort='true' align='right'>年末累计同比（%）</div>
+                </div>
+            </div>
+            <div header='成本' field="Cost" headeralign='center'>
+                <div property='columns'>
+                    <div field='Cost_Current' width='100' allowsort='true' align='right' datatype='currency'>本期值</div>
+                    <div field='Cost_FinalTotal' width='100' allowsort='true' align='right' datatype='currency'>年末累计值</div>
+                    <div field='Cost_CurrentRate' width='100' allowsort='true' align='right'>本期占比（%）</div>
+                    <div field='Cost_CurrentYoY' width='100' allowsort='true' align='right'>本期同比（%）</div>
+                    <div field='Cost_CurrentRateTotal' width='100' allowsort='true' align='right'>累计占比（%）</div>
+                    <div field='Cost_CurrentYoYTotal' width='110' allowsort='true' align='right'>年末累计同比（%）</div>
+                </div>
+            </div>
+            <div header='利润' field="Profit" headeralign='center'>
+                <div property='columns'>
+                    <div field='Profit_Current' width='100' allowsort='true' align='right' datatype='currency'>本期值</div>
+                    <div field='Profit_FinalTotal' width='100' allowsort='true' align='right' datatype='currency'>年末累计值</div>
+                    <div field='Profit_CurrentRate' width='100' allowsort='true' align='right'>本期占比（%）</div>
+                    <div field='Profit_CurrentYoY' width='100' allowsort='true' align='right'>本期同比（%）</div>
+                    <div field='Profit_CurrentRateTotal' width='100' allowsort='true' align='right'>累计占比（%）</div>
+                    <div field='Profit_CurrentYoYTotal' width='110' allowsort='true' align='right'>年末累计同比（%）</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var defaultGroupField = '@ViewBag.DefautGroupField'
+    @Html.GetEnum(typeof(Expenses.Areas.Report.Controllers.CustomizeReportController.GroupFieldType))
+    @Html.GetEnum("Market.BusinessType")
+    @Html.GetEnum("System.Province")
+    @Html.GetEnum("YearEnum")
+
+    var Quarter = [
+{ value: "1", text: "一" },
+{ value: "2", text: "二" },
+{ value: "3", text: "三" },
+{ value: "4", text: "四" }]
+
+    var Month = [
+{ value: "1", text: "一" },
+{ value: "2", text: "二" },
+{ value: "3", text: "三" },
+{ value: "4", text: "四" },
+{ value: "5", text: "五" },
+{ value: "6", text: "六" },
+{ value: "7", text: "七" },
+{ value: "8", text: "八" },
+{ value: "9", text: "九" },
+{ value: "10", text: "十" },
+{ value: "11", text: "十一" },
+{ value: "12", text: "十二" }]
+
+    var StatisticalDataType = [
+{ value: "Contract", text: "合同额" },
+{ value: "Income", text: "收入" },
+{ value: "Invoice", text: "开票" },
+{ value: "Receipt", text: "到款" }, { value: "Cost", text: "成本" }, { value: "Profit", text: "利润" }]
+
+    //addGridButton("dataGrid", "Contract_Current", {
+    //    onFilter:function(e)
+    //    {
+    //        return e.row.BusinessType !='总计' && e.row.Industry !='总计' && e.row.Area !='总计'
+    //    },
+    //    onButtonClick: function (row) {
+
+    //    }
+    //});
+
+
+
+
+</script>
+<script>
+    function pageLoad() {
+        mini.getbyName('StatisticalDataType').setValue(StatisticalDataType.map(function (v) { return v.value; }).join(','));
+        showGroupField(defaultGroupField);
+    }
+
+    function dataTypeCheckValueChanged(e) {
+        var dg = mini.get("dataGrid");
+        var valStr = mini.getbyName('StatisticalDataType').getValue();
+
+        $.each(dg.getColumns(), function (index, col) {
+            if (!col.columns || col.columns.length == 0) return true;
+
+            var pre = col.field.split('_')[0];
+            if (valStr.indexOf(pre) > -1) {
+                dg.showColumn(col);
+            }
+            else {
+                dg.hideColumn(col);
+            }
+        })
+    }
+
+    var firstQuarter = ['1', '2', '3'];
+    var secondQuarter = ['4', '5', '6'];
+    var thirdQuarter = ['7', '8', '9'];
+    var fourthQuarter = ['10', '11', '12'];
+
+    function onDateValueChanged(e) {
+        if (e.sender.name == 'Month') {
+            var val = mini.getbyName('Month').getValue();
+            if ($.inArray(val, firstQuarter) != -1)
+                mini.getbyName('Quarter').setValue('1');
+            else if ($.inArray(val, secondQuarter) != -1)
+                mini.getbyName('Quarter').setValue('2');
+            else if ($.inArray(val, thirdQuarter) != -1)
+                mini.getbyName('Quarter').setValue('3');
+            else if ($.inArray(val, fourthQuarter) != -1)
+                mini.getbyName('Quarter').setValue('4');
+        }
+        else if (e.sender.name == 'Quarter') {
+            mini.getbyName('Month').setValue('');
+        }
+        var year = mini.getbyName('Year').getValue();
+        var quarter = mini.getbyName('Quarter').getValue();
+        var month = mini.getbyName('Month').getValue();
+        thisSearch();
+    }
+
+    function thisSearch() {
+        var param =
+        {
+            BelongYear: mini.getbyName('Year').getValue(),
+            BelongQuarter: mini.getbyName('Quarter').getValue(),
+            BelongMonth: mini.getbyName('Month').getValue(),
+            GroupField: mini.getbyName('GroupField').getValue(),
+            //CbsDefineNodeID:cbsDefineNodeID
+            //ProjectClass: mini.getbyName('BusinessType').getValue(),
+            //Industry: mini.getbyName('Industry').getValue(),
+            //Province: mini.getbyName('Province').getValue()
+        }
+
+        showGroupField(param.GroupField);
+        var dg = mini.get("dataGrid");
+        var url = "GetCustomizeAnalysisList?";
+        url +="BelongYear="+param.BelongYear;
+        url += "&BelongQuarter="+param.BelongQuarter;
+        url += "&BelongMonth="+param.BelongMonth;
+        url += "&GroupField="+param.GroupField;
+        url += "&CbsDefineNodeID="+param.CbsDefineNodeID;
+
+
+        dg.setUrl(url);
+        dg.reload();
+
+    }
+
+
+    function showGroupField(fieldName) {
+        var dg = mini.get("dataGrid");
+        $.each(GroupFieldType, function (index, item) {
+            dg.hideColumn(dg.getColumn(item.value));
+
+            if (item.value == fieldName)
+                dg.showColumn(dg.getColumn(fieldName));
+        })
+    }
+  
+    function ondrawcell(e) {
+        //var record = e.record;
+        //var field = e.field;
+    }
+
+    var queryParamByDate = '';//本期
+    function createQueryParamByDate(row) {
+        queryParamByDate ='';
+        var GroupField=mini.getbyName('GroupField').getValue();
+        switch (GroupField) {
+            case 'BusinessType':
+                queryParamByDate += '&BusinessType=' + row['BusinessType'];
+                break;
+
+            case 'Area':
+                queryParamByDate += '&Area=' + row['Area'];
+                break;
+        }
+
+        var BelongYear=mini.getbyName('Year').getValue();
+        if (!BelongYear) return;
+        queryParamByDate += '&BelongYear=' + BelongYear;
+
+        var BelongQuarter=mini.getbyName('Quarter').getValue();
+        if (!BelongQuarter) return;
+        queryParamByDate += '&BelongQuarter=' + BelongQuarter;
+        
+        var BelongMonth=mini.getbyName('Month').getValue();
+        if (!BelongMonth) return;
+        queryParamByDate += '&BelongMonth=' + BelongMonth;
+
+    }
+
+    var queryParamByYear= '';//年末
+    function createQueryParamByYear(row) {
+        queryParamByYear ='';
+        var GroupField=mini.getbyName('GroupField').getValue();
+        switch (GroupField) {
+            case 'BusinessType':
+                queryParamByYear += '&BusinessType=' + row['BusinessType'];
+                break;
+
+            case 'Area':
+                queryParamByYear += '&Area=' + row['Area'];
+                break;
+        }
+
+        var BelongYear=mini.getbyName('Year').getValue();
+        if (!BelongYear) return;
+        queryParamByYear += '&BelongYear=' + BelongYear;
+    }
+    
+    //合同_本期
+    addGridButton("dataGrid", "Contract_Current", {
+        onButtonClick: function (row) {  
+            createQueryParamByDate(row);
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=ContractListForAnalysis' + queryParamByDate;
+            openWindow(url, {
+                width: 1000, title: '合同明细', onDestroy: function (data) {
+
+                }
+            });
+        },onFilter:function(e)
+        {
+            return e.row.BusinessType !='总计' && e.row.Area !='总计'
+        }
+    });    //合同_年末
+    addGridButton("dataGrid", "Contract_FinalTotal", {
+        onButtonClick: function (row) {
+            createQueryParamByYear(row);
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=ContractListForAnalysis' + queryParamByYear;
+            openWindow(url, {
+                width: 1000, title: '合同明细', onDestroy: function (data) {
+
+                }
+            });
+        },onFilter:function(e)
+        {
+            return e.row.BusinessType !='总计' && e.row.Area !='总计'
+        }
+    });        //开票_本期    addGridButton("dataGrid", "Invoice_Current", {
+        onButtonClick: function (row) {
+            createQueryParamByDate(row);
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=InvoiceListForAnalysis&FuncType=view' + queryParamByDate;
+            openWindow(url, {
+                width: 1000, title: '开票明细', onDestroy: function (data) {
+                }
+            });
+        },onFilter:function(e)
+        {
+            return e.row.BusinessType !='总计' && e.row.Area !='总计'
+        }
+    });    //开票_年末    addGridButton("dataGrid", "Invoice_FinalTotal", {
+        onButtonClick: function (row) {
+            createQueryParamByYear(row);
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=InvoiceListForAnalysis&FuncType=view' + queryParamByYear;
+            openWindow(url, {
+                width: 1000, title: '开票明细', onDestroy: function (data) {
+                }
+            });
+        },onFilter:function(e)
+        {
+            return e.row.BusinessType !='总计' && e.row.Area !='总计'
+        }
+    });    //到款_本期    addGridButton("dataGrid", "Receipt_Current", {
+        onButtonClick: function (row) {
+            createQueryParamByDate(row);
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=ReceiptListForAnalysis&FuncType=view' + queryParamByDate;
+            openWindow(url, {
+                width: 1000, title: '到款明细', onDestroy: function (data) {
+                }
+            });
+        },onFilter:function(e)
+        {
+            return e.row.BusinessType !='总计' && e.row.Area !='总计'
+        }
+    });    //到款_年末    addGridButton("dataGrid", "Receipt_FinalTotal", {
+        onButtonClick: function (row) {
+            createQueryParamByYear(row);
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=ReceiptListForAnalysis&FuncType=view' + queryParamByYear;
+            openWindow(url, {
+                width: 1000, title: '到款明细', onDestroy: function (data) {
+                }
+            });
+        },onFilter:function(e)
+        {
+            return e.row.BusinessType !='总计' && e.row.Area !='总计'
+        }
+    });    //收入_本期    addGridButton("dataGrid", "Income_Current", {
+        onButtonClick: function (row) {
+            createQueryParamByDate(row);
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=RevenueInfoDetail&FuncType=view' + queryParamByDate;
+            openWindow(url, {
+                width: 1000, title: '收入明细', onDestroy: function (data) {
+                }
+            });
+        },onFilter:function(e)
+        {
+            return e.row.BusinessType !='总计' && e.row.Area !='总计'
+        }
+    });    //收入_年末    addGridButton("dataGrid", "Income_FinalTotal", {
+        onButtonClick: function (row) {
+            createQueryParamByYear(row);
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=RevenueInfoDetail&FuncType=view' + queryParamByYear;
+            openWindow(url, {
+                width: 1000, title: '收入明细', onDestroy: function (data) {
+                }
+            });
+        },onFilter:function(e)
+        {
+            return e.row.BusinessType !='总计' && e.row.Area !='总计'
+        }
+    });
+    //成本_本期
+    addGridButton("dataGrid", "Cost_Current", {
+        onButtonClick: function (row) {
+            createQueryParamByDate(row);
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=CostInfoDetail&FuncType=view' + queryParamByDate;
+            openWindow(url, {
+                width: 1000, title: '成本明细', onDestroy: function (data) {
+
+                }
+            });
+        },onFilter:function(e)
+        {
+            return e.row.BusinessType !='总计' && e.row.Area !='总计'
+        }
+    });    //成本_年末
+    addGridButton("dataGrid", "Cost_FinalTotal", {
+        onButtonClick: function (row) {
+            createQueryParamByYear(row);
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=CostInfoDetail&FuncType=view' + queryParamByYear;
+            openWindow(url, {
+                width: 1000, title: '成本明细', onDestroy: function (data) {
+                }
+            });
+        },onFilter:function(e)
+        {
+            return e.row.BusinessType !='总计' && e.row.Area !='总计'
+        }
+    });
+
+</script>

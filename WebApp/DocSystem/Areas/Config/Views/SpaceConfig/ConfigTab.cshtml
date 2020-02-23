@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "ConfigTab";
+}
+    <div id="ConfigTab" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;"
+    maskonload="false">
+</div>
+<script type="text/javascript">
+    var ID = getQueryString("ID");
+
+
+    initTab();
+    function initTab() {
+        mini.parse();
+        var tabs = mini.get("ConfigTab");
+
+        var NodeListUrl = "/DocSystem/Config/NodeConfig/NodeList?SpaceID=" + ID;
+        var NodeListTab = { title: "节点定义", url: NodeListUrl, showCloseButton: false };
+        tabs.addTab(NodeListTab);
+        tabs.activeTab(NodeListTab);
+
+
+        var NodeStructConfigTab = { title: "结构定义", url: "/DocSystem/Config/NodeStructConfig/NodeStructConfig?SpaceID=" + ID, showCloseButton: false };
+        tabs.addTab(NodeStructConfigTab);
+
+        var FileListTab = { title: "文件定义", url: "/DocSystem/Config/FileConfig/FileList?SpaceID=" + ID, showCloseButton: false };
+        tabs.addTab(FileListTab);
+
+        var TreeConfigTab = { title: "树形定义", url: "/DocSystem/Config/TreeConfig/TreeConfig?SpaceID=" + ID, showCloseButton: false };
+        tabs.addTab(TreeConfigTab);
+
+        tabs.addTab({ title: "整编区定义", url: "/DocSystem/Config/ReorganizeConfig/Config?SpaceID=" + ID, showCloseButton: false });
+    }
+</script>

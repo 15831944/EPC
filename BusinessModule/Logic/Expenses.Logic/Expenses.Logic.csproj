@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7D4D8047-F4B1-4070-A1EC-5B56744F7007}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Expenses.Logic</RootNamespace>
+    <AssemblyName>Expenses.Logic</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Config.Logic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\BaseFrame\Resource\Dll\Config.Logic.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\BaseFrame\Resource\Dll\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Formula, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\BaseFrame\Resource\Dll\Formula.dll</HintPath>
+    </Reference>
+    <Reference Include="MvcAdapter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\BaseFrame\Resource\Dll\MvcAdapter.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\BaseFrame\Resource\Dll\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BusinessFacade\CaculateHelper.cs" />
+    <Compile Include="BusinessFacade\CBSInfoFO.cs" />
+    <Compile Include="BusinessFacade\CostFO.cs" />
+    <Compile Include="BusinessFacade\DataInterfaceFo.cs" />
+    <Compile Include="BusinessFacade\enums.cs" />
+    <Compile Include="BusinessFacade\HighChart\HighChartHelper.cs" />
+    <Compile Include="BusinessFacade\HighChart\PieChart\ColumnChart.cs" />
+    <Compile Include="BusinessFacade\HighChart\PieChart\PieChart.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\BaseChart.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\Chart.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\PlotOptions.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\Series.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\SubTitle.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\Title.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\ToolTip.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\xAxis.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\yAxis.cs" />
+    <Compile Include="BusinessFacade\IncomeFo.cs" />
+    <Compile Include="BusinessFacade\StringFuncFo.cs" />
+    <Compile Include="BusinessFacade\SysParams.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_WorkHourUserLog.cs" />
+    <Compile Include="Domain\Form\ProductionValue\S_EP_ProductionDeductionApply.cs" />
+    <Compile Include="Domain\Form\ProductionValue\S_EP_ProductionDistribute.cs" />
+    <Compile Include="Domain\Form\ProductionValue\S_EP_ProductionInput.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_DrawMoney.cs" />
+    <Compile Include="Domain\Form\Income\S_EP_IncomeInvoiceConfirmRevert.cs" />
+    <Compile Include="Domain\Form\Income\S_EP_IncomeSubmitRevert.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_IndirectExpenses.cs" />
+    <Compile Include="Domain\Form\ProductionValue\S_EP_ProductionBatchSettleApply.cs" />
+    <Compile Include="Domain\Form\ProductionValue\S_EP_ProductionProgressConfirmAdjustInfo.cs" />
+    <Compile Include="Domain\Form\ProductionValue\S_EP_ProductionSettleRevert.cs" />
+    <Compile Include="Domain\Form\ProductionValue\S_EP_ProductionProgressConfirm_DetailAdjustInfo.cs" />
+    <Compile Include="Domain\Form\ProductionValue\S_EP_ProductionSettleApply.cs" />
+    <Compile Include="Domain\Form\ProductionValue\S_EP_ProductionSettleRevertSingle.cs" />
+    <Compile Include="Domain\Form\ProductionValue\S_EP_ProductionSubsidyApply.cs" />
+    <Compile Include="Domain\Form\Income\S_EP_ProgressConfirmRevert.cs" />
+    <Compile Include="Domain\Form\Income\S_EP_IncomeInvoiceConfirm.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_SubContractProgressConfirm.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_SubContractSettlement.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_SubContractTask.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_SubContractTaskChange.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_SupplierContractConfirmRevert.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_Settlement.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_UserRefund.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_WorkHourDepartSubmit_WorkHourDetailLog.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_WorkHourSubmit_WorkHourDetailLog.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_WorkHourUser.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_WorkHourDepartSubmit.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_WorkHourDepartSubmitRevert.cs" />
+    <Compile Include="Domain\Form\Income\S_EP_InvoiceConfirm.cs" />
+    <Compile Include="Domain\Form\Income\S_EP_InvoiceConfirmRevert.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_SupplierContractConfirm.cs" />
+    <Compile Include="Domain\Infrastructure\S_EP_DefineApportion.cs" />
+    <Compile Include="Domain\Infrastructure\S_EP_DefineBudget.cs" />
+    <Compile Include="Domain\Infrastructure\S_EP_DefineIncome.cs" />
+    <Compile Include="Domain\Infrastructure\S_EP_DefineProduction.cs" />
+    <Compile Include="Domain\Infrastructure\S_EP_DefineSubject.cs" />
+    <Compile Include="Domain\BaseEPModel.cs" />
+    <Compile Include="Domain\Infrastructure\S_EP_DefineCBSInfo.cs" />
+    <Compile Include="Domain\Infrastructure\S_EP_DefineCBSNode.cs" />
+    <Compile Include="Domain\Form\S_EP_CBSInfoCancel.cs" />
+    <Compile Include="Domain\Form\S_EP_CBSInfoSchema_CBSNodeInfo.cs" />
+    <Compile Include="Domain\Instance\S_EP_CostInfo.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_CostApportion.cs" />
+    <Compile Include="Domain\Instance\S_EP_BudgetUnit.cs" />
+    <Compile Include="Domain\Form\Budget\S_EP_BudgetVersion.cs" />
+    <Compile Include="Domain\Form\Budget\S_EP_BudgetVersion_Detail.cs" />
+    <Compile Include="Domain\Instance\S_EP_CBSInfo.cs" />
+    <Compile Include="Domain\Form\S_EP_CBSInfoBuilder.cs" />
+    <Compile Include="Domain\Form\S_EP_CBSInfoSchema.cs" />
+    <Compile Include="Domain\Instance\S_EP_CBSNode.cs" />
+    <Compile Include="Domain\Form\Income\S_EP_IncomeSubmit.cs" />
+    <Compile Include="Domain\Instance\S_EP_IncomeUnit.cs" />
+    <Compile Include="Domain\Form\Income\S_EP_ProgressConfirm.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_ReimbursementApply.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_RevenueAdjustInfo.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_RevenueInfo.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_WorkHourSubmit.cs" />
+    <Compile Include="Domain\Form\Cost\S_EP_WorkHourSubmitRevert.cs" />
+    <Compile Include="Domain\Instance\S_EP_ProductionUnit.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\BaseLogic\Base.Logic\Base.Logic.csproj">
+      <Project>{ec8bb43b-4f2b-4e79-9be7-5521d4a86f62}</Project>
+      <Name>Base.Logic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BaseLogic\Base.Logic\Base.Logic.csproj">
+      <Project>{ec8bb43b-4f2b-4e79-9be7-5521d4a86f62}</Project>
+      <Name>Base.Logic</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Domain.partial\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

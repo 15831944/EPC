@@ -1,0 +1,69 @@
+﻿@{
+    ViewBag.Title = "NormalStateListForm";
+}
+<link type="text/css" rel="stylesheet" href="/Project/Scripts/Menu/Style.css" />
+
+<div id="menu_tab" style="width: 100%; height: 100%;overflow:hidden">
+    <div class="menu_tab_a_bg" style="height:23px">
+        <ul id="TabPlan" class="menu_tab_a">
+            <li style="cursor: pointer">
+                <a style="cursor: pointer" key="Node" class="current">项目及节点</a>
+            </li>
+            <li style="cursor: pointer">
+                <a style="cursor: pointer" key="File">文件资料</a>
+            </li>
+        </ul>
+    </div>
+    <div id="mainTab" class="mini-tabs" activeindex="0" style="width: 100%; height:calc(100% - 25px);" borderstyle="border:0;">
+        <div title="" showheader="false" headerstyle="display:none;">
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var ViewType = getQueryString("ViewType");
+    if (ViewType == "" || typeof ViewType == undefined || typeof ViewType == null)
+        ViewType = "";
+    if (ViewType.toLowerCase() == "node") {
+        $("#TabPlan").find("li:eq(1)").remove();
+        $("#TabPlan a").addClass("current");
+    }
+    else if (ViewType.toLowerCase() == "file") {
+        $("#TabPlan").find("li:eq(0)").remove();
+        $("#TabPlan a").addClass("current");
+    }
+
+    $("#TabPlan a").bind("click", function (e) {
+        $("#TabPlan a").removeClass("current");
+        key = $(e.target).attr("key");
+        jumpPage(key);
+        $(e.target).addClass("current");
+    });
+    var IsEdit = getQueryString("IsEdit");
+    function jumpPage(key) {
+        var url = '';
+        if (key == "Node")
+            url = "/DocSystem/Manager/NodeManager/Tag?SpaceID=" + getQueryString("SpaceID");
+        else
+            url = "/DocSystem/Manager/FileManager/Tag?SpaceID=" + getQueryString("SpaceID");
+        if (IsEdit != "true")
+            url += "&State=Normal";
+        loadTab(addUrlSearch(url));
+    }
+    function loadTab(url) {
+        var mainTabs = mini.get("mainTab");
+        var tab = mainTabs.getTabs()[0];
+        tab.url = url;
+        mainTabs.reloadTab(tab);
+        $(".current")
+    }
+    //初始化时显示的页面
+    function pageLoad() {
+        var key = $(".current").attr("key");
+        jumpPage(key);
+    }
+    //得到当前结点时file，还是node
+    function IsFileOrNode() {
+        return $(".current").attr("key");
+    }
+</script>

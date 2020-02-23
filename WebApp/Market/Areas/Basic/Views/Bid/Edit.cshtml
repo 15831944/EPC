@@ -1,0 +1,430 @@
+﻿@{
+    ViewBag.Title = "Edit";
+}
+<div class="mini-toolbar" id="btnDiv" style="width: 100%; position: fixed; top: 0;
+    left: 0; z-index: 100;">
+    <table>
+        <tr>
+            <td>
+                <a class="mini-button" id="btnSave" plain="true" iconcls="icon-save" onclick="SaveForm();">
+                    保存
+                </a> <a class="mini-button" id="btnCancel" plain="true" iconcls="icon-cancel" onclick="closeWindow()">
+                    取消
+                </a>
+            </td>
+            <td id="btnRight">
+                <a class="mini-button" id="btnHelp" onclick="showHelp()" iconcls="icon-help" plain="true">
+                    帮助
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+<form id="dataForm" method="post" style="top: 30px; position: relative;">
+    <input name="ID" class="mini-hidden" />
+    <div class="formDiv">
+        <fieldset>
+            <legend>项目信息</legend>
+            <div>
+                <table>
+                    <tr class="hideRow">
+                        <td width="15%"></td>
+                        <td width="35%"></td>
+                        <td width="15%"></td>
+                        <td width="35%"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            项目名称
+                        </td>
+                        <td colspan="3">
+                            <input name="ProjectName" style="width: 100%" class="mini-textbox" required="true"
+                                   vtype="maxLength:200" requirederrortext="项目名称不能为空" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            投标编号
+                        </td>
+                        <td>
+                            <input name="BidCode" style="width: 100%" class="mini-textbox" required="true" />
+                        </td>
+                        <td>
+                            投标阶段
+                        </td>
+                        <td>
+                            <input name="BidPhase" style="width: 100%" class="mini-textbox" required="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>关联工程</td>
+                        <td colspan="3">
+                            <input name="EngineeringInfo" textname="EngineeringInfoName" class="mini-buttonedit" style="width: 100%"
+                                   allowinput="false" vtype="maxLength:200" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            投标下达日期
+                        </td>
+                        <td>
+                            <input name="BidIssuedDate" class="mini-datepicker" style="width: 100%" />
+                        </td>
+                        <td>
+                            答疑截止时间
+                        </td>
+                        <td>
+                            <input name="CompetencyDate" class="mini-datepicker" style="width: 100%" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            招标编号
+                        </td>
+                        <td>
+                            <input name="TenderCode" style="width: 100%" class="mini-textbox" />
+                        </td>
+                        <td>
+                            招标单位
+                        </td>
+                        <td>
+                            <input name="TenderOrgan" style="width: 100%" class="mini-textbox" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            业务类别
+                        </td>
+                        <td>
+                            <input class="mini-combobox" name="BusinessClass" style="width: 100%;" valuefield="value"
+                                   textfield="text" data="BusinessType" shownullitem="true" required="true" />
+                        </td>
+                        <td>
+                            业主单位
+                        </td>
+                        <td>
+                            <input name="BusinessOwner" class="mini-textbox" style="width: 100%" vtype="maxLength:200" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            项目规模
+                        </td>
+                        <td>
+                            <input name="ProjectScale" class="mini-textbox" style="width: 100%" vtype="maxLength:50" />
+                        </td>
+                        <td>
+                            项目负责人
+                        </td>
+                        <td>
+                            <input name="ProjectMasterID" textname="ProjectMasterName" class="mini-buttonedit"
+                                   style="width: 100%" vtype="maxLength:50" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            承担项目设计所
+                        </td>
+                        <td>
+                            <input class="mini-combobox" name="DesignInstitute" style="width: 100%;" valuefield="value"
+                                   textfield="text" shownullitem="true" data="ManDept" />
+                        </td>
+                        <td>
+                            补偿费发票已开
+                        </td>
+                        <td>
+                            <input class="mini-combobox" name="ProvidedInvoice" style="width: 100%;" valuefield="value"
+                                   textfield="text" shownullitem="true" data="YesOrNo" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            邮政编码
+                        </td>
+                        <td>
+                            <input name="ZipCode" class="mini-textbox" style="width: 100%" rangelengtherrortext="字符长度必须是6"
+                                   vtype="float;rangeLength:6,6" />
+                        </td>
+                        <td>
+                            交标时间
+                        </td>
+                        <td>
+                            <input name="CompleteBidDate" class="mini-datepicker" style="width: 100%" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            详细地址
+                        </td>
+                        <td colspan="3">
+                            <input name="Address" style="width: 100%" class="mini-textbox" vtype="maxLength:200" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            备注
+                        </td>
+                        <td colspan="3">
+                            <input class="mini-textbox" name="Remarks" style="width: 100%;" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend style="font-weight: bold">过程信息</legend>
+            <table style="width: 100%">
+                <tr style="height: 0px">
+                    <td width="15%"></td>
+                    <td width="35%"></td>
+                    <td width="15%"></td>
+                    <td width="35%"></td>
+                </tr>
+                <tr>
+                    <td>
+                        招标代理机构
+                    </td>
+                    <td>
+                        <input name="BidSurrogateUnit" style="width: 100%" class="mini-textbox" vtype="maxLength:200" />
+                    </td>
+                    <td>
+                        交标地点
+                    </td>
+                    <td>
+                        <input name="BidAddress" style="width: 100%" class="mini-textbox" vtype="maxLength:200" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        投标保证金方式
+                    </td>
+                    <td>
+                        <input class="mini-combobox" name="BidType" style="width: 100%;" valuefield="value"
+                               textfield="text" data="BidType" shownullitem="true" />
+                    </td>
+                    <td>
+                        招标文售价(元)
+                    </td>
+                    <td>
+                        <input name="BidFilePrice" style="width: 100%" class="mini-textbox" vtype="float;rangeLength:0,18;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div id='toolbarEnsureAmounts' class='mini-toolbar' style='height: 25px; border-bottom: 0px;'>
+                            <table>
+                                <tr>
+                                    <td style='text-align: left;'>
+                                        <a class='mini-button' id='btnEnsureAmountsAdd' iconcls='icon-add' onclick='addRow({},{gridId:"EnsureAmounts",isLast:true});'
+                                           visible='true'>添加</a> <a class='mini-button' id='btnEnsureAmountsDelete' iconcls='icon-remove'
+                                                                    onclick='delRow({gridId:"EnsureAmounts"});' visible='true'>移除</a>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id='EnsureAmounts' multiselect='true' allowalternating='false' showsummaryrow='true'
+                             showindexcolumn='false' pagesize='50' style='width: 100%; height: 200px;' class='mini-datagrid'
+                             allowcellvalid='true' multiselect='true' allowcelledit='true' allowcellselect='true'
+                             showpager='false' allowunselect='false' url='GetEnsureAmounts' showmodified='false'>
+                            <div property='columns'>
+                                <div type='checkcolumn' width='20'>
+                                </div>
+                                <div field='EnsureAmount' header='保证金(元)' dateformat='yyyy-MM-dd' visible='true'
+                                     readonly='false' width='80' align='right' autoshowpopup='true' vtype="required;float;">
+                                    <input property='editor' class='mini-textbox' style='width: 100%' vtype="float;"
+                                           required="true" />
+                                </div>
+                                <div field='EnsureAmountIsReturn' header='是否归还' dateformat='yyyy-MM-dd' visible='true'
+                                     readonly='false' width='80' align='center' autoshowpopup='true'>
+                                    <input property='editor' class='mini-combobox' style='width: 100%' data="EnsureAmountIsReturn"
+                                           shownullitem="false" valuefield="value" textfield="text" />
+                                </div>
+                                <div field='EnsureAmountReturnDate' header='归还时间' dateformat='yyyy-MM-dd' visible='true'
+                                     width='100' align='center' autoshowpopup='true'>
+                                    <input property='editor' class='mini-datepicker' required='false' allowinput='true'
+                                           style='width: 100%;' />
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset>
+            <legend style="font-weight: bold">结果信息</legend>
+            <table style="width: 100%">
+                <tr style="height: 0px">
+                    <td width="15%"></td>
+                    <td width="35%"></td>
+                    <td width="15%"></td>
+                    <td width="35%"></td>
+                </tr>
+                <tr>
+                    <td>
+                        最后中标单位
+                    </td>
+                    <td colspan="3">
+                        <input name="ResultUnit" style="width: 100%" class="mini-textbox" vtype="maxLength:200" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        商务标金额(万元)
+                    </td>
+                    <td>
+                        <input name="TradeAmount" class="mini-textbox" style="width: 100%" vtype="float;rangeLength:0,18;" />
+                    </td>
+                    <td>
+                        商务标单价(元/M)
+                    </td>
+                    <td>
+                        <input name="TradeUnitAmount" class="mini-textbox" style="width: 100%" vtype="float;rangeLength:0,18;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        参加投标<br />
+                        单位情况
+                    </td>
+                    <td colspan="3">
+                        <input name="BidUntiRemark" class="mini-textarea" style="width: 100%" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        投标结果
+                    </td>
+                    <td colspan="3">
+                        <input name="BidResult" class="mini-textarea" style="width: 100%" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        是否中标
+                    </td>
+                    <td>
+                        <input class="mini-combobox" name="IsWinBid" style="width: 100%;" valuefield="value"
+                               textfield="text" data="IsWinBid" shownullitem="true" />
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset>
+            <legend style="font-weight: bold">招标资料</legend>
+            <table style="width: 100%">
+                <tr style="height: 0px">
+                    <td width="15%"></td>
+                    <td width="35%"></td>
+                    <td width="15%"></td>
+                    <td width="35%"></td>
+                </tr>
+                <tr>
+                    <td>
+                        招标文件
+                    </td>
+                    <td colspan="3">
+                        <span name="InviteBidFile" class="mini-multifile" style="width: 100%"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        招标过程<br />
+                        澄清文件
+                    </td>
+                    <td colspan="3">
+                        <span name="InviteBidClearFile" class="mini-multifile" style="width: 100%"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        招标其它文件
+                    </td>
+                    <td colspan="3">
+                        <span name="InviteBidOtherFile" class="mini-multifile" style="width: 100%"></span>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset>
+            <legend style="font-weight: bold">投标资料</legend>
+            <table style="width: 100%">
+                <tr style="height: 0px">
+                    <td width="15%"></td>
+                    <td width="35%"></td>
+                    <td width="15%"></td>
+                    <td width="35%"></td>
+                </tr>
+                <tr>
+                    <td>
+                        投标文件
+                    </td>
+                    <td colspan="3">
+                        <span name="BidFile" class="mini-multifile" style="width: 100%"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        投标过程<br />
+                        澄清文件
+                    </td>
+                    <td colspan="3">
+                        <span name="BidClearFile" class="mini-multifile" style="width: 100%"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        投标其它文件
+                    </td>
+                    <td colspan="3">
+                        <span name="BidOtherFile" class="mini-multifile" style="width: 100%"></span>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+</form>
+<script type="text/javascript">
+    @Html.GetEnum("Market.PreProjectDesignPhase")
+    @Html.GetEnum("Market.BidType")
+    @Html.GetEnum("Market.EnsureAmountIsReturn")
+    @Html.GetEnum("Market.IsWinBid")
+    @Html.GetEnum("System.ManDept")
+    @Html.GetEnum("Market.YesOrNo")
+    @Html.GetEnum("Market.BusinessType")
+
+</script>
+<script type="text/javascript">
+
+    addSingleUserSelector("ProjectMasterID");
+    addSelector("EngineeringInfo", "/MvcConfig/UI/List/PageView?TmplCode=EngineeringInfoSelector", { returnParams: "value:ID,text:Name" });
+
+    function SaveForm() {
+        var subGrid = mini.get("EnsureAmounts");
+        var subData = subGrid.getData();
+        addExecuteParam("formID", formData.ID)
+        addExecuteParam("subData", subData)
+        execute("SaveForm", {
+            actionTile: '保存', onComplete: function () {
+                msgUI("保存成功！", 4, function (action) {
+                    if (action == "ok") {
+                        closeWindow();
+                    }
+                });
+            }
+        });
+    }
+
+    function moveUp(gridId) {
+        var dataGrid = mini.get(gridId);
+        var rows = dataGrid.getSelecteds();
+        dataGrid.moveUp(rows);
+    }
+
+    function moveDown(gridId) {
+        var dataGrid = mini.get(gridId);
+        var rows = dataGrid.getSelecteds();
+        dataGrid.moveDown(rows);
+    }
+
+</script>

@@ -1,0 +1,5 @@
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\WorkflowScheduleJob\WebAPIKit\bin\Debug\Common.WebAPIKit.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\WorkflowScheduleJob\WebAPIKit\bin\Debug\Common.WebAPIKit.pdb
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\WorkflowScheduleJob\WebAPIKit\bin\Debug\Newtonsoft.Json.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\WorkflowScheduleJob\WebAPIKit\obj\Debug\Common.WebAPIKit.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\WorkflowScheduleJob\WebAPIKit\obj\Debug\Common.WebAPIKit.pdb

@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "NodeStructConfig";
+}
+<div class="mini-fit">
+    <ul id="mytree" url="GetTree" class="mini-tree" style="width: 100%; height: 100%;"
+        showtreeicon="true" textfield="Name" idfield="ID" enablehottrack="false" parentfield="ParentID"
+        resultastree="false" expandonload="4" contextmenu="#treeMenu">
+    </ul>
+</div>
+<ul id="treeMenu" class="mini-contextmenu" onbeforeopen="onBeforeOpen">
+    <li name="add" iconcls="icon-add" onclick="add();">添加</li>
+    <li name="remove" iconcls="icon-remove" onclick="treedelete();">删除</li>
+</ul>
+<script type="text/javascript">
+    function onBeforeOpen(e) {
+        var menu = e.sender;
+        var tree = mini.get("mytree");
+        var node = tree.getSelectedNode();
+        if (!node) {
+            e.cancel = true;
+            return;
+        }
+        var addItem = mini.getbyName("add", menu);
+        var removeItem = mini.getbyName("remove", menu);
+        addItem.show(); removeItem.show();
+        if (node.NodeID == "Root") {
+            removeItem.hide();
+        }
+        if (node.IsFreeNode == "True")
+            addItem.hide();
+    }
+    function add() {
+        var SpaceID = getQueryString("SpaceID");
+        var node = mini.get("mytree").getSelectedNode();
+        openWindow("/DocSystem/Config/NodeStructConfig/NodeStructEdit?ParentID=" + node.ID + "&SpaceID={SpaceID}", { refresh: false, title: "结构配置编辑", width: 400, height: 300,
+            onDestroy: function (data) {
+                if (data == "close" || !data) return;
+                addExecuteParam("ParentID", node.ID);
+                addExecuteParam("SpaceID", SpaceID);
+                addExecuteParam("NodeTypeCode", data.value);
+                addExecuteParam("NodeTypeName", data.text);
+                execute("Save", { showLoading: true, onComplete: function (data) {
+                    mini.get("mytree").reload();
+                }
+                })
+            }
+        }
+                );
+
+    }
+
+    function treedelete() {
+        msgUI("你确认删除选中的记录吗？", 2, function (result) {
+            if (result != "ok")
+                return;
+            var tree = mini.get("mytree");
+            var node = tree.getSelectedNode();
+            if (!node) return;
+            addExecuteParam("ListIDs", node.ID);
+            execute("Delete", { validateForm: false, showLoading: true, refresh: false, onComplete: function (data) {
+                mini.get("mytree").reload();
+            }
+            })
+        })
+    }
+</script>

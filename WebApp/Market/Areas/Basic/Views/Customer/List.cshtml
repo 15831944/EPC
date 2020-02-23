@@ -1,0 +1,211 @@
+﻿@{
+    ViewBag.Title = "List";
+}
+<div class="mini-toolbar" style="border-bottom: 0;">
+    <table>
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" iconcls="icon-add" id="btnAdd" onclick="add({height: '90%',width: '80%'});"
+                    plain="true">增加</a> <a class="mini-button" id="btnEdit" iconcls="icon-edit" onclick="edit({height: '90%',width:'80%'});"
+                        plain="true">编辑</a> <a class="mini-button" id="btnDelete" iconcls="icon-remove" onclick="del()"
+                            plain="true">删除</a>
+                @Html.ExportButton()
+            </td>
+            <td style="white-space: nowrap;">
+                分组：
+                <input class="mini-combobox" id="cbGroupType" style="width: 90px;" valuefield="value"
+                    textfield="text" data="groupType" onvaluechanged="groupTypeChanged()" value="NoGroup" />
+                <span class="separator"></span>
+                <input class="mini-buttonedit searchbox" id="key" emptytext="请输入客户名称或编号" style="width: 200px;"
+                    onenter="quickSearch('Name,Code');" onbuttonclick="quickSearch('Name,Code');" />
+                <a class="mini-button" onclick="showWindow('queryWindow')" iconcls="icon-find" plain="true">
+                    详细查询</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit">
+    <div id="dataGrid" class="mini-datagrid" idfield="ID" url="GetList" style="width: 100%;
+        height: 100%;" allowmovecolumn="false" pagesize="20" ondrawgroup="onDrawGroup"
+        virtualscroll="true" multiselect="true">
+        <div property="columns">
+            <div type="checkcolumn">
+            </div>
+            <div field="LastContactDate" headeralign="center" width="90" allowsort="true" align="center"
+                dateformat="yyyy-MM-dd">
+                最近联系日期</div>
+            <div field="Code" headeralign="center" width="100" allowsort="true" align="center">
+                客户编号</div>
+            <div field="Name" width="240" headeralign="center" renderer="onLinkRender" allowsort="true"
+                align="left">
+                客户名称</div>
+            <div field="Industry" headeralign="center" align="center" width="110" allowsort="true">
+                所属行业</div>
+            <div field="Province" headeralign="center" align="center" width="80" allowsort="true">
+                所在省份</div>
+            <div field="City" headeralign="center" align="center" width="80" allowsort="true">
+                所在城市</div>
+            <div field="Address" headeralign="center" width="200" allowsort="true" align="left">
+                联系地址</div>
+            <div field="IsImportantCustomer" width="80" headeralign="center" allowsort="true"
+                align="center">
+                是否重点客户</div>
+        </div>
+    </div>
+</div>
+<div id="queryWindow" class="mini-window" title="详细查询" style="width: 690px; height: 250px;"
+    showmodal="true" allowresize="false" allowdrag="true">
+    <div class="queryDiv">
+        <form id="queryForm" method="post">
+        <table>
+            <tr>
+                <td width="10%" align="center">
+                    客户编号
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$Code" style="width: 75%;" class="mini-textbox" />
+                </td>
+                <td width="10%" align="center">
+                    客户名称
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$Name" class="mini-textbox" style="width: 75%" />
+                </td>
+            </tr>
+            <tr>
+                <td width="10%" align="center">
+                    所属行业
+                </td>
+                <td width="23%" align="left">
+                    <input class="mini-combobox" name="$EQ$Industry" style="width: 75%;" valuefield="value"
+                        textfield="text" data="Industry" shownullitem="true" popupwidth="150" />
+                </td>
+                <td width="12%" align="center">
+                    是否重点客户
+                </td>
+                <td width="23%" align="left">
+                    <input class="mini-combobox" name="$EQ$IsImportantCustomer" style="width: 75%;" valuefield="value"
+                        textfield="text" data="YesOrNo" shownullitem="true" />
+                </td>
+            </tr>
+            <tr>
+                <td width="10%" align="center">
+                    省份
+                </td>
+                <td width="23%" align="left">
+                    <input class="mini-combobox" name="$EQ$Province" id="Province" style="width: 75%;"
+                        valuefield="value" textfield="text" shownullitem="true" data="Province" onvaluechanged="ProvinceChanged"
+                        popupwidth="130px" />
+                </td>
+                <td width="10%" align="center">
+                    城市
+                </td>
+                <td width="23%" align="left">
+                    <input class="mini-combobox" name="$EQ$City" id="City" style="width: 75%;" valuefield="value"
+                        textfield="text" shownullitem="true" popupwidth="140px" />
+                </td>
+            </tr>
+            <tr>
+                <td width="10%" align="center">
+                    区域
+                </td>
+                <td width="23%" align="left">
+                    <input class="mini-combobox" name="$EQ$Area" id="Area" style="width: 75%;" valuefield="value"
+                        textfield="text" shownullitem="true" data="Area" popupwidth="140px" />
+                </td>
+            </tr>
+        </table>
+        </form>
+        <div>
+            <a class="mini-button" onclick="search()" iconcls="icon-find" style="margin-right: 20px;">
+                查询</a> <a class="mini-button" onclick="clearQueryForm('queryForm')" iconcls="icon-undo">
+                    清空</a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    @Html.GetEnum("Market.CreditGrade")
+    @Html.GetEnum("Market.Industry")
+    @Html.GetEnum("System.Country")
+    @Html.GetEnum(typeof(Market.Logic.YesOrNo))
+    @Html.GetEnum("Market.ContactType")
+    @Html.GetEnum("System.Area");
+    @Html.GetEnum("System.Province");
+    @Html.GetBasicInfo(true, false, false, true);
+</script>
+<script type="text/javascript">
+
+    var groupType = [{ value: "Industry", text: "所属行业" },
+    { value: "Province", text: "所在省份" },
+    { value: "IsImportantCustomer", text: "是否重点客户" },
+    { value: "NoGroup", text: "不分组"}];
+
+    //为Grid枚举列指定枚举定义
+    addGridEnum("dataGrid", "Industry", "Industry");
+    addGridEnum("dataGrid", "Country", "Country");
+    addGridEnum("dataGrid", "Province", "Province");
+    addGridEnum("dataGrid", "CreditGrade", "CreditGrade");
+    addGridEnum("dataGrid", "IsImportantCustomer", "YesOrNo");
+    addGridEnum("dataGrid", "IsCooperated", "YesOrNo");
+    //注册Grid链接列
+    addGridLink('dataGrid', 'Name', 'Index?ID={ID}', { funcType: 'view', height: '90%', width: '80%', title: '查看客户信息'
+    });
+    /******************省份城市***************************/
+
+
+    //省份改变
+    function ProvinceChanged() {
+        var value = mini.get("Province").getValue();
+
+        //省份值为空时，城市值置空。
+        if (value == "" || value == null || value == undefined) {
+            mini.get("City").setValue("");
+        }
+        //重置城市数据源
+        mini.get("City").setUrl("/Market/Common/GetCityEnum?Province=" + escape(value));
+    }
+
+    function groupTypeChanged() {
+        var grid = mini.get("dataGrid");
+        var value = mini.get("cbGroupType").value;
+
+        if (value == "Industry") {
+            grid.groupBy("Industry", "");
+        } else if (value == "Province") {
+            grid.groupBy("Province", "");
+        } else if (value == "IsImportantCustomer") {
+            grid.groupBy("IsImportantCustomer", "");
+        } else if (value == "NoGroup") {
+            grid.clearGroup();
+        }
+        grid.collapseGroups();
+    }
+
+    function onDrawGroup(e) {
+        var grid = mini.get("dataGrid");
+        var value = mini.get("cbGroupType").value;
+        var text = getEText(e.value, Industry);
+        var type = "";
+        if (value == "Industry") {
+            type = "所属行业：" + getEText(e.value, Industry);
+        } else if (value == "Province") {
+            type = "所在省份：" + getEText(e.value, Province);
+        }
+        else if (value == "IsImportantCustomer") {
+            type = "是否重点客户：" + getEText(e.value, YesOrNo);
+        }
+        e.cellHtml = type + "<font style='color:#FF4500' > (" + e.rows.length + ")</font>";
+    }
+    function getEText(value, enumDef) {
+        var txt = "";
+        $.each(enumDef, function (key, item) {
+            if (item.value == value) {
+                txt = item.text;
+                return false;
+            }
+        });
+        return txt;
+    }
+
+</script>

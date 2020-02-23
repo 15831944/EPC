@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<link href="/market/Scripts/Market.css" rel="stylesheet" type="text/css" />
+<div class="menu_tab_a_bg">
+    <ul class="menu_tab_a">
+        <li>
+            <a target="content" href="/Market/Analysis/MainChart/MainChart">经营总览</a>
+        </li>
+        <li>
+            <a target="content" href="/Market/Analysis/CustomerChart/CustomerAnalysis">重点客户</a>
+        </li>
+        <li>
+            <a target="content" href="/Market/Analysis/ContractAnalysis/ContractAnalysisChart/">重点合同</a>
+        </li>
+        @*<li>
+            <a target="content" href="/Market/Analysis/MainChart/">报表中心</a>
+        </li>*@
+    </ul>
+</div>
+<div style="overflow: hidden;" class="mini-fit" style="width: 100%;">
+    <iframe id="content" name="content" src="" scrolling="no" width="100%" height="100%" frameborder="no">
+    </iframe>
+</div>
+<script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+        $("a").bind("click", function (e) {
+            var url = e.srcElement.href;
+            if ($("#content").attr("src") != url) {
+                $("#content").attr("src", url);
+                //设置背景颜色
+                for (var i = 0, len = $("a").length; i < len; i++) {
+                    if ($("a")[i].href == url)
+                        $("a")[i].className = "current";
+                    else
+                        $("a")[i].className = "";
+                }
+            }
+            return false;
+        });
+        $("a")[0].click(); //默认触发.
+    });
+</script>

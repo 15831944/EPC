@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "历史版本";
+}
+<div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+            </td>
+            <td style="white-space: nowrap;">
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit" style="height: 100px;">
+    <div id="dataGrid" url="GetVersionList" class="mini-datagrid" style="width: 100%;
+        height: 100%;" idfield="Version" multiselect="false" sortfield="Version" sortorder="desc">
+        <div property="columns">
+            <div field="BelongYear" width="100" headeralign="center" align="center" allowsort="true">
+                年度</div>
+            <div field="Version" width="*" headeralign="center" align="center" allowsort="true">
+                版本号</div>
+            <div field="CreateDate" width="150" headeralign="center" dateformat="yyyy-MM-dd"
+                allowsort="true" align="center">
+                版本时间</div>
+            <div field="CurrentVersion" width="150" headeralign="center" align="center" allowsort="true">
+                是否有效版本</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+   @Html.GetEnum(typeof(Market.Logic.YesOrNo))
+</script>
+<script type="text/javascript">
+    addGridEnum("dataGrid", "CurrentVersion", "YesOrNo");
+    var indicatorType = getQueryString("IndicatorType");
+    if (indicatorType == "@Market.Logic.IndicatorType.YearIndicator") {
+        addGridLink("dataGrid", "Version", "YearHistory?Version={Version}&Year={BelongYear}&IndicatorType=" + indicatorType + "", { title: '历史版本信息', height: "90%", width: "90%" })
+    } else if (indicatorType == "@Market.Logic.IndicatorType.QuarterIndicator") {
+        addGridLink("dataGrid", "Version", "QuarterHistory?Version={Version}&Year={BelongYear}&IndicatorType=" + indicatorType + "", { title: '历史版本信息', height: "90%", width: "90%" })
+    } else if (indicatorType == "@Market.Logic.IndicatorType.MonthIndicator") {
+        addGridLink("dataGrid", "Version", "MonthHistory?Version={Version}&Year={BelongYear}&IndicatorType=" + indicatorType + "", { title: '历史版本信息', height: "90%", width: "90%" })
+    }
+</script>

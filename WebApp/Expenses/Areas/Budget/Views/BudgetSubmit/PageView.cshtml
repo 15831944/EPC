@@ -1,0 +1,1286 @@
+﻿@section scripts{
+    <script type="text/javascript" charset="utf-8" src="/UEditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/UEditor/ueditor.all.js"> </script>
+    <script type="text/javascript" charset="utf-8" src="/UEditor/lang/zh-cn/zh-cn.js"></script>
+}
+
+
+
+<div class="mini-fit" style="padding-top: 5px;">
+    <div id="mainTab" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;">
+        <div title="预算审批表">
+            @if (string.IsNullOrEmpty(Request["IsPreView"]) && string.IsNullOrEmpty(Request["FlowCode"]) && string.IsNullOrEmpty(Request["TaskExecID"]) && (string.IsNullOrEmpty(Request["FuncType"]) || Request["FuncType"].ToLower() != "view"))
+            {
+                <div style='width: 100%; height: 28px;'>
+                </div>
+            }
+            else if ((!string.IsNullOrEmpty(Request["FlowCode"]) || !string.IsNullOrEmpty(Request["TaskExecID"])) && System.Configuration.ConfigurationManager.AppSettings["showCommentPosition"].ToLower() == "true")
+            {
+                <div style='width: 100%; height: 28px;'>
+                </div>
+            }
+            <form id="dataForm" method="post" align="center" autogetdata="false">
+                <input name="ID" class="mini-hidden" />
+                @Html.Raw(ViewBag.HiddenHtml)
+                <div class="formDiv" style="background-color: #fff;">
+                    @Html.Raw(ViewBag.FormHtml)
+                </div>
+                @if (System.Configuration.ConfigurationManager.AppSettings["showFlowComments"] == "True" && (!string.IsNullOrEmpty(Request["TaskExecID"]) || !string.IsNullOrEmpty(Request["FlowCode"])))
+                {
+                    <div class="flow-msg">
+                        <fieldset class="formDiv">
+                            @if (Formula.FormulaHelper.GetCurrentLGID() == "EN")
+                            {
+                                <legend>Operation Information</legend>
+                            }
+                            else
+                            {
+                                <legend>操作信息</legend>
+                            }
+                            <div id="comment">
+                            </div>
+                        </fieldset>
+                    </div>
+                    <br />
+                    <br />
+                    <script type="text/javascript">
+                        function onCommentLoad(e) {
+                            if (e.data.length == 0)
+                                $("#commentGrid").hide();
+                        }
+                    </script>
+                }
+            </form>
+            @if (!string.IsNullOrEmpty(Request["IsPreView"]))
+            {
+            }
+            else if (!string.IsNullOrEmpty(Request["FlowCode"]) || !string.IsNullOrEmpty(Request["TaskExecID"]) || (!string.IsNullOrEmpty(Request["FuncType"]) && Request["FuncType"].ToLower() == "view"))
+            {
+                @Html.GetFlowbar()
+            }
+            else
+            {
+                <div class="mini-toolbar" id="btnDiv" style="width: 100%; position: fixed; top: 0;
+        left: 0; z-index: 100;">
+                    <table>
+                        <tr>
+                            <td>
+                                @if (Formula.FormulaHelper.GetCurrentLGID() == "EN")
+                                {
+                                    <a id="btnSave" class="mini-button" plain="true" iconcls="icon-save" onclick="save();">
+                                        Save
+                                    </a> <a id="btnCancel" class="mini-button" plain="true" iconcls="icon-cancel" onclick="closeWindow()">
+                                        Cancel
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a id="btnSave" class="mini-button" plain="true" iconcls="icon-save" onclick="save();">
+                                        保存
+                                    </a> <a id="btnCancel" class="mini-button" plain="true" iconcls="icon-cancel" onclick="closeWindow()">
+                                        取消
+                                    </a>
+                                }
+                            </td>
+                            <td id="btnRight">
+                                <a class='mini-button' onclick='showHelp()' iconcls='icon-help' plain='true'>帮助</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            }
+        </div>
+
+        @{
+            if (ViewBag.Tabs.ToString().Contains(Expenses.Logic.SubjectType.DirectCost.ToString()))
+            {
+                <div title="直接费明细">
+                    @if (!ViewBag.FlowEnd)
+                    {
+                        <div class="mini-toolbar" style="padding: 2px; border-bottom: 0;" id="DirectCostBar" name="DirectCostBar">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 100%;">
+                                        <a class="mini-button" iconcls="icon-add" onclick="addNode('DirectCostTree','','true')" plain="true">增加</a>
+                                        <a class="mini-button" iconcls="icon-remove" onclick="delNode('DirectCostTree')" plain="true">删除</a>
+                                    </td>
+                                    <td style="white-space: nowrap;"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    }
+                    <div class="mini-fit">
+                        <div id="DirectCostTree" class="mini-treegrid" style="width:100%;height:100%;" url="GetDirectCostList?VersionID=@ViewBag.FormID" showtreeicon="true"
+                             treecolumn="Name" idfield="CBSID" parentfield="CBSParentID" resultastree="false" allowresize="false" fitcolumns="false" iconfield="NodeType"
+                             multiselect="true" expandonload="true" allowcelledit="true" allowcellselect="true" editnextonenterkey="true" editnextrowcell="true"
+                             allowdrag="true" allowdrop="true" allowleafdropin="true" ongivefeedback="onGiveFeedback" ondrop="onNodeDrop"
+                             allowcellwrap="true" oncellbeginedit="onDetailBeginEdit" oncellendedit="onDetailEndEdit" ondrawcell="onDrawingCell">
+                            <div property="columns">
+                                <div type="checkcolumn"></div>
+                                <div name="SqueNo" field="SqueNo" width="40" headeralign="center" align="center">
+                                    序号 <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div name="Name" field="Name" width="300" headeralign="center">
+                                    名称 <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="Quantity" width="80" headeralign="center" align="right" vtype="float">
+                                    数量<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="UnitPrice" numberformat="#,0.00" width="120" headeralign="center" align="right" vtype="float">
+                                    单价（元）<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="TotalValue" numberformat="#,0.00" width="120" headeralign="center" align="right" vtype="float">
+                                    合价（元）<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="Remark" width="200" headeralign="center">
+                                    备注<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            if (ViewBag.Tabs.ToString().Contains(Expenses.Logic.SubjectType.InDirectCost.ToString()))
+            {
+                <div title="间接费明细">
+                    @if (!ViewBag.FlowEnd)
+                    {
+                        <div class="mini-toolbar" style="padding: 2px; border-bottom: 0;" id="InDirectCostBar" name="InDirectCostBar">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 100%;">
+                                        <a class="mini-button" iconcls="icon-add" onclick="addNode('InDirectCostTree','','true')" plain="true">增加</a>
+                                        <a class="mini-button" iconcls="icon-remove" onclick="delNode('InDirectCostTree')" plain="true">删除</a>
+                                        <a class="mini-button" iconcls="icon-edit" onclick="saveNode('InDirectCostTree')" plain="true">保存</a>
+                                    </td>
+                                    <td style="white-space: nowrap;"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    }
+                    <div class="mini-fit">
+                        <div id="InDirectCostTree" class="mini-treegrid" style="width:100%;height:100%;" url="GetInDirectCostList?VersionID=@ViewBag.FormID" showtreeicon="true"
+                             treecolumn="Name" idfield="CBSID" parentfield="CBSParentID" resultastree="false" allowresize="false" fitcolumns="false" iconfield="NodeType"
+                             multiselect="true" expandonload="true" allowcelledit="true" allowcellselect="true" editnextonenterkey="true" editnextrowcell="true"
+                             allowdrag="true" allowdrop="true" allowleafdropin="true" ongivefeedback="onGiveFeedback" ondrop="onNodeDrop"
+                             allowcellwrap="true" oncellbeginedit="onDetailBeginEdit" oncellendedit="onDetailEndEdit" ondrawcell="onDrawingCell">
+                            <div property="columns">
+                                <div type="checkcolumn"></div>
+                                <div name="SqueNo" field="SqueNo" width="40" headeralign="center" align="center">
+                                    序号 <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div name="Name" field="Name" width="300" headeralign="center">
+                                    名称 <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="Quantity" width="80" headeralign="center" align="right" vtype="float">
+                                    数量<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="UnitPrice" numberformat="#,0.00" width="120" headeralign="center" align="right" vtype="float">
+                                    单价（元）<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="TotalValue" numberformat="#,0.00" width="120" headeralign="center" align="right" vtype="float">
+                                    合价（元）<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="Remark" width="200" headeralign="center">
+                                    备注<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            if (ViewBag.Tabs.ToString().Contains(Expenses.Logic.SubjectType.HRCost.ToString()))
+            {
+                <div title="人工费明细">
+                    @if (!ViewBag.FlowEnd)
+                    {
+                        <div class="mini-toolbar" style="padding: 2px; border-bottom: 0;" id="HRCostToolBar" name="HRCostToolBar">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 100%;">
+                                        @*<a class="mini-button" iconcls="icon-excel" onclick="importExcel" plain="true">Excel导入</a>*@
+                                        <a class="mini-button" iconcls="icon-add" onclick="importResource" plain="true">从资源库导入</a>
+                                        <a class="mini-button" iconcls="icon-add" onclick="addNode('HRCostTree','','true')" plain="true">增加</a>
+                                        <a class="mini-button" iconcls="icon-remove" onclick="delNode('HRCostTree')" plain="true">删除</a>
+                                        <a class="mini-button" iconcls="icon-edit" onclick="saveNode('HRCostTree')" plain="true">保存</a>
+                                    </td>
+                                    <td style="white-space: nowrap;"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    }
+
+                    <div class="mini-fit">
+                        <div id="HRCostTree" class="mini-treegrid" style="width:100%;height:100%;" url="GetHRCostList?VersionID=@ViewBag.FormID" showtreeicon="true"
+                             treecolumn="Name" idfield="CBSID" parentfield="CBSParentID" resultastree="false" allowresize="false" fitcolumns="false" iconfield="NodeType"
+                             multiselect="true" expandonload="true" allowcelledit="true" allowcellselect="true" editnextonenterkey="true" editnextrowcell="true"
+                             allowdrag="true" allowdrop="true" allowleafdropin="true" ongivefeedback="onGiveFeedback" ondrop="onNodeDrop"
+                             allowcellwrap="true" oncellbeginedit="onDetailBeginEdit" oncellendedit="onDetailEndEdit" ondrawcell="onDrawingCell">
+                            <div property="columns">
+                                <div type="checkcolumn"></div>
+                                <div type="indexcolumn" name="index"></div>
+                                <div name="Name" field="Name" width="300" headeralign="center">
+                                    名称 <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="Quantity" width="80" headeralign="center" align="right" vtype="float">
+                                    数量<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="UnitPrice" numberformat="#,0.00" width="120" headeralign="center" align="right" vtype="float">
+                                    单价（元）<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="TotalValue" numberformat="#,0.00" width="120" headeralign="center" align="right" vtype="float">
+                                    合价（元）<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="Remark" width="200" headeralign="center">
+                                    备注<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            if (ViewBag.Tabs.ToString().Contains(Expenses.Logic.SubjectType.SubContractCost.ToString()))
+            {
+                <div title="采购分包明细">
+                    @if (!ViewBag.FlowEnd)
+                    {
+                        <div class="mini-toolbar" style="padding: 2px; border-bottom: 0;" id="SubcontractToolBar" name="SubcontractToolBar">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 100%;">
+                                        <a class="mini-button" iconcls="icon-add" onclick="addNode('SubcontractTree','','true')" plain="true">增加</a>
+                                        <a class="mini-button" iconcls="icon-remove" onclick="delNode('SubcontractTree')" plain="true">删除</a>
+                                        <a class="mini-button" iconcls="icon-edit" onclick="saveNode('SubcontractTree')" plain="true">保存</a>
+                                    </td>
+                                    <td style="white-space: nowrap;"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    }
+                    <div class="mini-fit">
+                        <div id="SubcontractTree" class="mini-treegrid" style="width:100%;height:100%;" url="GetSubcontractList?VersionID=@ViewBag.FormID" showtreeicon="true"
+                             treecolumn="Name" idfield="CBSID" parentfield="CBSParentID" resultastree="false" allowresize="false" fitcolumns="false" iconfield="NodeType"
+                             multiselect="true" expandonload="true" allowcelledit="true" allowcellselect="true" editnextonenterkey="true" editnextrowcell="true"
+                             allowdrag="true" allowdrop="true" allowleafdropin="true" ongivefeedback="onGiveFeedback" ondrop="onNodeDrop"
+                             allowcellwrap="true" oncellbeginedit="onDetailBeginEdit" oncellendedit="onDetailEndEdit" ondrawcell="onDrawingCell">
+                            <div property="columns">
+                                <div type="checkcolumn"></div>
+                                <div name="SqueNo" field="SqueNo" width="40" headeralign="center" align="center">
+                                    序号 <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div name="Name" field="Name" width="300" headeralign="center">
+                                    名称 <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="Quantity" width="80" headeralign="center" align="right" vtype="float">
+                                    数量<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="UnitPrice" numberformat="#,0.00" width="120" headeralign="center" align="right" vtype="float">
+                                    单价（元）<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="TotalValue" numberformat="#,0.00" width="120" headeralign="center" align="right" vtype="float">
+                                    合价（元）<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="Remark" width="200" headeralign="center">
+                                    备注<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    @Html.Raw(ViewBag.DataSource);
+    var formData=@Html.Raw(ViewBag.FormData);
+    var fieldInfo=@Html.Raw(ViewBag.FieldInfo);
+    var position = '@System.Configuration.ConfigurationManager.AppSettings["showCommentPosition"]';
+    @Html.Raw(ViewBag.Script)
+</script>
+@{
+    if (ViewBag.VirtualScroll == "true")
+    {
+        <style type="text/css">
+            .mini-grid-cell {
+                padding-left: 4px;
+                padding-right: 2px;
+                padding-top: 0px;
+                padding-bottom: 0px;
+                border-right: #ececec 1px solid;
+            }
+        </style>
+    }
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var tip = new mini.ToolTip();
+        tip.set({
+            target: document,
+            selector: '[data-tooltip]'
+        });
+
+
+        var form = new mini.Form("dataForm");
+        form.setData(formData);
+        form.setChanged(false);
+
+        //UEditor控件
+        var arrTxtAreas = $("script.UEditor");
+        $.each(arrTxtAreas, function (i, obj) {
+            var name=$(obj).attr("name");
+            UE.getEditor(name).addListener('ready', function (editor) {
+                UE.getEditor(name).setContent(formData[name], false);//Content
+            });
+        });
+
+        //将地址栏参数赋值给form的空值隐藏控件
+        $("form .mini-hidden").each(function () {
+            var name = $(this).attr("name");
+            if (hasQueryString(name)) {
+                var field = mini.getbyName(name);
+                if (field.getValue() == "")
+                    field.setValue(getQueryString(name));
+            }
+        });
+
+        //大字段赋值给Grid
+        $("form .mini-datagrid").each(function () {
+            var id = $(this).attr("id");
+            if ((formData || 0)[id] != undefined)
+                mini.get(id).setData(mini.decode(formData[id]));
+        });
+
+        var _returnForm = null;
+        //调用界面上的onFormSetValue方法
+        if (typeof (onFormSetData) != "undefined")
+            _returnForm = onFormSetData(formData);
+
+        //流程：加载FlowBar
+        var flowMenubar = mini.get("flowMenubar");
+        if (flowMenubar != undefined) {
+            flowLoadMenubar(_returnForm);
+        }
+
+
+    });
+
+</script>
+<script type="text/javascript">
+    function onSummaryRenderer(e) {
+        var title = "";
+        switch (e.column.summaryType) {
+            case "count":
+                title = "总数：";
+                break;
+            case "max":
+                title = "最大：";
+                break;
+            case "min":
+                title = "最小：";
+                break;
+            case "sum":
+                title = "总计：";
+                break;
+            case "avg":
+                title = "平均：";
+                break;
+        }
+        e.cellHtml = "<div style='width:100%;text-align:right;'>" + title + (e.cellHtml.toFixed ? e.cellHtml.toFixed(2) : e.cellHtml) + "</div>";
+        return e.cellHtml;
+    }
+
+</script>
+<script type="text/javascript">
+    addMultiUserSelector("ReceiverIDs");
+    $("table").css("border-collapse", "collapse");
+
+
+    var showType = [{ text: "显示全部", value: "All" }, { text: "仅显示差异", value: "Diff" }, { text: "仅显示最新", value: "New" }];
+    executeParamSettings.resetFormData=false;
+
+    function onBeforeOpen(e) {
+        var dataTree = mini.get("Detail");
+        var menu = e.sender;
+        var node = dataTree.getSelectedNode();
+        if (!node || formData.FlowPhase == "End") {
+            e.cancel = true;
+            //阻止浏览器默认右键菜单
+            e.htmlEvent.preventDefault();
+            return;
+        }
+        else if (node.AllowEdit == "0" && node.AllowAddChild == "0" && node.AllowDelete == "0" && node.CustomEdit != "True") {
+            e.cancel = true;
+            e.htmlEvent.preventDefault();
+            return;
+        }
+        else if (node.NodeType == "Detail") {
+            e.cancel = true;
+            e.htmlEvent.preventDefault();
+            return;
+        }
+        var addItem = mini.getbyName("add", menu);
+        var removeItem = mini.getbyName("remove", menu);
+        var revertItem = mini.getbyName("revert", menu);
+        var addChildItem = mini.getbyName("addChild", menu);
+        var sumChildrenItem = mini.getbyName("sumChildren", menu);
+        addItem.hide();
+        removeItem.hide();
+        revertItem.hide();
+        addChildItem.hide();
+        sumChildrenItem.hide();
+        if (node.AllowDelete == "1") {
+            removeItem.show();
+        }
+        if (node.AllowAddChild == "1") {
+            addChildItem.show();
+        }
+        var parent = getParent(dataTree, node);
+        if (parent && parent.AllowAddChild == "1") {
+            addItem.show();
+        }
+        if(!parent){
+            addItem.show();
+        }
+        if (node.CustomEdit == "True") {
+            sumChildrenItem.show();
+        }
+    }
+
+    var budgetBasisValue=0;
+    var isFirstVersion =true;
+    function onFormSetData(data) {
+        var dataTree = mini.get("Detail");
+        if(dataTree&&data.Detail){
+            dataTree.loadList(mini.decode(data.Detail),"CBSID","CBSParentID");
+        }
+        if(data.VersionNumber&&data.VersionNumber=="1"){
+            dataTree.hideColumn("LastVersionValue");
+            dataTree.hideColumn("AdjustValue");
+            dataTree.hideColumn("CostValue");
+            dataTree.hideColumn("CostScale");
+            isFirstVersion=true;
+        }
+        else{
+            dataTree.showColumn("LastVersionValue");
+            dataTree.showColumn("AdjustValue");
+            dataTree.showColumn("CostValue");
+            dataTree.showColumn("CostScale");
+            isFirstVersion=false;
+        }
+        budgetBasisValue =isNaN(parseFloat(formData.BudgetBasisValue))?0:parseFloat(formData.BudgetBasisValue);
+        if(mini.getbyName("ShowType"))
+        {
+            mini.getbyName("ShowType").setValue("New");
+        }
+    }
+
+
+    function validateLimited() {
+        var limitValue =0;var budgetValue=0;
+        if(mini.getbyName('BudgetValueLimit')){
+            var limitValue = parseFloat(mini.getbyName('BudgetValueLimit').getValue());
+            if(!isNaN(limitValue)){
+                if(mini.getbyName("BudgetValue")){
+                    budgetValue = parseFloat( mini.getbyName("BudgetValue").getValue());
+                    if(isNaN(budgetValue))budgetValue=0;
+                }
+                if(budgetValue > limitValue){
+                    msgUI("预算总额不能超过预算上限"+limitValue+"元");
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    function onFormSaving() {
+        if(!validateLimited())return false;
+        var dataTree = mini.get("Detail"); dataTree.commitEdit();dataTree.accept();
+        var nodes = dataTree.getList();
+        addExecuteParam("Detail", mini.encode(nodes));
+        return true;
+    }
+
+    function onFormSaved(data) {
+        var dataTree = mini.get("Detail");
+        dataTree.commitEdit();
+        dataTree.accept();
+        if( mini.get("HRCostTree"))
+        {
+            mini.get("HRCostTree").reload();
+        }
+        if( mini.get("DirectCostTree"))
+        {
+            mini.get("DirectCostTree").reload();
+        }
+        if( mini.get("InDirectCostTree"))
+        {
+            mini.get("InDirectCostTree").reload();
+        }
+        if( mini.get("SubcontractTree"))
+        {
+            mini.get("SubcontractTree").reload();
+        }
+    }
+
+    function onFormSubmitting() {
+        if(!validateLimited())return false;
+        var dataTree = mini.get("Detail");
+        dataTree.commitEdit();
+        var nodes = dataTree.getChanges();
+        addExecuteParam("Detail", mini.encode(nodes));
+        return true;
+    }
+
+    function onDrawingCell(e) {
+        var treeGrid = e.sender;
+        var record = e.record;
+        var column = e.column;
+        var field = e.field;
+        if (record.ModifyState == "Added") {
+            if (field == "Name") {
+                e.cellHtml = record.Name + "<img style=\"height:18px;float:right;\" src=\"/Expenses/Scripts/Common/new_red.png\" />";// record.Name + "new";
+            }
+            e.cellStyle = "background:#BBFFFF;";
+        }
+        else if (record.ModifyState == "Modified") {
+            if (field == "Name") {
+                e.cellHtml = '<span id="' + record.ID + '" class="showCellTooltip" data-placement="bottomleft">' + record.Name + '</span>';
+            }
+            e.cellStyle = " background: yellow;";
+        }
+        else if (record.ModifyState == "Removed") {
+            e.cellStyle = "background:url('/Expenses/Scripts/Common/red-line.jpg')  center ;color:#fff;";
+        }
+        if (record.NodeType != "Detail") {
+            e.cellStyle += "font-weight:bolder; ";
+        }
+        if (record.CustomEdit == "True" && record.NodeType != "Detail") {
+            e.cellStyle += "color:red;";
+        }
+        if(field == 'UnitPrice' && (!record.Quantity || record.Quantity == ''))
+        {
+            e.cellHtml = '';
+        }
+    }
+
+    function onShowTypeChanged(e) {
+        var tree = mini.get("Detail");
+        var showDiff = mini.getbyName("ShowType").getValue();
+        var showAll = mini.get("showAll").getValue();
+        tree.setUrl("GetVersionTreeList?VersionID="+formData.ID+"&showAll="+showAll+"&ShowType="+showDiff);
+    }
+
+    function onCheckBoxValueChanged(e) {
+        var tree = mini.get("Detail");
+        var showDiff = mini.getbyName("ShowType").getValue();
+        var showAll = mini.get("showAll").getValue();
+        tree.setUrl("GetVersionTreeList?VersionID="+formData.ID+"&showAll="+showAll+"&ShowType="+showDiff);
+    }
+
+    function onDrawSummaryCell(e) {
+        var result = e.result;
+        var grid = e.sender;
+        if(e.field=="TotalScale"){
+            var children =grid.getChildNodes(grid.getRootNode());
+            var sumScale=0;
+            for (var i = 0; i < children.length; i++) {
+                sumScale+=isNaN(parseFloat(children[i].TotalScale))?0:parseFloat(children[i].TotalScale);
+            }
+            e.cellHtml=mini.formatNumber(sumScale, "n") ;
+        }
+        else if(e.field=="TotalValue"){
+            var children =grid.getChildNodes(grid.getRootNode());
+            var sumTotalValue=0;
+            for (var i = 0; i < children.length; i++) {
+                sumTotalValue+=isNaN(parseFloat(children[i].TotalValue))?0:parseFloat(children[i].TotalValue);
+            }
+            e.cellHtml=mini.formatNumber(sumTotalValue, "n") ;
+        }
+        e.cellStyle = "text-align:right; color:Brown;";
+    }
+
+    var editableFields = "TotalValue,Remark";
+    var detailEditableFields = "Name,Quantity,TotalValue,UnitPrice,Remark";
+    var lastValue = 0;
+    var lastCellValue = 0;
+    function OnCellBeginEdit(e) {
+        var record = e.record, field = e.field;
+        if (record.NodeType == "Detail" && detailEditableFields.indexOf(field) < 0) {
+            e.cancel = true;
+        }
+        else if(record.ModifyState=="Removed"){
+            e.cancel = true;
+        }
+        else if (formData.FlowPhase == "End") {
+            e.cancel = true;
+        }
+        else {
+            if (record.AllowEdit == "0" && editableFields.indexOf(field) < 0)
+                e.cancel = true;
+        }
+        lastValue =isNaN( parseFloat(record["TotalValue"]))?0:parseFloat(record["TotalValue"]);
+        lastCellValue = e.value;
+    }
+
+    function onCellEndEdit(e) {
+        var sender = e.sender;
+        var record = e.record;
+        var lastVersion = isNaN(parseFloat(record.LastVersionValue))?0:parseFloat(record.LastVersionValue);
+        var column = e.column;
+        var field = e.field;
+        if(e.value == lastCellValue) return;
+
+        if (field == "Quantity" || field == "UnitPrice") {
+            var quantity = parseFloat(record.Quantity);
+            var unitPrice = parseFloat(record.UnitPrice);
+            if (!isNaN(quantity) && !isNaN(unitPrice)) {
+                var totalValue = (unitPrice * quantity).toFixed(2);
+                var totalScale =0;
+                if(budgetBasisValue!=0){
+                    totalScale =totalValue/budgetBasisValue*100;
+                }
+                var adjustValue=totalValue-lastVersion;
+                if(lastVersion!=totalValue){
+                    if(record.ModifyState=="Normal"){
+                        sender.updateRow(record, { TotalValue: totalValue,AdjustValue:adjustValue,TotalScale: totalScale.toFixed(2),ModifyState:"Modified" });
+                    }
+                    else{
+                        sender.updateRow(record, { TotalValue: totalValue,AdjustValue:adjustValue,TotalScale: totalScale.toFixed(2) });
+                    }
+                }
+                else{
+                    sender.updateRow(record, { TotalValue: totalValue,AdjustValue:adjustValue,TotalScale: totalScale.toFixed(2),ModifyState:"Normal"  });
+                }
+                if (lastValue != totalValue && (getChildren(sender, record).length > 0 || record.CalExpression)) {
+                    sender.updateRow(record, { CustomEdit: "True" });
+                }
+                sumTotalValue(sender, record);
+                CalExpression(sender);
+                setBudgetValue();
+            }
+        }
+        else if(field=="TotalScale"){
+            var totalScale = isNaN(parseFloat( e.value))?0:parseFloat(e.value);
+            var totalValue =budgetBasisValue*totalScale/100;
+            var adjustValue=totalValue-lastVersion;
+            if(lastVersion!=totalValue){
+                if(record.ModifyState=="Normal"){
+                    sender.updateRow(record, { TotalValue: totalValue,AdjustValue:adjustValue,ModifyState:"Modified" });
+                }
+                else{
+                    sender.updateRow(record, { TotalValue: totalValue,AdjustValue:adjustValue });
+                }
+            }
+            else{
+                sender.updateRow(record, { TotalValue: totalValue,AdjustValue:adjustValue,ModifyState:"Normal"  });
+            }
+            if (lastValue != totalValue && (getChildren(sender, record).length > 0 || record.CalExpression)) {
+                sender.updateRow(record, { CustomEdit: "True" });
+            }
+            sumTotalValue(sender, record,true);
+            CalExpression(sender);
+            setBudgetValue();
+        }
+        else if (field == "TotalValue") {
+            sumTotalValue(sender, record,true);
+            var totalValue = isNaN(parseFloat( e.value))?0:parseFloat(e.value);
+            var totalScale =0;
+            if(budgetBasisValue!=0){
+                totalScale =totalValue/budgetBasisValue*100;
+            }
+            var adjustValue=totalValue-lastVersion;
+            if(lastVersion!=totalValue){
+                if(record.ModifyState=="Normal"){
+                    sender.updateRow(record, { TotalScale: totalScale.toFixed(2),AdjustValue:adjustValue,ModifyState:"Modified" });
+                }
+                else{
+                    sender.updateRow(record, { TotalScale: totalScale.toFixed(2),AdjustValue:adjustValue, });
+                }
+            }
+            else{
+                sender.updateRow(record, { TotalScale: totalScale.toFixed(2),ModifyState:"Normal" });
+            }
+
+            var quantity = parseFloat(record.Quantity);
+            var unitPrice = 0;
+            if(isNaN(quantity)) quantity = 0;
+            if(quantity != 0) unitPrice = totalValue / quantity;
+            sender.updateRow(record, { UnitPrice: unitPrice.toFixed(2) });
+
+            if (lastValue != totalValue && (getChildren(sender, record).length > 0 || record.CalExpression)) {
+                sender.updateRow(record, { CustomEdit: "True" });
+            }
+            CalExpression(sender);
+            setBudgetValue();
+        }
+
+        lastValue = 0;
+    }
+
+    function onDetailEndEdit(e) {
+        var sender = e.sender;
+        var record = e.record;
+        var lastVersion = isNaN(parseFloat(record.LastVersionValue))?0:parseFloat(record.LastVersionValue);
+        var field = e.field;
+        lastValue = 0;
+        if (field == "Quantity" || field == "UnitPrice") {
+            var quantity = parseFloat(record.Quantity);
+            var unitPrice = parseFloat(record.UnitPrice);
+            if (!isNaN(quantity) && !isNaN(unitPrice)) {
+                var totalValue = (unitPrice * quantity).toFixed(2);
+                var totalScale =0;
+                if(budgetBasisValue!=0){
+                    totalScale =totalValue/budgetBasisValue*100;
+                }
+                var adjustValue=totalValue-lastVersion;
+                if(lastVersion!=totalValue){
+                    if(record.ModifyState=="Normal"){
+                        sender.updateRow(record, { TotalValue: totalValue,AdjustValue:adjustValue,TotalScale: totalScale.toFixed(2),ModifyState:"Modified" });
+                    }
+                    else{
+                        sender.updateRow(record, { TotalValue: totalValue,AdjustValue:adjustValue,TotalScale: totalScale.toFixed(2)});
+                    }
+                }
+                else{
+                    sender.updateRow(record, { TotalValue: totalValue,AdjustValue:adjustValue,TotalScale: totalScale.toFixed(2),ModifyState:"Normal"  });
+                }
+                sumTotalValue(sender, record);
+            }
+        }
+        else if (field == "TotalValue") {
+            sumTotalValue(sender, record,true);
+            var totalValue = isNaN(parseFloat( e.value))?0:parseFloat(e.value);
+            var totalScale =0;
+            if(budgetBasisValue!=0){
+                totalScale =totalValue/budgetBasisValue*100;
+            }
+            var adjustValue=totalValue-lastVersion;
+            if(lastVersion!=totalValue){
+                if(record.ModifyState=="Normal"){
+                    sender.updateRow(record, { TotalScale: totalScale.toFixed(2),AdjustValue:adjustValue,ModifyState:"Modified" });
+                }
+                else{
+                    sender.updateRow(record, { TotalScale: totalScale.toFixed(2),AdjustValue:adjustValue,});
+                }
+            }
+            else{
+                sender.updateRow(record, { TotalScale: totalScale.toFixed(2),AdjustValue:adjustValue,ModifyState:"Normal" });
+            }
+
+            var quantity = parseFloat(record.Quantity);
+            var unitPrice = 0;
+            if(isNaN(quantity)) quantity = 0;
+            if(quantity != 0) unitPrice = totalValue / quantity;
+            sender.updateRow(record, { UnitPrice: unitPrice.toFixed(2) });
+
+        }
+        lastValue = 0;
+    }
+
+    function onDetailBeginEdit(e) {
+        var record = e.record, field = e.field;
+        if (record.NodeType != "Detail") {
+            e.cancel = true;
+        }
+        else if (formData.FlowPhase == "End") {
+            e.cancel = true;
+        }
+        else if(record.ModifyState=="Removed"){
+            e.cancel = true;
+        }
+        lastValue = isNaN( parseFloat(record["TotalValue"]))?0:parseFloat(record["TotalValue"]);
+    }
+
+    function reloadForm() {
+        var showAllValue ="false"; var showTypeValue="New";
+        var showAll=mini.get("showAll");
+        var showType = mini.getbyName("ShowType");
+        if(showAll){
+            showAllValue = mini.get("showAll").getValue();
+        }
+        if(showType){
+            showTypeValue = showType.getValue();
+        }
+        addExecuteParam("ID", formData.ID);
+        addExecuteParam("showAll", showAllValue);
+        execute("ReloadForm", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                if (data&&data.formData) {
+                    var form = new mini.Form("dataForm");
+                    form.setData(data.formData);
+                    if(showAll){
+                        showAll.setValue(showAllValue);
+                    }
+                    if(showType){
+                        showType.setValue(showTypeValue);
+                    }
+                    var dataTree = mini.get("Detail");
+                    if( dataTree){
+                        dataTree.loadList(mini.decode(data.DetailList),"CBSID","CBSParentID");
+                    }
+                }
+            }, validateForm: false
+        });
+    }
+
+    function onAdd() {
+        var dataTree = mini.get("Detail");
+        var node = dataTree.getSelectedNode();
+        if (!node) {
+            return;
+        }
+        addExecuteParam("NodeID", node.ID);
+        addExecuteParam("AddMode", "After");
+        addExecuteParam("VersionID", formData.ID);
+        execute("AddVersionCBS", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                dataTree.addNode(data, "after", node);
+            }, validateForm: false
+        });
+    }
+
+    function onAddChild() {
+        var dataTree = mini.get("Detail");
+        var node = dataTree.getSelectedNode();
+        if (!node) {
+            return;
+        }
+        addExecuteParam("NodeID", node.ID);
+        addExecuteParam("AddMode", "AddChild");
+        addExecuteParam("VersionID", formData.ID);
+        execute("AddVersionCBS", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                dataTree.addNode(data, "add", node);
+            }, validateForm: false
+        });
+
+    }
+
+    function onRemove() {
+        var dataTree = mini.get("Detail");
+        var nodes = dataTree.getSelecteds();
+        if (nodes.length == 0) {
+            return;
+        }
+        msgUI("您确定要删除选中的内容吗？", 2, function (result) {
+            if (result != "ok") return;
+            addExecuteParam("ListData", mini.encode(nodes));
+            execute("DeleteNodes", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    for (var i = 0; i < nodes.length; i++) {
+                        if (nodes[i].ModifyState == "Add") {
+                            dataTree.removeNode(nodes[i]);
+                        }
+                        else {
+                            var showType = mini.getbyName("ShowType");
+                            if (!showType || showType.getValue() == "New") {
+                                dataTree.removeNode(nodes[i]);
+                            }
+                            else {
+                                dataTree.updateNode(nodes[i], { ModifyState: "Remove" });
+                            }
+                        }
+                        var parentNode = getParent(dataTree, nodes[i]);
+                        if (parentNode) {
+                            if (!parentNode.CustomEdit || parentNode.CustomEdit != "True") {
+                                var children = getChildren(dataTree, parentNode);
+                                var totalValue = 0;
+                                for (var m = 0; m < children.length; m++) {
+                                    var value = parseFloat(children[m].TotalValue);
+                                    if (isNaN(value)) {
+                                        value = 0;
+                                    }
+                                    totalValue += value;
+                                }
+                                if (totalValue == parentNode.LastVersionValue && parentNode.ModifyState == "Modify") {
+                                    dataTree.updateRow(parentNode, { TotalValue: totalValue, CustomEdit: "False", ModifyState: "Normal" });
+                                }
+                                else {
+                                    dataTree.updateRow(parentNode, { TotalValue: totalValue, CustomEdit: "False" });
+                                }
+                                sumTotalValue(dataTree, parentNode);
+                            }
+                        }
+                    }
+                    dataTree.accept();
+                }, validateForm: false
+            });
+        });
+    }
+
+    function importResource() {
+        var dataTree = mini.get("HRCostTree");
+        var node = dataTree.getSelectedNode();
+        var parentID = "";
+        if (node&&node.NodeType!="Detail") {
+            parentID = node.ID;
+        }
+        else {
+            var parentNode = dataTree.getRootNode()
+            parentID = parentNode.children[0].ID;
+            node = parentNode.children[0];
+        }
+        var url="/MvcConfig/UI/List/PageView?TmplCode=ResourcePriceSelector";
+        openWindow(url, { refresh: false, title: "资源等级选择", width: 700, height: 600,
+            onDestroy: function (data) {
+                if(!data||data.length==0||data=="close"){
+                    return;
+                }
+                addExecuteParam("VersionID", formData.ID);
+                addExecuteParam("ParentID", parentID);
+                addExecuteParam("ListData", mini.encode(data));
+                execute("ImportResource", { showLoading: true, refresh: false, onComplete: function (data) {
+                    if(data&&data.length>0){
+                        dataTree.addNodes(data,node);
+                    }
+                }, validateForm: false
+                });
+            }
+        });
+    }
+
+    function addNode(treeID, rootID) {
+        var dataTree = mini.get(treeID);
+        var node = dataTree.getSelectedNode();
+        var parentID = "";
+        if (node&&node.NodeType!="Detail") {
+            parentID = node.ID;
+        }
+        else {
+            var parentNode = dataTree.getRootNode()
+            parentID = parentNode.children[0].ID;
+            node = parentNode.children[0];
+        }
+        addExecuteParam("NodeID", parentID);
+        addExecuteParam("AddMode", "AddChild");
+        addExecuteParam("VersionID", formData.ID);
+        execute("AddVersionDetail", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                if (data) {
+                    dataTree.addNode(data, "add", node);
+                }
+            }, validateForm: false
+        });
+    }
+
+    function delNode(treeID) {
+        var dataTree = mini.get(treeID);
+        var nodes = dataTree.getSelecteds(); if (nodes.length == 0) { msgUI("请至少选择一个节点"); return; }
+        msgUI("删除该节点将会删除下级所有子节点，您确定需要删除吗？", 2, function (act) {
+            if (act == "ok") {
+                addExecuteParam("ListData", mini.encode(nodes));
+                execute("DeleteNodes", {
+                    showLoading: true, refresh: false, onComplete: function (data) {
+                        for (var i = 0; i < nodes.length; i++) {
+                            if (nodes[i].ModifyState == "Add") {
+                                dataTree.removeNode(nodes[i]);
+                            }
+                            else {
+                                var showType = mini.getbyName("ShowType");
+                                if (!showType || showType.getValue() == "New") {
+                                    dataTree.removeNode(nodes[i]);
+                                }
+                                else {
+                                    dataTree.updateNode(nodes[i], { ModifyState: "Remove" });
+                                }
+                            }
+                            var parentNode = getParent(dataTree, nodes[i]);
+                            if (parentNode) {
+                                if (!parentNode.CustomEdit || parentNode.CustomEdit != "True") {
+                                    var children = getChildren(dataTree, parentNode);
+                                    var totalValue = 0;
+                                    for (var m = 0; m < children.length; m++) {
+                                        var value = parseFloat(children[m].TotalValue);
+                                        if (isNaN(value)) {
+                                            value = 0;
+                                        }
+                                        totalValue += value;
+                                    }
+                                    if (totalValue == parentNode.LastVersionValue && parentNode.ModifyState == "Modify") {
+                                        dataTree.updateRow(parentNode, { TotalValue: totalValue, CustomEdit: "False", ModifyState: "Normal" });
+                                    }
+                                    else {
+                                        dataTree.updateRow(parentNode, { TotalValue: totalValue, CustomEdit: "False" });
+                                    }
+                                    sumTotalValue(dataTree, parentNode);
+                                }
+                            }
+                        }
+                        dataTree.accept();
+                    }, validateForm: false
+                });
+            }
+        });
+    }
+
+    function saveNode(treeID) {
+        var treeGrid = mini.get(treeID);
+        treeGrid.commitEdit(); treeGrid.accept();
+        var nodes = treeGrid.getList();
+        if (nodes.length == 0)
+            return;
+        treeGrid.validate();
+        if (treeGrid.isValid() == false) {
+            var error = treeGrid.getCellErrors()[0];
+            var txt = error.errorText;
+            if (error.column.header)
+                txt = error.column.header + "：" + txt;
+            msgUI(txt, 1);
+            return;
+        }
+        addExecuteParam("NodeInfo", mini.encode(nodes));
+        addExecuteParam("VersionID", formData.ID);
+        execute("SaveNodes", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                treeGrid.accept();
+                msgUI("保存成功");
+                reloadForm();
+            }, validateForm: false
+        });
+    }
+
+    function sumTotalValue(tree, node,changeScale) {
+        if (!tree || !node) return;
+        var parentNode = getParent(tree, node);
+        if (parentNode) {
+            if (!parentNode.CustomEdit || parentNode.CustomEdit != "True") {
+                var children = getChildren(tree, parentNode);
+                var totalValue = 0;
+                var lastVersionValue= isNaN(parseFloat(parentNode.LastVersionValue))?0:parseFloat(parentNode.LastVersionValue);
+                for (var i = 0; i < children.length; i++) {
+                    var child = children[i];
+                    var childTotalValue = parseFloat(child.TotalValue);
+                    if (isNaN(childTotalValue))
+                        childTotalValue = 0;
+                    totalValue += childTotalValue;
+                }
+                var totalScale =0;
+                if(budgetBasisValue&&budgetBasisValue!=0){
+                    totalScale = totalValue/budgetBasisValue*100;
+                }
+                var adjustValue = totalValue-lastVersionValue;
+                if (totalValue == parentNode.LastVersionValue && parentNode.ModifyState == "Modify") {
+                    if(changeScale){
+                        tree.updateRow(parentNode, {TotalScale:totalScale.toFixed(2),AdjustValue:adjustValue, TotalValue: totalValue.toFixed(2), ModifyState: "Normal" });
+                    }
+                    else{
+                        tree.updateRow(parentNode, { TotalValue: totalValue.toFixed(2),AdjustValue:adjustValue,  ModifyState: "Normal" });
+                    }
+                }
+                else {
+                    if(changeScale){
+                        tree.updateRow(parentNode, {TotalScale:totalScale.toFixed(2),AdjustValue:adjustValue,  TotalValue: totalValue.toFixed(2)});
+                    }
+                    else
+                        tree.updateRow(parentNode, { AdjustValue:adjustValue, TotalValue: totalValue.toFixed(2) });
+                }
+            }
+            sumTotalValue(tree, parentNode);
+        }
+    }
+
+    function sumChildren() {
+        var dataTree = mini.get("Detail");
+        var node = dataTree.getSelectedNode();
+        if (!node) {
+            return;
+        }
+        var children = getChildren(dataTree, node);
+        var totalValue = 0;
+        for (var i = 0; i < children.length; i++) {
+            var value = parseFloat(children[i].TotalValue);
+            if (isNaN(value)) {
+                value = 0;
+            }
+            totalValue += value;
+        }
+        var totalScale = 0;
+        if(budgetBasisValue&&budgetBasisValue!=0){
+            totalScale=totalValue/budgetBasisValue*100;
+        }
+        dataTree.updateRow(node, {TotalScale:totalScale.toFixed(), TotalValue: totalValue, CustomEdit: "False" });
+        sumTotalValue(dataTree, node);
+        CalExpression(dataTree);
+    }
+
+    function setBudgetValue() {
+        //汇总费用信息
+        var dataTree = mini.get("Detail");
+        var roots = dataTree.getChildNodes(dataTree.getRootNode());
+
+        var sumTotalValue=0;  // 预算总金额
+        for (var i = 0; i < roots.length; i++) {
+            sumTotalValue+=isNaN(parseFloat(roots[i].TotalValue))?0:parseFloat(roots[i].TotalValue);
+        }
+
+        var sumScale = 0; //预算占比
+        if(budgetBasisValue>0){
+            sumScale = sumTotalValue/budgetBasisValue*100;
+        }
+
+        var budgetProfit =budgetBasisValue-sumTotalValue;  //预算毛利润
+        var budgetProfitScale =0;
+        if(budgetBasisValue>0){
+            budgetProfitScale = budgetProfit/budgetBasisValue*100;
+        }
+
+        if(mini.getbyName("BudgetValue")){
+            mini.getbyName("BudgetValue").setValue(sumTotalValue);
+        }
+
+        if(mini.getbyName("BudgetScale")){
+            mini.getbyName("BudgetScale").setValue(sumScale.toFixed(2));
+        }
+
+        if(mini.getbyName("BudgetProfit")){
+            mini.getbyName("BudgetProfit").setValue(budgetProfit.toFixed(2));
+        }
+
+        if(mini.getbyName("BudgetProfitScale")){
+            mini.getbyName("BudgetProfitScale").setValue(budgetProfitScale.toFixed(2));
+        }
+    }
+
+    function getParent(tree, child) {
+        if (!tree) {
+            return null;
+        }
+        var list = tree.findNodes(function (node) {
+            if (node.CBSID == child.CBSParentID) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+        if (list.length > 0) {
+            return list[0];
+        }
+        else
+            return null;
+    }
+
+    function getChildren(tree, parentNode) {
+        if (!tree || !parentNode) {
+            return null;
+        }
+        return tree.findNodes(function (node) {
+            if (node.CBSParentID == parentNode.CBSID && node.ModifyState != "Remove") {
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+    }
+
+    var reg = /\{[0-9a-zA-Z_\\.]*\}/;
+    function getExpression(node, tree) {
+        var expression = node.CalExpression;
+        if (expression) {
+            if (expression.indexOf("{") >= 0) {
+                var array = reg.exec(expression);
+                for (var i = 0; i < array.length; i++) {
+                    var variable = array[0].replace("{", "").replace("}", "");
+                    var variableNodes = tree.findNodes(function (node) {
+                        if (node.Code == variable)
+                            return true;
+                        else
+                            return false;
+                    });
+                    if (variableNodes.length == 0) {
+                        continue;
+                    }
+                    var variableNode = variableNodes[0];
+                    if (variableNode.CustomEdit == "True") {
+                        var totalValue = parseFloat(variableNode.TotalValue);
+                        if (isNaN(totalValue)) {
+                            totalValue = 0;
+                        }
+                        expression = expression.replace("{" + variable + "}", totalValue);
+                    }
+                    else if (variableNode.CalExpression) {
+                        var subExpression = getExpression(variableNode, tree);
+                        expression = expression.replace("{" + variable + "}", subExpression);
+                    }
+                    else {
+                        var totalValue = parseFloat(variableNode.TotalValue);
+                        if (isNaN(totalValue)) {
+                            totalValue = 0;
+                        }
+                        expression = expression.replace("{" + variable + "}", totalValue);
+                    }
+                }
+                return expression;
+            }
+            else {
+                return expression;
+            }
+        }
+        else {
+            return "";
+        }
+    }
+
+    function CalExpression(tree) {
+        var calNodes = tree.findNodes(function (treeNode) {
+            if (treeNode.CalExpression) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+
+        for (var i = 0; i < calNodes.length; i++) {
+            var calNode = calNodes[i];
+            if (calNode.CustomEdit == "True") {
+                continue;
+            }
+            var formula = getExpression(calNode, tree);
+            var totalValue = eval(formula);
+            tree.updateRow(calNode, { TotalValue: totalValue/*, ModifyState: "Modify"*/ });
+            sumTotalValue(sender, calNode);
+        }
+    }
+
+    function onNodeDrop(e) {
+        var tree = e.sender;
+        addExecuteParam("sourceID", e.dragNode.ID);
+        addExecuteParam("targetID", e.dropNode.ID);
+        addExecuteParam("dragAction", e.dragAction);
+        execute("MoveNode", {
+            showLoading: false, refresh: false, onComplete: function (data) {
+                tree.updateNode(e.dragNode, data);
+                tree.acceptRecord(e.dragNode);
+            }, validateForm: false, resetFormData:false
+        });
+    }
+
+    function onGiveFeedback(e) {
+        var tree = e.sender;
+        var node = e.node;              //被拖拽的节点
+        var targetNode = e.targetNode;  //目标投放节点
+        var effect = e.effect;          //投放方式：add|before|after
+
+        if (effect == "add") {
+            e.effect = "no";
+        }
+        else if (targetNode.ParentID!=node.ParentID) {
+            e.effect = "no";
+        }
+    }
+
+
+
+</script>
+<style>
+    body {
+        background-color: #fff;
+    }
+</style>

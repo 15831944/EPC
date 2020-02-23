@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "NormalStateListTab";
+}
+<script src="/Project/Scripts/EngineeringSpace/js/jquery.nicescroll.js" type="text/javascript"></script>
+<div style="width: 100%;height: 100%;overflow:hidden">
+<div style="width: 40px;float:left;">
+    <div id="tabEnums" class="mini-tabs" activeindex="0" style="border:0px solid; height: 100%;" 
+    onactivechanged="loadTab" tabposition="left"><!-- ontabload="renderscroll"-->
+    @{
+        foreach(var space in ViewBag.spaces)
+        {
+            <div title="@space.Name" name="@space.ID">
+            </div>
+        }
+        }
+    
+    </div>
+</div>
+<div style="width:calc(100% - 40px);height:100%;float:left;overflow:hidden">
+    @*<div id="mainTab" class="mini-tabs" activeindex="0" style="width: 100%;float:left; height: 100%;" borderstyle="border:0;">
+        <div title="" showheader="false" headerstyle="display:none">
+        </div>
+    </div>*@
+
+    <iframe id="ListForm" src="" style="width: 100%; height: 100%;"></iframe>
+</div>
+</div>
+
+<script type="text/javascript">
+    function loadTab(e) {
+        var SpaceID = e.name;
+        var IsEdit = getQueryString("IsEdit");
+        var ViewType = getQueryString("ViewType");
+        if (IsEdit=="true")
+            var url = "/DocSystem/Manager/NodeManager/NormalStateListForm?SpaceID=" + SpaceID + "&$IsEdit=true";
+        else
+            var url = "/DocSystem/Manager/NodeManager/NormalStateListForm?SpaceID=" + SpaceID ;
+        $("#ListForm").attr("src", addUrlSearch(url));
+    }
+    function pageLoad()
+    {
+        $('.mini-tab-text').css({ "writing-mode": "tb-rl", "letter-spacing": "4.2px" });//文字纵向排列,字体间距
+        $('.mini-tabs-header').css({ "width": "38px" });
+        $('#tabEnums').css({ "height": document.body.clientHeight }).niceScroll({ cursorborder: "none"});
+        $('#tabEnums').find("tr:last").remove();
+        $("#tabEnums").find("tr:first").children("td:eq(1)").remove();//移除没有内容的td
+        var width=document.body.clientWidth-45;
+        //$('#mainTab').css({ "width": width })
+        $('html').css({ "overflow": "hidden" });
+    }
+    function returnSelectList() {
+        var data = $($($("iframe")[0].contentWindow.document).find("iframe")[0].contentWindow.document).find("iframe")[0].contentWindow.GetSelecteds();
+        if (data.length > 0) {
+            $.each(data, function (i,item) {
+                item.RelateDocType = $("iframe")[0].contentWindow.IsFileOrNode();
+            });
+        }
+        if ($("iframe").length > 0) {
+            closeWindow(data);
+        }
+        else msgUI("未找到子页面");
+    }
+</script>

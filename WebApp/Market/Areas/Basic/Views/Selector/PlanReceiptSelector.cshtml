@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "PlanReceiptSelector";
+}
+<div class="mini-toolbar" style="padding: 0px; border-top: 0; border-left: 0; border-right: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" iconcls="icon-add" onclick="returnValue();" plain="true">选择</a>
+                <a class="mini-button" iconcls="icon-cancel" onclick="closeWindow();" plain="true">取消</a>
+            </td>
+            <td style="white-space: nowrap;">
+                <input class="mini-buttonedit searchbox" id="key" emptytext="请输入计划收款名称" style="width: 200px;" onenter="quickSearch('Name,Code');"
+                    onbuttonclick="quickSearch('Name,Code');" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit" style="height: 100px;">
+    <div id="dataGrid" url="" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID" multiselect="true"
+        borderstyle="border-left:0;border-right:0;border-bottom:0;" showpager="false">
+        <div property="columns">
+            <div type="checkcolumn">
+            </div>
+            <div field="Name" width="200" headeralign="center">
+                计划收款名称
+            </div>
+            <div field="ProductionUnitName" width="90" headeralign="center" align="center">
+                责任部门
+            </div>
+            <div field="PlanReceiptDate" width="100" headeralign="center" dateformat="yyyy-MM" align="center">
+                计划收款日期
+            </div>
+            <div field="PlanReceiptValue" headeralign="center" width="120" datatype="currency" align="right">
+                计划收款金额（元）
+            </div>
+            <div field="ProjectName" width="250" headeralign="center">
+                项目名称
+            </div>
+            <div field="ProjectCode" width="150" headeralign="center" align="center">
+                项目编号
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    var contractID = getQueryString("ContractInfoID");
+    var url = "GetContractPlanReceiptList?ContractInfoID=" + contractID;
+    $("#dataGrid").attr("url", url);
+
+    function returnValue() {
+        var dataGrid = mini.get("dataGrid");
+        var rows = dataGrid.getSelecteds();
+        closeWindow(rows);
+    }
+</script>

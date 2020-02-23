@@ -1,0 +1,25 @@
+﻿    *{margin:0;padding:0;list-style-type:none;}
+    a,img{border:0;}
+    body{font:12px/180% "宋体",Arial, Helvetica, sans-serif;}
+    /*图片轮换*/
+    #slideBox{height:290px;overflow:hidden;position:relative;margin:0px auto;}
+    #slideBox ul#show_pic{margin:0;padding:0;list-style:none;height:290px;width:4750px;position:absolute;}
+    #slideBox ul#show_pic li{float:left;margin:0;padding:0;height:220px;width:340px}
+    #slideBox ul#show_pic li img{display:block;}
+    #iconBall{position:absolute;left:10px;top:10px;}
+    #iconBall li{color: #5dbcfe;width:32px;height:32px;line-height:30px;cursor:pointer;text-align:center;font-size:14px;font-weight:bold;padding-top:1px; background:url(/PortalLTE/PublicInfo/images/iconbg.png) no-repeat;}
+    #iconBall li.active{    background: url(/PortalLTE/PublicInfo/images/iconbg2.png) no-repeat;
+    color: #5dbcfe;
+    width: 40px;
+    height: 40px;
+    line-height: 37px;
+    text-align: center;}
+    #slideText {width:475px;height:28px;background:rgba(0,0,0,0.7); display:none; color:#fff;position:absolute;left:0px;bottom:0px;*background:transparent;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000,endColorstr=#b2000000);}
+    #textBall{position:absolute;left:20px;bottom:3px;}
+    #textBall li{float:left;cursor:pointer;display:none;color:#fff;font-size:12px; height:65px;}
+    #textBall li.active{display:block;}
+    .textBall_title {width:100%;height:30px;line-height:25px; margin-top:10px; font-weight: bold;font-size: 16px;
+    font-weight: normal;
+    color: #0f3869;}
+    .textBall_content {color:#999999;width:100%;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;    height: 30px;
+    line-height: 30px;}

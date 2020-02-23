@@ -1,0 +1,170 @@
+﻿@{
+    ViewBag.Title = "DeptOverView";
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+}
+<div class="mini-toolbar" style="padding: 2px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                @Html.ExportButton("导出Excel", "", "DeptOverView")
+            </td>
+            <td style="white-space: nowrap;">
+                <span style=" font-weight:bolder;color:red; font-size:13px; padding-right:5px;"> 单位：元</span>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit" id="gridarea">
+    <div id="dataGrid" url="GetList" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID" multiselect="true" showpager="false"
+         frozenstartcolumn="0" frozenendcolumn="2" sortmode="client"
+         ondrawcell="onDrawCell"
+         showsummaryrow="true" ondrawsummarycell="onDrawSummaryCell">
+        <div property="columns">
+            <div type="indexcolumn">
+            </div>
+            <div field="Name" width="150" headeralign="center" allowsort="true">
+                部门名称
+            </div>
+            <div field="UserCount" width="60" headeralign="center" allowsort="true" align="right">
+                员工数
+            </div>
+            <div header="合同及收支" headeralign="center">
+                <div property="columns">
+                    <div field="CurrentContractValue" summarytype="sum" datatype="currency" headeralign="center" width="100" allowsort="true" align="right">
+                        当期合同额
+                    </div>
+                    <div field="ContractValue" summarytype="sum" datatype="currency" headeralign="center" width="100" allowsort="true" align="right">
+                        合同总额
+                    </div>
+                    <div field="CurrentIncomeValue" summarytype="sum" datatype="currency" headeralign="center" width="100" allowsort="true" align="right">
+                        当期收入
+                    </div>
+                    <div field="AvgIncomeValue" summarytype="avg" datatype="currency" headeralign="center" width="100" allowsort="true" align="right">
+                        人均收入
+                    </div>
+                    <div field="CurrentCostValue" summarytype="sum" datatype="currency" headeralign="center" width="100" allowsort="true" align="right">
+                        当期成本
+                    </div>
+                    <div field="CurrentProfit" summarytype="sum" datatype="currency" headeralign="center" width="100" allowsort="true" align="right">
+                        当期利润
+                    </div>
+                </div>
+            </div>
+            <div header="开票及收款" headeralign="center">
+                <div property="columns">
+                    <div field="CurrentInvoiceValue" summarytype="sum" datatype="currency" headeralign="center" width="100" allowsort="true" align="right">
+                        当期开票金额
+                    </div>
+                    <div field="CurrentReceiptValue" summarytype="sum" datatype="currency" headeralign="center" width="100" allowsort="true" align="right">
+                        当期收款
+                    </div>
+                    <div field="AvgReceiptValue" summarytype="avg" datatype="currency" headeralign="center" width="100" allowsort="true" align="right">
+                        人均收款
+                    </div>
+                    <div field="Receivables" summarytype="sum" datatype="currency" headeralign="center" width="100" allowsort="true" align="right">
+                        期末应收账款
+                    </div>
+                    <div field="ReceivablesTurnoverRatio" datatype="currency" headeralign="center" width="100" allowsort="true" align="right">
+                        应收款周转率
+                    </div>
+                </div>
+            </div>
+            @*<div header="产值信息" headeralign="center">
+                    <div property="columns">
+                        <div field="ProductionValue" datatype="currency" headeralign="center" width="100" allowsort="true" align="right">
+                            产值总额
+                        </div>
+                        <div field="CurrentProductionValue" datatype="currency" headeralign="center" width="100" allowsort="true" align="right">
+                            当期产值额
+                        </div>
+                        <div field="ProductionConfirmValue" datatype="currency" headeralign="center" width="100" allowsort="true" align="right">
+                            当期确认产值
+                        </div>
+                        <div field="AvgProductionConfirmValue" datatype="currency" headeralign="center" width="100" allowsort="true" align="right">
+                            人均产值
+                        </div>
+                        <div field="RemainProductionValue" datatype="currency" headeralign="center" width="100" allowsort="true" align="right">
+                            剩余产值
+                        </div>
+                    </div>
+                </div>*@
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    var belongYear = 0;
+
+
+    //addGridLink('dataGrid', 'CurrentContractValue', '/MvcConfig/UI/List/PageView?TmplCode=ContractInfo&BelongYear={BelongYear}&BelongMonth={BelongMonth}&IsSigned=Signed&ProductionDept={ID}', { funcType: 'view', height: '80%', width: '80%', addQueryString: false });
+    //addGridLink('dataGrid', 'CurrentIncomeValue', '/MvcConfig/UI/List/PageView?TmplCode=ContractInfo&BelongYear=' + belongYear + '&IsSigned=Signed&ProductionDept={ID}', { funcType: 'view', height: '80%', width: '80%', addQueryString: false });
+    //addGridLink('dataGrid', 'ContractValue', '/MvcConfig/UI/List/PageView?TmplCode=ContractInfo&IsSigned=Signed&ProductionDept={ID}', { funcType: 'view', height: '80%', width: '80%', addQueryString: false });
+    //addGridLink('dataGrid', 'CurrentInvoiceValue', '/MvcConfig/UI/List/PageView?TmplCode=ContractInfo&BelongYear=' + belongYear + '&IsSigned=Signed&ProductionDept={ID}', { funcType: 'view', height: '80%', width: '80%', addQueryString: false });
+    //addGridLink('dataGrid', 'CurrentReceiptValue', '/MvcConfig/UI/List/PageView?TmplCode=ContractInfo&BelongYear=' + belongYear + '&IsSigned=Signed&ProductionDept={ID}', { funcType: 'view', height: '80%', width: '80%', addQueryString: false });
+
+
+    function onDrawSummaryCell(e) {
+        var result = e.result;
+        var field = e.field;
+        e.cellStyle = "text-align:right; color:Brown";
+    }
+
+    function onDrawCell(e) {
+        var field = e.field; var rec = e.record;
+        var belongYear = e.record.BelongYear;
+        var belongMonth = e.record.BelongMonth;
+        var url = "";
+        var reg = new RegExp("^[0-9]*$");
+        if (reg.test(e.value) && e.value <= 0) {
+            e.cellStyle = "text-align:right; color:#c4c4c4";
+        }
+        else if (field == "CurrentContractValue") {
+            url = "/MvcConfig/UI/List/PageView?TmplCode=ContractInfo&IsSigned=Signed&ProductionDept=" + rec.ID;
+            e.cellHtml = '<a href="javascript:viewDetailInfo(\'' + url + '\',\'' + belongYear + '\',\'' + belongMonth + '\')">' + mini.formatNumber(e.value, "n") + '</a>&nbsp; ';
+        }
+        else if (field == "CurrentIncomeValue") {
+            url = "/MvcConfig/UI/List/PageView?TmplCode=RevenueInfoDetail&ChargerDept=" + rec.ID;
+            e.cellHtml = '<a href="javascript:viewDetailInfo(\'' + url + '\',\'' + belongYear + '\',\'' + belongMonth + '\')">' + mini.formatNumber(e.value, "n") + '</a>&nbsp; ';
+        }
+        else if (field == "ContractValue") {
+            url = "/MvcConfig/UI/List/PageView?TmplCode=ContractInfo&IsSigned=Signed&ProductionDept=" + rec.ID;
+            belongYear = ""; belongMonth = "";
+            e.cellHtml = '<a href="javascript:viewDetailInfo(\'' + url + '\',\'' + belongYear + '\',\'' + belongMonth + '\')">' + mini.formatNumber(e.value, "n") + '</a>&nbsp; ';
+        }
+        else if (field == "CurrentInvoiceValue") {
+            url = "/MvcConfig/UI/List/PageView?TmplCode=InvoiceDetail&ProductionDept=" + rec.ID;
+            e.cellHtml = '<a href="javascript:viewDetailInfo(\'' + url + '\',\'' + belongYear + '\',\'' + belongMonth + '\')">' + mini.formatNumber(e.value, "n") + '</a>&nbsp; ';
+        }
+        else if (field == "CurrentReceiptValue") {
+            url = "/MvcConfig/UI/List/PageView?TmplCode=ReceiptInfo&ProductUnit=" + rec.ID;
+            e.cellHtml = '<a href="javascript:viewDetailInfo(\'' + url + '\',\'' + belongYear + '\',\'' + belongMonth + '\')">' + mini.formatNumber(e.value, "n") + '</a>&nbsp; ';
+        }
+        else if (field == "CurrentCostValue") {
+            url = "/MvcConfig/UI/List/PageView?TmplCode=CostInfoDetail&BelongDept=" + rec.ID;
+            e.cellHtml = '<a href="javascript:viewDetailInfo(\'' + url + '\',\'' + belongYear + '\',\'' + belongMonth + '\')">' + mini.formatNumber(e.value, "n") + '</a>&nbsp; ';
+        }
+    }
+
+    function viewDetailInfo(url, belongYear, belongMonth, deptID) {
+        if (belongYear) {
+            url += url.indexOf("?") >= 0 ? "&BelongYear=" + belongYear : "?BelongYear=" + belongYear;
+        }
+        if (belongMonth) {
+            url += url.indexOf("?") >= 0 ? "&BelongMonth=" + belongMonth : "?BelongMonth=" + belongMonth;
+        }
+
+
+        openWindow(url, {
+            refresh: false, title: "查看明细", width: "80%", height: "80%",
+            onDestroy: function () { }
+        });
+
+    }
+
+</script>
+
+<style type="text/css">
+    .mini-grid-columns-lock .mini-grid-table {
+        height: 66px !important;
+    }
+</style>

@@ -1,0 +1,128 @@
+﻿{
+    "说明": [
+        "1.ValueFrom 表示本行数据从哪里取值",
+        "   1.1 ValueFrom为FrameInfo时，将从成果的FrameAllAttInfo大字段中根据配置的项目查找并替换",
+        "   1.2 ValueFrom为FieldValue时，直接返回配置的FieldValue的值",
+        "   1.3 ValueFrom为数据库表名加字段名时，将从指定的表中取字段返回（如：S_E_ProductVersion.ApproverName）",
+        "       1.3.1 ValueFrom从S_W_WBS表中取值时，需要将类型加上（如：S_W_WBS.SubProject.Name，表示取子项WBS节点的Name字段），当前支持SubProject、Area、Device、Work、Major",
+        "       1.3.2 ValueFrom从数据库字段取值当前只支持 S_I_ProjectInfo、S_E_ProductVersion、S_W_WBS",
+        "   1.4 ValueFrom为System或其他时，根据FieldCode获取数据",
+        "2.当从FieldCode取值时，是固定的取值方式",
+        "3.FrameItems 是将{}中的字段连带{}替换为成果的FrameAllAttInfo大字段中的值",
+        "4.IconCls 是显示的图标，当前只有qr_entity、qr_data、qr_list、qr_user"
+    ],
+    "FormDic_Product": [
+        {
+            "FieldCode": "Customer",
+            "FieldName": "委托单位",
+            "FrameItems": "{建设单位1}{建设单位2}",
+            "IconCls": "qr_entity",
+            "FieldValue": "",
+            "ValueFrom": "FrameInfo"
+        },
+        {
+            "FieldCode": "",
+            "FieldName": "设计单位",
+            "FrameItems": "",
+            "IconCls": "qr_entity",
+            "FieldValue": "河南中科建筑规划设计有限公司",
+            "ValueFrom": "FieldValue"
+        },
+        {
+            "FieldCode": "Name",
+            "FieldName": "图纸名称",
+            "FrameItems": "{图纸名称1}{图纸名称2}",
+            "IconCls": "qr_list",
+            "FieldValue": "",
+            "ValueFrom": "FrameInfo"
+        },
+        {
+            "FieldCode": "Code",
+            "FieldName": "图号",
+            "FrameItems": "{图号}",
+            "IconCls": "qr_data",
+            "FieldValue": "",
+            "ValueFrom": "FrameInfo"
+        },
+        {
+            "FieldCode": "ProjectInfoName",
+            "FieldName": "项目名称",
+            "FrameItems": "{项目名称1}{项目名称2}",
+            "IconCls": "qr_list",
+            "FieldValue": "",
+            "ValueFrom": "FrameInfo"
+        },
+        {
+            "FieldCode": "ProjectInfoCode",
+            "FieldName": "设计号",
+            "FrameItems": "{设计号}",
+            "IconCls": "qr_data",
+            "FieldValue": "",
+            "ValueFrom": "FrameInfo"
+        },
+        {
+            "FieldCode": "SubProjectName",
+            "FieldName": "子项",
+            "FrameItems": "",
+            "IconCls": "qr_data",
+            "FieldValue": "",
+            "ValueFrom": "S_W_WBS.SubProject.Name"
+        },
+        {
+            "FieldCode": "ProjectChargerName",
+            "FieldName": "项目总负责人",
+            "FrameItems": "{项目总负责人}",
+            "IconCls": "qr_user",
+            "FieldValue": "",
+            "ValueFrom": "FrameInfo"
+        },
+        {
+            "FieldCode": "MajorChargerName",
+            "FieldName": "专业负责人",
+            "FrameItems": "{专业负责人}",
+            "IconCls": "qr_user",
+            "FieldValue": "",
+            "ValueFrom": "FrameInfo"
+        },
+        {
+            "FieldCode": "ApproverName",
+            "FieldName": "审定人",
+            "FrameItems": "",
+            "IconCls": "qr_user",
+            "FieldValue": "",
+            "ValueFrom": "S_E_ProductVersion.ApproverName"
+        },
+        {
+            "FieldCode": "AuditorName",
+            "FieldName": "审核人",
+            "FrameItems": "",
+            "IconCls": "qr_user",
+            "FieldValue": "",
+            "ValueFrom": "S_E_ProductVersion.AuditorName"
+        },
+        {
+            "FieldCode": "CollactorName",
+            "FieldName": "校对人",
+            "FrameItems": "",
+            "IconCls": "qr_user",
+            "FieldValue": "",
+            "ValueFrom": "S_E_ProductVersion.CollactorName"
+        },
+        {
+            "FieldCode": "DesignerName",
+            "FieldName": "设计人",
+            "FrameItems": "",
+            "IconCls": "qr_user",
+            "FieldValue": "",
+            "ValueFrom": "S_E_ProductVersion.DesignerName"
+        },
+        {
+            "FieldCode": "DesignerName",
+            "FieldName": "制图人",
+            "FrameItems": "",
+            "IconCls": "qr_user",
+            "FieldValue": "",
+            "ValueFrom": "S_E_ProductVersion.DesignerName"
+        }
+    ]
+}

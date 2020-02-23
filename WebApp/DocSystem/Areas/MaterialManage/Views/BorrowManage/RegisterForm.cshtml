@@ -1,0 +1,427 @@
+﻿@{
+    ViewBag.Title = "RegisterForm";
+}
+<div id="formlayout" class="mini-layout" style="width: 100%; height: 100%;">
+    <div region="north" height="32" showspliticon="false" showheader="false" allowresize="false"
+         splitsize="0" style="border: 0;">
+        <div class="mini-toolbar" style="padding: 0px; border-left: 0; border-top: 0; border-right: 0;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        <a class="mini-button" iconcls="icon-save" onclick="register();" plain="true">登记</a>
+                        <a class="mini-button" iconcls="icon-cancel" onclick="closeWindow()" plain="true">取消</a>
+                        <a id="btnFinish" class="mini-button" iconcls="icon-project" onclick="setFinish()" plain="true">设置完成</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div title="center" region="center" style="border: 0;">
+        <div class="formDiv">
+            <h1 align="center">
+                <font class="registerType"></font>登记
+            </h1>
+            <fieldset class="formDiv">
+                <legend>基本信息</legend>
+                <div>
+                    <table width="100%" border="0" cellpadding="0" cellspacing="2">
+                        <tr>
+                            <td width="15%">
+                                <font class="registerType"></font>人
+                            </td>
+                            <td width="35%">
+                                <input name="ApplyUser" textname='ApplyUserName' class="mini-buttonedit"
+                                       style="width:100%" required="true" allowinput='false' onvaluechanged="onApplyUserChange" />
+                            </td>
+                            <td width="15%" align="left" style="padding-left: 20px">
+                                <font class="registerType"></font>部门
+                            </td>
+                            <td width="35%">
+                                <input name='ApplyDept' textname='ApplyDeptName' class='mini-buttonedit'
+                                       style="width: 100%;" required='true' allowinput='false' />
+                            </td>
+                        </tr>
+                        <tr class="LostCls">
+                            <td>
+                                遗失说明
+                            </td>
+                            <td colspan="3">
+                                <input name="LostRemarks" class="mini-textarea" style="width:100%" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </fieldset>
+            <fieldset class="formDiv">
+                <legend>登记清单</legend>
+                <table class="ke-zeroborder" style="width:100%;" cellpadding="2" border="0">
+                    <tr>
+                        <td>
+                            <div id='toolbarDetailInfoTree' class='mini-toolbar' style='height:25px;border-bottom: 0px;'>
+                                <table>
+                                    <tr>
+                                        <td style='text-align:left;'>
+                                            @*<a class='mini-button' id='btnDetailInfoTreeDelete' iconcls='icon-remove' onclick='delRow({ gridId: "DetailInfoTree" });'>移除</a>*@
+                                        </td>
+                                        <td class='gw-toolbar-right'>
+                                            <div id="showInTree" name='showInTree' class='mini-checkbox' checked='false' text='显示文件' onvaluechanged='onShowTreeChanged'></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div id='DetailInfoTree' class='mini-treegrid' style='width:100%;height:300px;' showtreeicon='true' iconfield="DetailType"
+                                 treecolumn='Name' idfield='UID' parentfield='ParentUID' expandonload='true' allowcelledit="true" allowcellselect="true"
+                                 allowcellwrap="false" multiselect='true'
+                                 oncellbeginedit="onCellBeginEdit" oncellendedit="onCellEndEdit" ondrawcell="onDrawCell">
+                                <div property='columns'>
+                                    <div type='checkcolumn'></div>
+                                    <div type='indexcolumn'></div>
+                                    <div name='Name' field='Name' width='300' align='left' headeralign='center'>名称</div>
+                                    <div name='Code' field='Code' width='120' align='left' headeralign='center'>编号</div>
+                                    <div name='DataType' field='DataType' width='60' align='center' headeralign='center'>类型</div>
+                                    <div name='SpaceName' field='SpaceName' width='80' align='center' headeralign='center'>档案门类</div>
+                                    <div name='CreateUserName' field='CreateUserName' width='60' align='center' headeralign='center'>申请人</div>
+                                    <div name='ApplyNumber' field='ApplyNumber' width='50' align='right' datatype='int' headeralign='center'>申请数</div>
+                                    <div name='Quantity' field='Quantity' width='50' align='right' datatype='int' headeralign='center'>份数</div>
+                                    <div name='StorageNumber' field='StorageNumber' width='50' align='right' datatype='int' headeralign='center'>库存数</div>
+                                    <div name='LendUserID' field='LendUserID' displayfield='LendUserName' align='center' width='60' autoshowpopup='true' headeralign='center'>
+                                        借阅人
+                                        <input name='DetailInfoTree_LendUserID' property='editor' class='mini-buttonedit' style='width:100%' />
+                                    </div>
+                                    <div name='LendDate' field='LendDate' width='80' autoshowpopup='true' align='center' datatype='date' dateformat='yyyy-MM-dd'>
+                                        首次借阅日期
+                                        <input property='editor' class='mini-datepicker' style='width:100%' />
+                                    </div>
+                                    <div name='LendNumber' field='LendNumber' vtype='int' width='50' align='right' autoshowpopup='true' datatype='int'>
+                                        借阅数
+                                        <input property='editor' class='mini-textbox' allowinput='true' vtype='int' style='width:100%;' />
+                                    </div>
+                                    <div name='ToRtnNumber' field='ToRtnNumber' vtype='int' width='50' align='right' autoshowpopup='true' datatype='int'>待还数</div>
+                                    <div name='ReturnUserID' field='ReturnUserID' displayfield='ReturnUserName' align='center' width='60' autoshowpopup='true' allowsort='true' headeralign='center'>
+                                        归还人
+                                        <input name='DetailInfoTree_ReturnUserID' property='editor' class='mini-buttonedit' allowinput='false' style='width:100%' />
+                                    </div>
+                                    <div name='ReturnDate' field='ReturnDate' width='80' autoshowpopup='true' align='center' datatype='date' dateformat='yyyy-MM-dd'>
+                                        归还日期
+                                        <input property='editor' class='mini-datepicker' style='width:100%' />
+                                    </div>
+                                    <div name='ReturnNumber' field='ReturnNumber' vtype='int' width='50' align='right' autoshowpopup='true' datatype='int'>
+                                        归还数
+                                        <input property='editor' class='mini-textbox' allowinput='true' vtype='int' style='width:100%;' />
+                                    </div>
+                                    <div name='LostUserID' field='LostUserID' displayfield='LostUserName' align='center' width='60' autoshowpopup='true' headeralign='center'>
+                                        遗失人
+                                        <input name='DetailInfoTree_LostUserID' property='editor' class='mini-buttonedit' allowinput='false' style='width:100%' />
+                                    </div>
+                                    <div name='LostDate' field='LostDate' width='80' autoshowpopup='true' align='center' datatype='date' dateformat='yyyy-MM-dd'>
+                                        遗失日期
+                                        <input property='editor' class='mini-datepicker' style='width:100%' />
+                                    </div>
+                                    <div name='LostNumber' field='LostNumber' vtype='int' width='50' align='right' autoshowpopup='true' datatype='int'>
+                                        遗失数
+                                        <input property='editor' class='mini-textbox' allowinput='true' vtype='int' style='width:100%;' />
+                                    </div>
+                                    <div name='BorrowExpireDate' field='BorrowExpireDate' width='80' align='center' autoshowpopup='true' datatype='date' dateformat='yyyy-MM-dd'>
+                                        应归还日期
+                                        <input property='editor' class='mini-datepicker' style='width:100%' />
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.Raw(@ViewBag.BorrowExpireDays);
+    addSingleUserSelector('ApplyUser', { returnParams: 'value:ID,text:Name,ApplyDept:DeptID,ApplyDept:DeptName' });
+    addSingleOrgSelector('ApplyDept', { returnParams: 'value:ID,text:Name' });
+
+    addSingleUserSelector('DetailInfoTree_LendUserID', { returnParams: 'value:ID,text:Name' });
+    addSingleUserSelector('DetailInfoTree_ReturnUserID', { returnParams: 'value:ID,text:Name' });
+    addSingleUserSelector('DetailInfoTree_LostUserID', { returnParams: 'value:ID,text:Name' });
+</script>
+<script type="text/javascript">
+    var registerType = getQueryString("RegisterType");
+    var hideCols = {
+        "Lend": ["LendUserID", "ReturnUserID", "ReturnDate", "ReturnNumber", "LostUserID", "LostDate", "LostNumber"],
+        "Return": ["CreateUserName", "ApplyNumber", "Quantity", "StorageNumber", "ReturnUserID", "LendDate", "LendNumber", "LostUserID", "LostDate", "LostNumber"],
+        "Lost": ["CreateUserName", "ApplyNumber", "Quantity", "StorageNumber", "LendDate", "LendNumber", "ReturnUserID", "ReturnDate", "ReturnNumber", "LostUserID"]
+    };
+    function register() {
+        var formData = {
+            RegisterType: registerType,
+            ApplyUser: mini.getbyName("ApplyUser").getValue(),
+            ApplyUserName: mini.getbyName("ApplyUser").getText(),
+            ApplyDept: mini.getbyName("ApplyDept").getValue(),
+            ApplyDeptName: mini.getbyName("ApplyDept").getText(),
+            LostRemarks: mini.getbyName("LostRemarks").getValue(),
+            ListData: mini.get("DetailInfoTree").getList()
+        };
+        if (!formData.ApplyUser || !formData.ApplyDept) {
+            var str = "";
+            if (registerType == "Lend") str = "借阅人/借阅部门";
+            else if (registerType == "Return") str = "归还人/归还部门";
+            else if (registerType == "Lost") str = "遗失人/遗失部门";
+            return msgUI("请选择" + str);
+        }
+        if (registerType == "Lost" && !formData.LostRemarks)
+            return msgUI("遗失说明不能为空");
+        addExecuteParam("FormData", formData);
+        execute("Save", {
+            validateForm: false, showLoading: true, refresh: false, onComplete: function (data) {
+                if (registerType == "Lend")
+                    closeWindow();
+                else
+                    msgUI("登记成功，是否关闭页面？", 2, function (rtn) {
+                        if (rtn == "ok")
+                            closeWindow();
+                    });
+            }
+        });
+    }
+
+    $(function () {
+        var tree = mini.get("DetailInfoTree");
+        if (registerType == "Lend") {
+            $(".registerType").text("借阅");
+            $(".LostCls").hide();
+            $("#btnFinish").hide();
+        }
+        else if (registerType == "Return") {
+            $(".registerType").text("归还");
+            $(".LostCls").hide();
+            $("#showInTree").hide();
+        }
+        else if (registerType == "Lost") {
+            $(".registerType").text("遗失");
+            $("#showInTree").hide();
+            mini.getbyName("LostRemarks").setRequired(true);
+        }
+        var cols = hideCols[registerType];
+        for (var i = 0; i < cols.length; i++) {
+            tree.hideColumn(tree.getColumn(cols[i]));
+        }
+    })
+
+    function onApplyUserChange() {
+        var ApplyUser = mini.getbyName("ApplyUser").getValue();
+        var ApplyUserName = mini.getbyName("ApplyUser").getText();
+
+        var grid = mini.get("DetailInfoTree");
+        var rows = grid.getList();
+        for (var i = 0; i < rows.length; i++) {
+            if (registerType == "Lend") {
+                if (!rows[i]["LendUserID"])
+                    grid.updateRow(rows[i], { LendUserID: ApplyUser, LendUserName: ApplyUserName });
+            }
+            else if (registerType == "Return") {
+                if (!rows[i]["ReturnUserID"])
+                    grid.updateRow(rows[i], { ReturnUserID: ApplyUser, ReturnUser: ApplyUserName });
+            }
+            else if (registerType == "Lost") {
+                if (!rows[i]["LostUserID"])
+                    grid.updateRow(rows[i], { LostUserID: ApplyUser, LostUserName: ApplyUserName });
+            }
+        }
+    }
+
+    var baseData = [];
+    function setData(data) {
+        //ApplyUser为申请人ApplyDept为申请部门默认带出
+        mini.get("DetailInfoTree").loadList(data.FileInfo, "UID", "ParentUID");
+        mini.getbyName("ApplyUser").setValue(data.FileInfo[0].ApplyUser);
+        mini.getbyName("ApplyDept").setValue(data.FileInfo[0].ApplyDept);
+        mini.getbyName("ApplyUser").setText(data.FileInfo[0].ApplyUserName);
+        mini.getbyName("ApplyDept").setText(data.FileInfo[0].ApplyDeptName);
+        baseData = data.FileInfo;
+    }
+
+    function onShowTreeChanged() {
+        var grid = mini.get("DetailInfoTree");
+        var showInTree = mini.getbyName("showInTree");
+        var checked = "false";
+        if (showInTree) {
+            var rows = grid.getList();
+            checked = showInTree.getValue();
+            if (checked.toLowerCase() == "true") {
+                addExecuteParam("ListData", rows);
+                execute("GetBorrowDetailTree", {
+                    validateForm: false, showLoading: true, refresh: false, onComplete: function (data) {
+                        grid.loadData(data);
+                    }
+                });
+            }
+            else {
+                grid.loadList(baseData, "UID", "ParentUID");
+            }
+        }
+    }
+
+    function onDrawCell(e) {
+        var row = e.row;
+        if (registerType == "Lend") {
+            if (!row["StorageNumber"] || row["StorageNumber"] == 0 || row["StorageNumber"] == "0")
+                e.cellStyle = "background:#F0F0F0";
+        }
+        else if (registerType == "Return" || registerType == "Lost") {
+            if (!row["ToRtnNumber"] || row["ToRtnNumber"] == 0 || row["ToRtnNumber"] == "0")
+                e.cellStyle = "background:#F0F0F0";
+        }
+        //默认日期为当前日期
+        var date = new Date();
+        var eDate = new Date((date / 1000 + 86400 * BorrowExpireDays) * 1000);
+        if (!row["LendDate"]) {
+            row["LendDate"] = date,
+            row["BorrowExpireDate"] = eDate;
+        }
+        if (!row["ReturnDate"]) {
+            row["ReturnDate"] = date;
+        }
+        if (!row["LostDate"]) {
+            row["LostDate"] = date;
+        }
+        if (e.field == "Name") {
+            e.cellHtml = "<span title=" + e.value + ">" + e.value + "</span>";
+        }
+    }
+
+    function onCellBeginEdit(e) {
+        var row = e.row;
+        var field = e.field;
+        if (registerType == "Lend") {
+            if (field == "LendNumber" || field == "LendDate" || field == "BorrowExpireDate") {
+                if (!row["StorageNumber"] || row["StorageNumber"] == 0 || row["StorageNumber"] == "0")
+                    e.cancel = true;
+            }
+        }
+        else if (registerType == "Return") {
+            if (field == "ReturnDate" || field == "ReturnNumber") {
+                if (!row["ToRtnNumber"] || row["ToRtnNumber"] == 0 || row["ToRtnNumber"] == "0")
+                    e.cancel = true;
+            }
+            if (field == "LendUserID" || field == "BorrowExpireDate")
+                e.cancel = true;
+        }
+        else if (registerType == "Lost") {
+            if (field == "LostDate" || field == "LostNumber") {
+                if (!row["ToRtnNumber"] || row["ToRtnNumber"] == 0 || row["ToRtnNumber"] == "0")
+                    e.cancel = true;
+            }
+            if (field == "LendUserID" || field == "BorrowExpireDate")
+                e.cancel = true;
+        }
+    }
+
+    function onCellEndEdit(e) {
+        var grid = mini.get("DetailInfoTree");
+        var row = e.row;
+        var field = e.field;
+        var value = e.value;
+        if (!value) return;
+        if (field == "LendNumber" || field == "ReturnNumber" || field == "LostNumber") {
+            var v = parseInt(value);
+            if (isNaN(v) || v < 0) {
+                msgUI("请输入大于零的整数");
+                var upObj = {};
+                upObj[field] = "";
+                return grid.updateRow(row, upObj);
+            }
+            if (registerType == "Lend") {
+                var applyNumber = parseInt(row["ApplyNumber"]);
+                if (isNaN(applyNumber)) applyNumber = 0;
+                var storageNumber = parseInt(row["StorageNumber"]);
+                if (isNaN(storageNumber)) storageNumber = 0;
+                var toRtnNumber = parseInt(row["ToRtnNumber"]);
+                if (isNaN(toRtnNumber)) toRtnNumber = 0;
+
+                if (applyNumber < v + toRtnNumber) {
+                    msgUI("借阅数+待还数不能大于申请数");
+                    return grid.updateRow(row, { LendNumber: "" });
+
+                }
+                if (storageNumber < v) {
+                    msgUI("借阅数不能大于库存数");
+                    return grid.updateRow(row, { LendNumber: "" });
+                }
+
+                var date = new Date();
+                var eDate = new Date((date / 1000 + 86400 * BorrowExpireDays) * 1000);
+                if (!row["LendDate"]) {
+                    grid.updateRow(row, { LendDate: date, BorrowExpireDate: eDate });
+                }
+                var ancestors = grid.getAncestors(row);
+                for (var i = 0; i < ancestors.length; i++) {
+                    if (!ancestors[i]["ParentUID"] && !ancestors[i]["LendDate"]) {
+                        grid.updateRow(ancestors[i], { LendDate: date, BorrowExpireDate: eDate });
+                    }
+                }
+            }
+            else if (registerType == "Return") {
+                var toRtnNumber = parseInt(row["ToRtnNumber"]);
+                if (isNaN(toRtnNumber)) toRtnNumber = 0;
+                if (toRtnNumber < v) {
+                    msgUI("归还数不能大于待还数");
+                    return grid.updateRow(row, { ReturnNumber: "" });
+                }
+                var date = new Date();
+                grid.updateRow(row, { ReturnDate: date });
+            }
+            else if (registerType == "Lost") {
+                var toRtnNumber = parseInt(row["ToRtnNumber"]);
+                if (isNaN(toRtnNumber)) toRtnNumber = 0;
+                if (toRtnNumber < v) {
+                    msgUI("遗失数不能大于待还数");
+                    return grid.updateRow(row, { ReturnNumber: "" });
+                }
+                var date = new Date();
+                grid.updateRow(row, { LostDate: date });
+            }
+        }
+        if (field == "LendDate") {
+            var ancestors = grid.getAncestors(row);
+            for (var i = 0; i < ancestors.length; i++) {
+                if (!ancestors[i]["ParentUID"]) {
+                    if (!ancestors[i]["LendDate"] || ancestors[i]["LendDate"] > value) {
+                        grid.updateRow(ancestors[i], { LendDate: value });
+                    }
+                }
+            }
+        }
+        if (field == "BorrowExpireDate") {
+            var ancestors = grid.getAncestors(row);
+            for (var i = 0; i < ancestors.length; i++) {
+                if (!ancestors[i]["ParentUID"]) {
+                    if (!ancestors[i]["BorrowExpireDate"] || ancestors[i]["BorrowExpireDate"] < value) {
+                        grid.updateRow(ancestors[i], { BorrowExpireDate: value });
+                    }
+                }
+            }
+        }
+    }
+
+    function setFinish() {
+        var grid = mini.get("DetailInfoTree");
+        addExecuteParam("TreeData", grid.getData());
+        execute("SetFinish", {
+            validateForm: false, showLoading: true, refresh: false, onComplete: function (data) {
+                closeWindow();
+            }
+        });
+    }
+</script>
+<style type="text/css">
+    .Node:before {
+        content: "\f07c";
+        padding-right: 5px;
+        font-size: 14px;
+    }
+
+    .File:before {
+        content: "\f0f6";
+        padding-right: 5px;
+        font-size: 14px;
+    }
+</style>

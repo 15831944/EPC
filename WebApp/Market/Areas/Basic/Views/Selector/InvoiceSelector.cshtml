@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "InvoiceSelector";
+}
+<div class="mini-toolbar" style="padding: 0px; border-top: 0; border-left: 0; border-right: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" iconcls="icon-add" onclick="returnValue();" plain="true">选择</a>
+                <a class="mini-button" iconcls="icon-cancel" onclick="closeWindow();" plain="true">取消</a>
+            </td>
+            <td style="white-space: nowrap;">
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit" style="height: 100px;">
+    <div id="dataGrid" url="" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID" multiselect="true"
+         borderstyle="border-left:0;border-right:0;border-bottom:0;" showpager="false">
+        <div property="columns">
+            <div type="checkcolumn">
+            </div>
+            <div field="InvoiceDate" dateformat="yyyy-MM-dd" width="120" headeralign="center">
+                开票日期
+            </div>
+            <div field="Amount" width="120" headeralign="center" align="right">
+                发票金额（元）
+            </div>
+            <div field="SumRelationValue" width="100" headeralign="center" allowsort="true" align="right">
+                冲销金额（元）
+            </div>
+            <div field="RemainRelationValue" headeralign="center" width="120" allowsort="true" align="right">
+                剩余冲销金额（元）
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var contractID = getQueryString("ContractInfoID");
+    var url = "GetContractInvoiceList?ContractInfoID=" + contractID;
+    $("#dataGrid").attr("url", url);
+
+    function returnValue() {
+        var dataGrid = mini.get("dataGrid");
+        var rows = dataGrid.getSelecteds();
+        closeWindow(rows);
+    }
+
+</script>

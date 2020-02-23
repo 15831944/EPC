@@ -1,0 +1,108 @@
+.mini-menu-horizontal .mini-menu-inner {
+    background-color: #ffffff;
+}
+.mini-flow-button {
+    line-height: 22px;
+	background: -webkit-linear-gradient(top, #0080d9, #0080d9);
+    background: -moz-linear-gradient(top, #0080d9, #0080d9);
+    background: linear-gradient(top, #0080d9, #0080d9);
+    background: -ms-linear-gradient(top, #0080d9, #0080d9);
+    background-color: #0080d9;
+    border: 1px solid #0080d9;
+    text-shadow: 1px 1px 0.5px #22629B;
+
+}
+.mini-menu-horizontal .mini-menu-inner {
+	padding: 10px;
+}
+.mini-tab {
+    font: 14px "微软雅黑",Arial,sans-serif;
+    background-image: none;
+    padding: 10px 10px 10px 10px;
+	border-bottom: 1px solid #ccc;
+	border-right: 0px;
+	border-left: 0px;
+	border-top: 0px;
+	color: #333;
+	background-color: transparent;
+	
+}
+.mini-tab-active {
+    border-bottom: solid 3px #00b8d9;
+    background: #ffffff;
+    color: #0f3869;
+    font-weight: bold;
+}
+.mini-tabs-space {
+    border-bottom: solid 1px #ccc;
+}
+.mini-tabs-space2 {
+    border-bottom: solid 1px #ccc;
+}
+
+.tab2 .mini-tab {
+    font: 14px "微软雅黑",Arial,sans-serif;
+    background-image: none;
+    padding: 10px 10px 10px 10px;
+	border-bottom: 1px solid #fff;
+	border-right: 0px;
+	border-left: 0px;
+	border-top: 0px;
+	background-color: transparent;
+	color: #333;
+	
+}
+.tab2 .mini-tab-active {
+    border-top: solid 3px #00b8d9;
+	border-bottom: 1px solid #fff;
+    background: #ffffff;
+    color: #0f3869;
+    font-weight: bold;
+}
+.tab2 .mini-tabs-space {
+    border-bottom: solid 1px #fff;
+}
+.tab2 .mini-tabs-space2 {
+    border-bottom: solid 1px #fff;
+}
+.tab2 .mini-tabs-header {
+	background-color: #f1f1f1;
+    padding: 0 10px;
+}
+
+#leftPanel{box-shadow: 4px -2px 10px #000;}
+.close_list {
+    position: absolute;
+    left: -33px;
+    background-color: #0080d9;
+    display: block;
+    top: 8px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    height: 34px;
+    width: 34px;
+    z-index: 10;
+    cursor: pointer;
+    padding-top: 0px;
+    padding-left: 0px;
+    box-shadow: -2px 2px 2px #ccc;
+}
+.mini-layout-region {
+	border: 1px solid #fff;}
+.mini-tabs-bodys {
+	border: solid 1px #fff;background: #f1f1f1;}
+.formDiv {
+    margin: 30px 30px 0px 30px;
+}
+.flow-msg {
+    background-color: #fff;
+    margin: 0px 30px 50px 30px;
+}
+.mini-layout-region {
+	border: 1px solid #fff;}
+.rowTitle{
+    font-size: 14px;
+    font-weight: 600;
+    margin-left: 20px;
+    color: #000;
+}

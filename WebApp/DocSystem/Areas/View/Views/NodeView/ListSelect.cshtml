@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "ListSelect";
+}
+<script src="@Url.Content("/DocSystem/Scripts/AdvanceQuery.js")" type="text/javascript"></script>
+<div class="mini-toolbar" style="padding: 0px; border-top: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class='mini-button'  id='btnSelect' iconcls='icon-refer' text='选择' enabled='true' visible='true'   onclick='returnList();'></a>
+                @Html.Raw(ViewBag.BtnHTML)
+            </td>
+            <td style="white-space: nowrap;">
+                <a class="mini-button" onclick="search()" iconcls="icon-find" plain="true" id="btnSearch">查询</a>
+                <a class="mini-button" onclick="clearQueryForm()" iconcls="icon-undo" plain="true" id="btnClear">清空</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="divQueryForm" style="padding-left: 11px; padding-bottom: 5px;">
+    @Html.Raw(ViewBag.QueryFormHtml)
+</div>
+<div class="mini-fit" id="dataGridDiv">
+    @Html.Raw(ViewBag.DatagridHtml)
+</div>
+<script type="text/javascript">
+    @{
+        var enumList = ViewBag.Enums as List<string>;
+        foreach (var item in enumList)
+        {
+        @Html.GetEnum(item);
+
+        }
+}
+</script>
+<script type="text/javascript">
+    @Html.Raw(ViewBag.Script)
+
+    addGridLink('dataGrid', 'BorrowDetail', '/MvcConfig/UI/List/PageView?TmplCode=BorrowDetailView&RelateID={ID}', {
+        addQueryString: false, title: "查看", funcType: 'view', width: "70%", height: "70%", linkText: "查看"
+    });
+    var spaceID = getQueryString("SpaceID");
+    var nodeConfigID = getQueryString("ConfigID");
+    var width = $(window.parent.parent).width() - 50;
+    var height = $(window).height() + 150;
+    var editForm = "Edit?ID={ID}&SpaceID=" + spaceID + "&ConfigID=" + nodeConfigID;
+    addGridLink('dataGrid', 'Name', editForm, {
+        addQueryString: false, title: "查看", funcType: 'view', width: "70%", height: "70%"
+    });
+    //var linkUrl = "Tree?SpaceID=" + spaceID + "&ConfigID=" + nodeConfigID;
+
+    //点击节点名称链接，增加首页显示最近使用
+    var _onGridLinkClick = onGridLinkClick;
+    onGridLinkClick = function (uid, key, url) {
+        _onGridLinkClick(uid, key, url);
+        var grid = mini.get("dataGrid");
+        var row = grid.getRowByUID(uid);
+        addHistory(row.Name, "", row.ID, row.SpaceID, "viewnode");
+    }
+    
+    $("#queryForm .mini-textbox").bind("keyup", function (event) {
+        if (event.keyCode == "13") {
+            search();
+        }
+    });
+
+    function openfile() {
+        var grid = mini.get("dataGrid");
+        var row = grid.getSelected();
+        if (!row) { mini.alert("请选中一条记录"); return; }
+        var url = "FileListTab?ID=" + row.ID + "&SpaceID=" + row.SpaceID + "&ConfigID=" + nodeConfigID;
+        openWindow(url, { title: '文件信息', width: "90%", height: "90%", funcType: 'view' });
+        addHistory(row.Name, "", row.ID, row.SpaceID, "openfilelist");
+    }
+</script>

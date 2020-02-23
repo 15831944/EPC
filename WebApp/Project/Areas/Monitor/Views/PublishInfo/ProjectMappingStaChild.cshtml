@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "ProjectMappingStaChild";
+}
+
+<div class="mini-fit" style="height: 100px;" id="GridArea">
+    <div id="dataGrid" class="mini-datagrid" style="width: 100%; height: 100%;"
+        url="GetProjectMappingStaChildList" showsummaryrow="true" ondrawsummarycell="onDrawSummaryCell" ondrawcell="onDrawCell">
+        <div property="columns">
+            <div type="indexcolumn"></div>
+            <div field="PublicationType" width="120" align="center" headeralign="center" allowsort="true">文件类型</div>
+            @{
+                var picSpecifications = ViewBag.PicSpecifications as List<Formula.Helper.EnumItemInfo>;
+                foreach (var item in picSpecifications)
+                {
+                    var fieldName = item.Name;
+                    string ApplyNum = item.Code + "_ApplyNum";
+                    string ApplyTotalCost = item.Code + "_ApplyTotalCost";
+                    string RealNum = item.Code + "_RealNum";
+                    string RealTotalCost = item.Code + "_RealTotalCost";
+                <div header="@fieldName" headerAlign="center">
+                    <div property="columns">
+                        <div field="@ApplyNum" width="55" align="right" summarytype="sum">打印数量</div>
+                        <div field="@ApplyTotalCost" width="55" dataType="currency"  align="right" summarytype="sum">打印费用</div>
+                        <div field="@RealNum" width="55" allowsort="true"  align="right" summarytype="sum">结算数量</div>
+                        <div field="@RealTotalCost" width="55" allowsort="true" dataType="currency"  align="right" summarytype="sum">结算费用</div>
+                    </div>
+                </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+<script type="text/ecmascript">
+    //合计添加颜色
+    function onDrawSummaryCell(e) {
+        if (e.field == "MajorCode")
+            e.cellHtml = "合计：";
+        e.cellStyle = "text-align:right; color:Brown";
+    }
+    //数值为零时，修改样式
+    function onDrawCell(e) {
+        var field = e.field;
+        var record = e.record;
+        if (field != "MajorCode" && field) {
+            if (e.value <= 0) {
+                e.cellStyle = "text-align:right; color:#c4c4c4";
+                e.cellHtml = '0';
+            }
+        }
+    }
+
+</script>

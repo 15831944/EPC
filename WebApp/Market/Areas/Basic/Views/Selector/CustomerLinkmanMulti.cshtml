@@ -1,0 +1,64 @@
+﻿<div class="mini-toolbar" style="padding: 0px; border-bottom: 0px; border-top: 0px;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" iconcls="icon-ok" plain="true" onclick="returnValue()">选择</a>
+                <a class="mini-button" iconcls="icon-cancel" plain="true" onclick="closeWindow()">取消</a>
+            </td>
+            <td style="white-space: nowrap;">
+                <input class="mini-buttonedit searchbox" id="key" emptytext="请输入联系人姓名" style="width: 200px;"
+                    onenter="quickSearch('LinkmanName');" onbuttonclick="quickSearch('LinkmanName');" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit">
+    <div id="dataGrid" class="mini-datagrid" idfield="ID" url="GetCustomerLinkmanList"
+        multiselect="true" style="width: 100%; height: 100%;" allowcellselect="true"
+        onselectionchanged="onSelectoinChanged">
+        <div property="columns">
+            <div type="checkcolumn">
+            </div>
+            <div field="LinkmanName" width="80" headeralign="center" align="center" vtype="maxLength:50"
+                required="true">
+                联系人姓名</div>
+            <div field="Position" headeralign="center" width="100" align="center" vtype="maxLength:50">
+                职务</div>
+            <div field="OfficeTelephone" width="120" headeralign="center" align="left" vtype="maxLength:50">
+                办公电话</div>
+            <div field="ResponsiblePerson" headeralign="center" align="left" width="200">
+                负责事务</div>
+            <div field="MobilePhone" width="120" headeralign="center" align="left" vtype="maxLength:50">
+                移动电话</div>
+            <div field="Fax" headeralign="center" align="left" width="120" vtype="maxLength:50">
+                传真号码</div>
+            <div field="Email" headeralign="center" align="left" width="120" vtype="maxLength:200">
+                邮箱</div>
+            <div field="OfficeRoom" headeralign="center" align="left" width="120" vtype="maxLength:200">
+                办公地址</div>
+            <div field="Remark" width="*" headeralign="center" align="left">
+                其它备注</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+  @Html.GetEnum("System.Sex")
+</script>
+<script type="text/javascript">
+    var selectMaps = {};
+    function returnValue() {
+        var data = [];
+        for (var pageIndex in selectMaps) {
+            var rows = selectMaps[pageIndex];
+            data.addRange(rows);
+        }
+        closeWindow(data);
+    }
+
+    function onSelectoinChanged(e) {
+        var grid = mini.get("dataGrid");
+        var rows = grid.getSelecteds();
+        selectMaps[grid.getPageIndex()] = rows;
+    }
+
+</script>

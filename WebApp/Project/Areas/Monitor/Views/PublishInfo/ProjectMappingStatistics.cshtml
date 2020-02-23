@@ -1,0 +1,71 @@
+﻿@{
+    ViewBag.Title = "ProjectMappingStatistics";
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+}
+<div class="mini-fit" style="height: 100px;" id="GridArea">
+    <div id="dataGrid" class="mini-datagrid" style="width: 100%; height: 100%;"
+        url="GetProjectMappingList" showsummaryrow="true" ondrawsummarycell="onDrawSummaryCell" ondrawcell="onDrawCell">
+        <div property="columns">
+            <div type="indexcolumn"></div>
+            <div field="MajorCode" width="120" align="center" headeralign="center" allowsort="true" >专业</div>
+            @{for (int i = 1; i < 13; i++)
+              {
+                  string ApplyNum = "m" + i + "_ApplyNum";
+                  string ApplyTotalCost = "m" + i + "_ApplyTotalCost";
+                  string RealNum = "m" + i + "_RealNum";
+                  string RealTotalCost = "m" + i + "_RealTotalCost";
+                <div header="@i 月" headerAlign="center">
+                    <div property="columns">
+                        <div field="@ApplyNum" width="55" headerAlign="center" align="right" summarytype="sum">打印数量</div>
+                        <div field="@ApplyTotalCost" width="55"  align="right" dataType="currency" summarytype="sum">打印费用</div>
+                        <div field="@RealNum" width="55" allowsort="true"  align="right" summarytype="sum">结算数量</div>
+                        <div field="@RealTotalCost" width="55" allowsort="true"  dataType="currency" align="right" summarytype="sum">结算费用</div>
+                    </div>
+                </div>
+              }
+            }
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum("Project.Major");
+</script>
+<script type="text/javascript">
+    addGridEnum("dataGrid", "MajorCode", "Major");
+    function onDrawCell(e) {
+        var field = e.field;
+        var record = e.record;
+        if (field != "MajorCode" && field) {
+            if (e.value > 0)
+                e.cellHtml = '<a href="javascript:onGridLink(\'' + e.field + '\')">' +mini.formatNumber(e.value, "#,0.00") + '</a>&nbsp; ';
+            else {
+                e.cellStyle = "text-align:right; color:#c4c4c4";
+                e.cellHtml = '0';
+            }
+        }
+    }
+    function onGridLink(field) {
+        var dataGrid = mini.get("dataGrid");
+        var MajorCode = dataGrid.getSelected().MajorCode;
+        var Year = "";
+        var tabData = GetTabsData();
+        for (var i = 0; i < tabData.length; i++)
+        {
+            if (tabData[i].queryfield == "Year")
+                Year = tabData[i].value;
+        }
+        var Month = field.replace(/^(m)(\d*)(\D*)/, "$2");
+        var tabData = GetTabsData();
+        var url = "/Project/Monitor/PublishInfo/ProjectMappingStaChild?Year=" + Year + "&Month=" + Month + "&MajorCode=" + MajorCode;
+        var width = "80%"; var height = "80%";
+        openWindow(url, { width: width, height: height, title: "查看" });
+    }
+    //合计添加颜色
+    function onDrawSummaryCell(e) {
+        if (e.field == "MajorCode")
+            e.cellHtml = "合计：";
+        e.cellStyle = "text-align:right; color:Brown";
+    }
+
+</script>

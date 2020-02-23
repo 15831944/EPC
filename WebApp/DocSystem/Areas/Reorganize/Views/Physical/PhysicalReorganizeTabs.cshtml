@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "PhysicalReorganizeTabs";
+}
+
+<link href="@Url.Content("~/Scripts/Reorganize/index.css")" rel="stylesheet" type="text/css" />
+@section scripts{
+}
+<div class="containers" style="height: calc(100% - 30px);">
+    <div class="center mini-fit" style="height: 100%">
+        <div id="mainTab" class="mini-tabs" activeindex="0" style="height: 100%;"
+            onactivechanged="loadTab" tabposition="left" bodystyle="border:0px">
+            <div title="整<br/><br/>编<br/><br/>中" name="Create,Execute,Wait">
+            </div>
+            <div title="整<br/><br/>编<br/><br/>完<br/><br/>成" name="Finish">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('body').css({"overflow":"hidden"});
+    function loadTab(e) {
+        var state = e.name;
+        var tabActiveIndex = mini.get("mainTab").getActiveIndex();
+        var url = "/DocSystem/Reorganize/Physical/index?State=" + state;
+        var mainTabs = mini.get("mainTab");
+        var tab = mainTabs.getTabs()[tabActiveIndex];
+        tab.url = url;
+        mainTabs.reloadTab(tab);
+    }
+</script>

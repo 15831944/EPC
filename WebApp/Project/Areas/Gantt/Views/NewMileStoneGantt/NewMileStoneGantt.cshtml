@@ -1,0 +1,212 @@
+﻿@{
+    ViewBag.Title = "MileStoneGantt";
+}
+<div class="mini-toolbar" style="padding: 0px; border-top: 0; border-left: 0; border-right: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" iconcls="icon-zoomin" onclick="zoomIn" plain="true">放大</a>
+                <a class="mini-button" iconcls="icon-zoomout" onclick="zoomOut" plain="true">缩小</a>
+            </td>
+            <td style="white-space: nowrap;">
+                @*<div name="showWBS" class="mini-checkbox" truevalue="True" falsevalue="False" text="显示WBS" onvaluechanged="onValueChanged">
+                    </div>*@
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit" id="GanttDV">
+</div>
+<div id="queryWindow" class="mini-window" title="项目开始日期" style="width: 250px; height: 160px;">
+    <div class="queryDiv">
+        <form id="queryForm" method="post">
+            <table>
+                <tr><td width="95%">请设置项目计划开始日期</td><td></td></tr>
+                <tr><td><input name="PlanStartDate" class="mini-datepicker" style='width:100%' /></td></tr>
+            </table>
+        </form>
+        <div>
+            <a class="mini-button mini-button-plain" onclick="saveStart" iconcls="icon-save" style="margin-right: 20px;">确定</a>
+            <a class="mini-button mini-button-plain" onclick="hideWindow('queryWindow')" iconcls="icon-cancel">取消</a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum("Project.Major");
+</script>
+<script type="text/javascript">
+    var projectInfoID = getQueryString("ProjectInfoID");
+
+    var gantt = initGantt();
+    gantt.render(document.getElementById("GanttDV"));
+
+    loadData("False");
+    function loadData(includeWBS) {
+        addExecuteParam("ProjectInfoID", projectInfoID);
+        addExecuteParam("IncludeWBS", includeWBS);
+        gantt.loading();
+        execute("GetTree", {
+            refresh: false, onComplete: function (data) {
+                var list = mini.arrayToTree(data, "children", "UID", "ParentTaskUID");
+                gantt.loadTasks(list);
+                gantt.unmask();
+                debugger
+                if (list && !list[0].PlanStartDate)
+                    showWindow('queryWindow');
+            }, validateForm: false
+        });
+    }
+
+    function saveStart() {
+        var d = mini.getbyName("PlanStartDate").getValue();
+        if (!d)
+            return msgUI("请设置项目计划开始日期");
+        addExecuteParam("ProjectInfoID", projectInfoID);
+        addExecuteParam("PlanStartDate", mini.formatDate(d, 'yyyy-MM-dd'));
+        execute("SaveProjectPlanStartDate", {
+            refresh: false, onComplete: function (data) {
+                loadData("False");
+            }, validateForm: false
+        });
+        hideWindow('queryWindow');
+    }
+
+    function onViewChange(e) {
+        loadData(e.value);
+    }
+
+    function gotoStandard() {
+        window.location.href = "/Project/Basic/MileStone/MileStonePlanList" + window.location.search;
+    }
+
+    function onValueChanged(e) {
+        loadData(e.value);
+    }
+
+    function zoomIn() {
+        gantt.zoomIn();
+    }
+    function zoomOut() {
+        gantt.zoomOut();
+    }
+
+    gantt.on("drawcell", function (e) {
+        var record = e.record;
+        var column = e.column;
+        var field = e.field;
+        if (field == "Milestone" && record.Milestone == 1) {
+            e.cellHtml = "<span title='里程碑'></span>";
+            e.cellStyle = "background: url(/CommonWebResource/Theme/Default/MiniUI/icons/flag_red.gif) no-repeat;";
+        }
+        else if (field == "Name" && record.WBSType) {
+            e.cellStyle = "background:#F0F0F0";
+        }
+        else if (e.column.field == "Start" || e.column.field == "Finish") {
+            if (e.value) {
+                e.cellHtml = mini.formatDate(e.value, 'yyyy-MM-dd');
+            }
+        }
+        else if (e.column.field == "MajorValue") {
+            if (e.value) {
+                var major = Major.filter(function (m) {
+                    if (m.value == e.value) return true;
+                })
+                if (major.length > 0)
+                    e.cellHtml = major[0].text;
+            }
+        }
+    });
+
+    gantt.on("itemdragstart", function (e) {
+        e.cancel = true;
+    })
+
+    gantt.on('itemtooltipneeded', function (e) {
+        var task = e.task;
+        e.tooltip = "<div>任务：" + task.Name + "</div>"
+            + "<div style='clear:both;'>计划开始日期：" + mini.formatDate(task.Start, 'yyyy-MM-dd') + "</div>"
+            + "<div>计划完成日期：" + mini.formatDate(task.Finish, 'yyyy-MM-dd') + "</div>";
+    });
+
+    function initGantt() {
+        var gantt = new PlusGantt();
+        new RGanttSchedule(gantt);
+        gantt.setStyle("width:100%;height:100%;border:0px;");
+        gantt.setAllowResize(false);
+        gantt.setMultiSelect(true);
+        gantt.setAllowDragDrop(false);
+        gantt.setTableViewWidth(590)
+        gantt.setTopTimeScale("month");
+        gantt.setTimeLines([{ date: new Date(), text: "今日", style: "width:2px;background:red;" }]);
+
+        gantt.setColumns([
+            { header: "", field: "WBSType", width: 30, align: "center", allowDrag: false, allowMove: false, visible: false },
+            { header: "", field: "Milestone", width: 30, align: "center", allowDrag: false, allowMove: false },
+            { header: mini.Gantt.Name_Text, field: "Name", width: 300, name: "taskname", headeralign: "center" },
+            { header: "专业", field: "MajorValue", width: 80, headeralign: "center" },
+            { header: "计划开始日期", field: "Start", width: 85, headeralign: "center" },
+            { header: "计划完成日期", field: "Finish", width: 85, headeralign: "center" }
+        ]);
+        //设置节点列
+        gantt.setTreeColumn("taskname");
+        return gantt;
+    }
+</script>
+<style type="text/css">
+    .mini-splitter-border {
+        border-top: 0px;
+        border-left: 0px;
+        border-right: 0px;
+        border-bottom: 0px;
+    }
+
+    .icon-MileStone {
+        background: url(/CommonWebResource/Theme/Default/MiniUI/icons/flag_red.gif) no-repeat;
+    }
+
+    .mini-button .mini-button-icon {
+        padding-left: 5px;
+        padding-top: 4px;
+    }
+
+    .icon-zoomin, .icon-save, .icon-cancel, .mini-tools-close {
+        background: none !important;
+    }
+
+    .icon-zoomout {
+        background: none !important;
+    }
+
+        .icon-zoomout:before {
+            content: "\f010";
+            padding-right: 5px;
+            font-size: 14px;
+        }
+
+    .mini-window .mini-panel-header {
+        background-image: none;
+        background-color: rgba(54, 106, 160, 0.8) !important;
+        border-bottom: solid 1px rgba(54, 106, 160, 0.8) !important;
+    }
+
+    .mini-panel-header-inner {
+        padding-top: 10px;
+        padding-left: 16px;
+        padding-right: 30px;
+        display: inline-block;
+    }
+
+    .mini-panel .mini-tools {
+        top: 10px;
+        right: 8px;
+    }
+
+    .mini-buttonedit {
+        height: 31px;
+        margin: 0px;
+    }
+
+    .mini-buttonedit-border {
+        padding-right: 0px !important;
+    }
+</style>

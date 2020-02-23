@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "IndicatorCategoryList";
+}
+<div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" iconcls="icon-add" onclick="add({url:'IndicatorCategoryEdit',height:250});"
+                    plain="true">增加</a>
+                <a class="mini-button" iconcls="icon-edit" onclick="edit({url:'IndicatorCategoryEdit',height:250});"
+                    plain="true">编辑</a>
+                <a class="mini-button" iconcls="icon-remove" onclick="del()" plain="true">删除</a>
+               @* <a class="mini-button" iconcls="icon-ok" onclick="" plain="true">作废</a>*@
+            </td>
+            <td style="white-space: nowrap;">
+                <input class="mini-buttonedit searchbox" id="key" emptytext="请输入名称或编号" style="width: 200px;"
+                    onenter="quickSearch('Name,Code');" onbuttonclick="quickSearch('Name,Code');" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit" style="height: 100px;">
+    <div id="dataGrid" url="GetList" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID"
+        multiselect="true" sortfield="SortIndex">
+        <div property="columns">
+            <div type="checkcolumn">
+            </div>
+            <div field="Name" width="*" headeralign="center" allowsort="true">
+                名称</div>
+            <div field="Code" width="120" headeralign="center" allowsort="true">
+                编号</div>
+            <div field="OrgType" width="300" headeralign="center" allowsort="true">
+                定义组织类别</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+   @Html.GetEnum(typeof(Config.ConnEnum));
+   @Html.GetEnum(typeof(Market.Logic.IndicatorOrgType));
+</script>
+<script type="text/javascript">
+    addGridEnum("dataGrid", "FieldName", "EnumKey");
+    addGridEnum("dataGrid", "OrgType", "IndicatorOrgType");
+</script>

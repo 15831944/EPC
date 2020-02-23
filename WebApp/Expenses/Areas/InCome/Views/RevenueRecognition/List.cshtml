@@ -1,0 +1,318 @@
+﻿@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+}
+
+<div class="mini-fit" id="gridArea">
+    <div id="dataGrid" url="GetList" class="mini-datagrid" style="width: 100%; height: 100%;" showpager="false" enablehottrack="false"
+         idfield="ID" multiselect="true" showcolumns="false">
+        <div property="columns">
+            <div field="State" width="60" headeralign="center" allowsort="false" renderer="onStateRenderer">
+            </div>
+            <div field="Content" width="*" headeralign="center" allowsort="false" renderer="onContentRenderer">
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function onStateRenderer(e) {
+        var rec = e.record;
+        var rowIndex = e.rowIndex;
+        var $table = $("<table width=\"100%\" border=\"0\" cellspacing=\"5\" cellpadding=\"0\"></table");
+
+        var $tr1td = $("<td></td>");
+        if (rec.HasReven == "true") {
+            if (rec.State == "Finish") {
+                $titleInfo = $('<span class="titleSpan  titleFinish" onclick="">发布</span>');
+                $tr1td.append($titleInfo);
+            }
+            else {
+                $titleInfo = $('<span class="titleSpan titleUnFinish" onclick="">编制</span>');
+                $tr1td.append($titleInfo);
+            }
+        }
+        else {
+            $titleInfo = $('<span class="titleSpan titleNone" onclick="">未编</span>');
+            $tr1td.append($titleInfo);
+        }
+
+        var $tr1 = $("<tr></tr>").append($tr1td);
+        $table.append($("<tr></tr>").append($tr1));
+        var $html = $("<div></div>").attr("id", "Content" + rec.ID).append($table);
+        $html.addClass("left_main_list")
+        return $html[0].outerHTML;
+    }
+
+    function onContentRenderer(e) {
+        var rec = e.record;
+        var rowIndex = e.rowIndex;
+        var $table = $("<table width=\"100%\" border=\"0\" cellspacing=\"5\" cellpadding=\"0\"></table");
+
+        //第一行
+        var $tr1td = $("<td></td>");
+        if (rec.HasReven == "true") {
+
+            $tr1td.append($("<h3></h3>").text(rec.Name));
+            $sumInfo = $('<h4><span>确认收入总计:</span><a href="javascript:void();" class="now" onclick="viewRevInfo(\'' + rec.ID + '\')">'
+                + formatCurrency(rec.SumIncomeValue) + '</a>元</h4>');
+            $tr1td.append($sumInfo);
+        }
+        else {
+            $tr1td.append($("<h3 style='color:#ccc'></h3>").text(rec.Name));
+            $tr1td.append($("<h4 style='color:#ccc'></h4>").text(" 未编制"));
+        }
+        var $tr1 = $("<tr></tr>").append($tr1td);
+        $table.append($("<tr></tr>").append($tr1));
+
+        if (rec.ID) {
+            //第二行
+            var title = $.trim(rec.Name);
+            var $tr2td = $("<td></td>");
+            $tr2td.append($("<h0></h0>").text("首次发布人：" + rec.RegisterUserName));
+            $tr2td.append($("<h0></h0>").text("首次发布人日期：" + mini.formatDate(rec.ModifyDate, "yyyy-MM-dd HH:mm:ss")));
+
+            if (rec.ChangeCount > 0) {
+                $modifyInfo = $('<span>最近发布人：' + rec.LastAdjustUser + '</span><span>最近发布日期：' + mini.formatDate(rec.LastAdjustDate, "yyyy-MM-dd HH:mm:ss") + '</span>');
+                $tr2td.append($modifyInfo);
+            }
+
+            $changeInfo = $('<span>调整过:<a href="javascript:void();" class="now" onclick="viewChangeLog(\'' + rec.ID + '\')">'
+                + rec.ChangeCount + '次</a></span>');
+            $tr2td.append($changeInfo);
+
+
+            var $tr2 = $("<tr></tr>").append($tr2td);
+            $table.append($tr2);
+        }
+
+        //第三行
+        if (rec.DeptIncomeInfo) {
+            var title = $.trim(rec.Name);
+            var $tr3td = $("<td></td>");
+            $titleValue = $('<h4>各部门收入:<h4/>');
+            $tr3td.append($titleValue);
+            var deptList = mini.decode(rec.DeptIncomeInfo);
+            for (var i = 0; i < deptList.length; i++) {
+                var $deptValue = $('<span>' + deptList[i].DeptName + ':</span><span>' + formatCurrency(deptList[i].InComveValue) + '</span>');
+                $tr3td.append($deptValue);
+            }
+            var $tr3 = $("<tr></tr>").append($tr3td);
+            $table.append($tr3);
+        }
+
+        //第四行
+        var $tr4td = $("<td></td>");
+        if (!rec.ID) {
+            $addBtn = $('<span class="stateSpan Btn" onclick="Add();">编制</span>');
+            $adjustBtn = $('<span class="stateSpan  BtnDisable">调整</span>');
+            $delBtn = $('<span class="stateSpan BtnDisable">撤销</span>');
+            $tr4td.append($delBtn);
+            $tr4td.append($adjustBtn);
+            $tr4td.append($addBtn);
+        }
+        else if (rec.State == "Finish") {
+            $addBtn = $('<span class="stateSpan BtnDisable">编制</span>');
+            $adjustBtn = $('<span class="stateSpan Adjust" onclick="Adjust(\'' + rec.ID + '\')">调整</span>');
+            $delBtn = $('<span class="stateSpan Revert" onclick="Remove(\'' + rec.ID + '\')">撤销</span>');
+            $tr4td.append($delBtn);
+            $tr4td.append($adjustBtn);
+            $tr4td.append($addBtn);
+        }
+        else {
+            $addBtn = $('<span class="stateSpan Btn "  onclick="Add();">编制</span>');
+            $adjustBtn = $('<span class="stateSpan  BtnDisable">调整</span>');
+            $delBtn = $('<span class="stateSpan Revert" onclick="Remove(\'' + rec.ID + '\')">撤销</span>');
+            $tr4td.append($delBtn);
+            $tr4td.append($adjustBtn);
+            $tr4td.append($addBtn);
+        }
+        var $tr4 = $("<tr></tr>").append($tr4td);
+        $table.append($tr4);
+
+        var $html = $("<div></div>").attr("id", "Content" + rec.ID).append($table);
+        $html.addClass("left_main_list")
+        return $html[0].outerHTML;
+    }
+
+    function Add() {
+        var dataGrid = mini.get("dataGrid");
+        var row = dataGrid.getSelected();
+        if (row) {
+            addExecuteParam("BelongYear", row.BelongYear);
+            addExecuteParam("BelongMonth", row.BelongMonth);
+            execute("SubmitRevenueInfo", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    var url = "/Expenses/InCome/IncomeConfirm/PageView?TmplCode=IncomeValueConfirm&FlowCode=IncomeValueConfirm";
+                    if (data.ID) {
+                        url += "&ID=" + data.ID;
+                    }
+                    openWindow(url, {
+                        refresh: false, data: row, title: "收入确认", width: "85%", height: "90%",
+                        onDestroy: function (data) {
+                            //if (data == "close") return;
+                            dataGrid.reload();
+                        }
+                    });
+                }, validateForm: false
+            });
+        }
+    }
+
+    function Adjust(ID) {
+        var dataGrid = mini.get("dataGrid");
+        msgUI("您确定要调整收入吗？", 2, function (result) {
+            if (result != "ok") return;
+            if (ID) {
+                addExecuteParam("ID", ID);
+                execute("ValidateAdjust", {
+                    showLoading: true, refresh: false, onComplete: function (data) {
+                        var url = "/Expenses/InCome/IncomeAdjust/PageView?TmplCode=IncomeAdjust&FlowCode=IncomeAdjust";
+                        if (data && data.ID) {
+                            url += "&ID=" + data.ID;
+                        }
+                        else {
+                            url += "&RevenueInfoID=" + ID;
+                        }
+                        openWindow(url, {
+                            refresh: false, title: "收入调整", width: "85%", height: "90%",
+                            onDestroy: function (data) {
+                                if (data == "close") return;
+                                dataGrid.reload();
+                            }
+                        });
+                    }, validateForm: false
+                });
+            }
+        });
+    }
+
+    function viewRevInfo(ID) {
+        if (ID) {
+            var url = "/Expenses/InCome/IncomeConfirm/PageView?TmplCode=IncomeValueConfirm&FlowCode=IncomeValueConfirm&FuncType=View&ID=" + ID;
+            openWindow(url, {
+                refresh: false, title: "收入确认", width: "85%", height: "90%",
+                onDestroy: function (data) {
+                }
+            });
+        }
+    }
+
+    function viewChangeLog(ID) {
+        if (ID) {
+            var url = "/MvcConfig/UI/List/PageView?TmplCode=IncomeAdjust&RevenueInfoID=" + ID;
+            openWindow(url, {
+                refresh: false, title: "收入调整记录", width: "70%", height: "70%",
+                onDestroy: function (data) {
+                }
+            });
+        }
+    }
+
+    function Remove(ID) {
+        msgUI("您确定要删除选中的确认收入信息吗？", 2, function (result) {
+            if (result != "ok") return;
+            if (ID) {
+                addExecuteParam("ID", ID);
+                execute("RemoveRevenueInfo", {
+                    showLoading: true, refresh: false, onComplete: function (data) {
+                        mini.get("dataGrid").reload();
+                    }, validateForm: false
+                });
+
+            }
+        });
+    }
+
+    function formatCurrency(num) {
+        if (!num || isNaN(parseFloat(num))) num = 0;
+        num = num.toString().replace(/\$|\,/g, '');
+        if (isNaN(num))
+            num = "0";
+        sign = (num == (num = Math.abs(num)));
+        num = Math.floor(num * 100 + 0.50000000001);
+        cents = num % 100;
+        num = Math.floor(num / 100).toString();
+        if (cents < 10)
+            cents = "0" + cents;
+        for (var i = 0; i < Math.floor((num.length - (1 + i)) / 3) ; i++)
+            num = num.substring(0, num.length - (4 * i + 3)) + ',' +
+            num.substring(num.length - (4 * i + 3));
+        return (((sign) ? '' : '-') + num + '.' + cents);
+    }
+
+</script>
+
+@section scripts{
+    <link href="@Url.Content("/Expenses/Scripts/Income/project.css")" r rel="stylesheet" type="text/css" />
+}
+
+<style>
+    .mini-modal {
+        opacity: .9;
+        background: #ccc;
+    }
+
+    .stateSpan {
+        padding: 0px 8px !important;
+        float: right !important;
+        border-radius: 15px;
+        font-size: 12px;
+        background-color: transparent !important;
+        margin-right: 5px !important;
+    }
+
+    .Revert {
+        color: #c63c39;
+        border: 1px solid #c63c39;
+        cursor: pointer;
+    }
+
+    .Adjust {
+        color: #2b88d8;
+        border: 1px solid #2b88d8;
+        cursor: pointer;
+    }
+
+    .BtnDisable {
+        background-color: #FFF;
+        color: #ccc;
+        border: 1px solid #ccc;
+    }
+
+    .Btn {
+        background-color: #FFF;
+        color: #82bf00;
+        border: 1px solid #82bf00;
+        cursor: pointer;
+    }
+
+
+    .titleSpan {
+        border-radius: 21px;
+        font-size: 13px;
+        /* margin-right: 5px !important; */
+        height: 42px;
+        width: 42px;
+        text-align: center;
+        line-height: 42px;
+    }
+
+    .titleFinish {
+        background-color: #82bf00;
+        color: #fff;
+        border: 1px solid #82bf00;
+    }
+
+    .titleUnFinish {
+        background-color: #2b88d8;
+        color: #fff;
+        border: 1px solid #2b88d8;
+    }
+
+    .titleNone {
+        background-color: #ccc;
+        color: #FFF;
+        border: 1px solid #ccc;
+    }
+</style>

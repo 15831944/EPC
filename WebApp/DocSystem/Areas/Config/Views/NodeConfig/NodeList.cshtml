@@ -1,0 +1,574 @@
+﻿@{
+    ViewBag.Title = "NodeList";
+}
+<div id="minilayout" class="mini-layout" style="width: 100%; height: 100%;">
+    <div region="west" width="300" showheader="false">
+        <div class="mini-toolbar" style="padding: 2px; border-top: 0; border-left: 0; border-right: 0;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        <a class="mini-button" iconcls="icon-add" onclick="addNode();" plain="true">添加</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="mini-fit">
+            <div id="mygrid" url="NodeConfigGetList" class="mini-datagrid" onselectionchanged="onRowSelectChange"
+                 style="width: 100%; height: 100%;" idfield="ID" multiselect='false' borderstyle="border:0"
+                 allowunselect='false' selectonload='true'>
+                <div property="columns">
+                    <div type="checkcolumn">
+                    </div>
+                    <div field="delete" width="50" headeralign="center" align="center">
+                        删除
+                    </div>
+                    <div field="Name" width="*" headeralign="center" allowsort="true">
+                        名称
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div title="center" region="center">
+        <div class="mini-fit" style="padding-top: 5px;">
+            <div id="propertyTab" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;">
+                <div title="属性设置">
+                    <div class="mini-toolbar" style="padding: 2px; border-bottom: 0;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="width: 100%;">
+                                    <a class="mini-button" iconcls="icon-add" onclick="addAttr();" plain="true">添加</a>
+                                    <a class="mini-button" iconcls="icon-remove" onclick="deleteAttr('nodeAttrGrid','DeleteNodeList')"
+                                       plain="true">删除</a>
+                                    <a class="mini-button" iconcls="icon-save" onclick="saveList('nodeAttrGrid', 'SaveNodeList')"
+                                       plain="true">保存</a>
+                                    <a class="mini-button" iconcls="icon-upload" onclick="moveup('nodeAttrGrid')" plain="true">上移</a>
+                                    <a class="mini-button" iconcls="icon-download" onclick="movedown('nodeAttrGrid')" plain="true">
+                                        下移
+                                    </a>
+                                </td>
+                                <td class="gw-toolbar-right">
+                                    <input id="key" class="mini-buttonedit gw-searchbox" emptytext="请输入属性名称或字段名称" onenter="quickSearch('AttrField,AttrName',{gridId:'nodeAttrGrid'});"
+                                           onbuttonclick="quickSearch('AttrField,AttrName',{gridId:'nodeAttrGrid'});" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="mini-fit">
+                        <div id="nodeAttrGrid" url="NodeAttrConfigGetList" class="mini-datagrid" style="width: 100%;
+                            height: 100%;" idfield="ID" multiselect="true" allowcelledit="true" allowcellselect="true"
+                             editnextonenterkey="true" oncellbeginedit="OnCellBeginEdit" ondrawcell="OnDrawCell" 
+                            onbeforeselect="OnBeforeSelect" oncellendedit ="OnCellEndEdit">
+                            <div property="columns">
+                                <div type="checkcolumn">
+                                </div>
+                                <div field="AttrName" vtype="required" width="200" headeralign="center" allowsort="true">
+                                    属性名称
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="AttrField" vtype="english;required;" width="100" headeralign="center" allowsort="true">
+                                    字段名称
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div type="comboboxcolumn" vtype="required" field="DataType" autoshowpopup="true" width="80"
+                                     headeralign="center" allowsort="true" align="center">
+                                    数据类型<input property="editor" textfield="text" valuefield="value" class="mini-combobox" style="width: 100%;"
+                                               data="AttrDataType" />
+                                </div>
+                                <div type="comboboxcolumn" vtype="required" field="InputType" autoshowpopup="true" width="80"
+                                     headeralign="center" allowsort="true" align="center">
+                                    输入类型<input property="editor" textfield="text" valuefield="value" class="mini-combobox" style="width: 100%;"
+                                               data="ControlType" />
+                                </div>
+                                <div type="comboboxcolumn" vtype="required" field="ValidateType" autoshowpopup="true" width="80"
+                                     headeralign="center" allowsort="true" align="center">
+                                    验证类别<input property="editor" textfield="text" valuefield="value" class="mini-combobox" style="width: 100%;"
+                                               data="ValidateType" />
+                                </div>
+                                <div type="checkboxcolumn" field="Required" truevalue="True" falsevalue="False" width="40"
+                                     headeralign="center">
+                                    必填
+                                </div>
+                                <div type="checkboxcolumn" field="Disabled" truevalue="True" falsevalue="False" width="40"
+                                     headeralign="center">
+                                    只读
+                                </div>
+                                <div type="checkboxcolumn" field="Visible" truevalue="True" falsevalue="False" width="40" headeralign="center">
+                                    可见
+                                </div>
+                                <div type="checkboxcolumn" field="FulltextProp" truevalue="True" falsevalue="False" width="55" headeralign="center">
+                                    全文检索
+                                </div>
+                                <div type="checkboxcolumn" field="AdvancedSearch" truevalue="True" falsevalue="False" width="55" headeralign="center">
+                                    高级检索
+                                </div>
+                                <div field="DefaultValue" width="100" headeralign="center" allowsort="true">
+                                    默认值
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="VType" width="100" headeralign="center">
+                                    VType<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div type="checkboxcolumn" field="IsEnum" truevalue="True" falsevalue="False" width="50" headeralign="center">
+                                    枚举
+                                </div>
+                                <div type="checkboxcolumn" field="MultiSelect" truevalue="True" falsevalue="False" width="50" headeralign="center">
+                                    多选
+                                </div>
+                                <div field="TextFieldName" vtype="english;" width="100" headeralign="center" allowsort="true">
+                                    TextName
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="EnumKey" headeralign="center" width="120" allowsort="true" align="center">
+                                    枚举KEY
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div type="comboboxcolumn" field="SelectorKey" autoshowpopup="true" width="160"
+                                     headeralign="center" allowsort="true" align="center">
+                                    选择页面<input property="editor" textfield="text" valuefield="value" class="mini-combobox" style="width: 100%;"
+                                               data="SelectorEnum" allowinput="true"/>
+                                </div>
+                                <div field="ReturnParams" width="100" headeralign="center">
+                                    返回值格式<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div title="列表定义">
+                    <div class="mini-toolbar" style="padding: 2px; border-bottom: 0;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="width: 100%;">
+                                    <a class="mini-button" iconcls="icon-add" onclick="addListConfig('listConfigGrid');" plain="true">
+                                        添加
+                                    </a>
+                                    <a class="mini-button" iconcls="icon-remove" onclick=" deleteAttr('listConfigGrid','DeletelistConfig')"
+                                       plain="true">删除</a>
+                                    <a class="mini-button" iconcls="icon-save" onclick="saveList('listConfigGrid','SaveListConfig');"
+                                       plain="true">保存</a>
+                                    <a class="mini-button" iconcls="icon-upload" onclick="moveup('listConfigGrid')" plain="true">上移</a>
+                                    <a class="mini-button" iconcls="icon-download" onclick="movedown('listConfigGrid')" plain="true">
+                                        下移
+                                    </a>
+                                </td>
+                                <td class="gw-toolbar-right">
+                                    <input id="listConfigKey" class="mini-buttonedit gw-searchbox" emptytext="请输入列名或字段名" onenter="quickSearch('AttrField,AttrName',{gridId:'listConfigGrid',queryBoxId:'listConfigKey'});"
+                                           onbuttonclick="quickSearch('AttrField,AttrName',{gridId:'listConfigGrid',queryBoxId:'listConfigKey'});" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="mini-fit">
+                        <div id="listConfigGrid" url="ListConfigDetailGetList" class="mini-datagrid" style="width: 100%;
+                            height: 100%;" idfield="ID" multiselect="true" allowcelledit="true" allowcellselect="true" editnextonenterkey="true">
+                            <div property="columns">
+                                <div type="checkcolumn">
+                                </div>
+                                <div field="AttrName" width="200" headeralign="center" allowsort="true">
+                                    列名
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="AttrField" width="120" headeralign="center" allowsort="true" align="center">
+                                    字段名
+                                </div>
+                                <div field="Width" width="120" headeralign="center" allowsort="true" align="center">
+                                    宽度
+                                    <input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div type="comboboxcolumn" autoshowpopup="true" vtype="required" field="Align" headeralign="center"
+                                     width="120" allowsort="true" align="center">
+                                    对齐<input property="editor" textfield="text" valuefield="value" class="mini-combobox" style="width: 100%;"
+                                             data="Algin" />
+                                </div>
+                                <div type="checkboxcolumn" truevalue="True" falsevalue="False" width="60" field="Dispaly" headeralign="center"
+                                     width="120" allowsort="true" align="center">
+                                    显示
+                                </div>
+                                <div type="checkboxcolumn" truevalue="True" falsevalue="False" width="60" field="AllowSort"
+                                     headeralign="center" width="120" allowsort="true" align="center">
+                                    排序
+                                </div>
+                                <div field="DetailSort" headeralign="center" width="120" allowsort="true" align="center">
+                                    序号
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div title="查询定义">
+                    <div class="mini-toolbar" style="padding: 2px; border-bottom: 0;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="width: 100%;">
+                                    <a class="mini-button" iconcls="icon-add" onclick="addListConfig('queryConfigGrid');" plain="true">
+                                        添加
+                                    </a>
+                                    <a class="mini-button" iconcls="icon-remove" onclick="deleteAttr('queryConfigGrid','DeletelistQueryConfigGrid')"
+                                       plain="true">删除</a>
+                                    <a class="mini-button" iconcls="icon-save" onclick="saveList('queryConfigGrid','SaveListQueryConfig');"
+                                       plain="true">保存</a>
+                                    <a class="mini-button" iconcls="icon-upload" onclick="moveup('queryConfigGrid')" plain="true">
+                                        上移
+                                    </a>
+                                    <a class="mini-button" iconcls="icon-download" onclick="movedown('queryConfigGrid')" plain="true">
+                                        下移
+                                    </a>
+                                </td>
+                                <td class="gw-toolbar-right">
+                                    <input id="queryParamKey" class="mini-buttonedit gw-searchbox" emptytext="请输入名称" onenter="quickSearch('AttrField,AttrName',{gridId:'queryConfigGrid',queryBoxId:'queryParamKey'});"
+                                           onbuttonclick="quickSearch('AttrField,AttrName',{gridId:'queryConfigGrid',queryBoxId:'queryParamKey'});" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="mini-fit">
+                        <div id="queryConfigGrid" url="QueryConfigGetList" class="mini-datagrid" style="width: 100%;
+                            height: 100%;" idfield="ID" multiselect="true" allowcelledit="true" allowcellselect="true"
+                             editnextonenterkey="true">
+                            <div property="columns">
+                                <div type="checkcolumn">
+                                </div>
+                                <div field="AttrName" vtype="required" width="200" headeralign="center" allowsort="true">
+                                    名称<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="AttrField" vtype="required" width="*" headeralign="center" allowsort="true">
+                                    FieldName<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                                <div field="InnerField" width="120" headeralign="center" allowsort="true" align="center">
+                                    InnerName
+                                </div>
+                                <div field="DataType" width="120" headeralign="center" allowsort="true" align="center">
+                                    数据类型
+                                </div>
+                                <div field="InKey" type="checkboxcolumn" truevalue="True" falsevalue="False" width="80" headeralign="center"
+                                     allowsort="true" align="center">
+                                    快捷查询
+                                </div>
+                                @*<div field="InAdvancedQuery" type="checkboxcolumn" truevalue="True" falsevalue="False" width="80"
+                                         headeralign="center" allowsort="true" align="center">
+                                        高级查询
+                                    </div>*@
+                                <div field="QueryType" type="comboboxcolumn" autoshowpopup="true" vtype="required" headeralign="center"
+                                     width="120" allowsort="true" align="center">
+                                    运算符<input property="editor" textfield="text" valuefield="value" class="mini-combobox" style="width: 100%;"
+                                              data="QueryType" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div title="文件对象">
+                    <div class="mini-toolbar" style="padding: 2px; border-bottom: 0;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="width: 100%;">
+                                    <a class="mini-button" iconcls="icon-add" onclick="addFileRelation();" plain="true">添加</a>
+                                    <a class="mini-button" iconcls="icon-remove" onclick="deleteAttr('relationGrid','deletefilenode')"
+                                       plain="true">删除</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="mini-fit">
+                        <div id="relationGrid" url="getrelation" class="mini-datagrid" style="width: 100%; height: 100%;"
+                             idfield="ID" multiselect="true">
+                            <div property="columns">
+                                <div type="checkcolumn">
+                                </div>
+                                <div field="Name" vtype="required" width="*" headeralign="center" allowsort="true">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum(typeof(DocSystem.Logic.Domain.AttrDataType));
+    @Html.GetEnum(typeof(DocSystem.Logic.ControlType));
+    @Html.GetEnum(typeof(DocSystem.Logic.Domain.ValidateType));
+    @Html.GetEnum(typeof(DocSystem.Logic.Algin));
+    @Html.GetEnum(typeof(DocSystem.Logic.Domain.QueryType));
+    var SelectorEnum = @Html.Raw(ViewBag.SelectorEnum);
+</script>
+<script type="text/javascript">
+    addGridButton("mygrid", "delete", {
+        linkText: '删除', onButtonClick: function (row) {
+            var dataGrid = mini.get("mygrid");
+            msgUI("你确认删除选中的记录吗？", 2, function (result) {
+                if (result != "ok")
+                    return;
+                addExecuteParam("ListIDs", row.ID);
+                execute("Delete", {
+                    validateForm: false, showLoading: true, refresh: false, onComplete: function (data) {
+                        dataGrid.removeRow(row);
+                        mini.get("listConfigGrid").clearRows();
+                        mini.get("queryConfigGrid").clearRows();
+                        mini.get("nodeAttrGrid").clearRows();
+                        mini.get("relationGrid").clearRows();
+                    }
+                });
+            });
+
+        }
+    });
+
+    function addNode() {
+        add({ url: "/DocSystem/Config/NodeConfig/NodeEdit?SpaceID={SpaceID}", width: 700, height: "60%", gridId: "mygrid" });
+    }
+    addGridLink('mygrid', 'Name', '/DocSystem/Config/NodeConfig/NodeEdit?ID={ID}', {
+        width: 700, height: "60%", onDestroy: function () {
+            mini.get("mygrid").reload();
+        }
+    });
+    function addListConfig(GridID) {
+        var nodeGrid = mini.get("mygrid");
+        var row = nodeGrid.getSelected();
+        if (!row) { alert("请选择一个节点信息"); return; }
+        openWindow("/DocSystem/Config/NodeConfig/NodeAttrSelect?NodeID=" + row.ID, {
+            refresh: false, title: "属性选择", width: 750, height: 500,
+            onDestroy: function (rows) {
+                if (rows == "close" || !rows || rows.length == 0) return;
+                addExecuteParam("ListData", mini.encode(rows));
+                addExecuteParam("NodeID", row.ID);
+                addExecuteParam("GridID", GridID);
+                execute("addListConfig", {
+                    showLoading: true, onComplete: function (data) {
+                        mini.get(GridID).reload();
+                    }
+                });
+            }
+        });
+    }
+    function addFileRelation() {
+        var nodeGrid = mini.get("mygrid");
+        var row = nodeGrid.getSelected();
+        if (!row) { alert("请选择一个节点信息"); return; }
+        openWindow("/DocSystem/Config/NodeConfig/FileSelect?NodeID=" + row.ID, {
+            refresh: false, title: "属性选择", width: 750, height: 500,
+            onDestroy: function (rows) {
+                if (rows == "close" || !rows || rows.length == 0) return;
+                addExecuteParam("ListData", mini.encode(rows));
+                addExecuteParam("NodeID", row.ID);
+                execute("addfilenode", {
+                    showLoading: true, onComplete: function (data) {
+                        mini.get(relationGrid).reload();
+                    }
+                });
+            }
+        });
+
+    }
+    function onRowSelectChange(e) {
+        var row = e.selected; if (!row) {
+            mini.get("nodeAttrGrid").load();
+            mini.get("listConfigGrid").load();
+            mini.get("queryConfigGrid").load();
+            mini.get("relationGrid").load();
+            return;
+        }
+
+        var nodeAttrGrid = mini.get("nodeAttrGrid");
+        nodeAttrGrid.setUrl(nodeAttrGrid.url.split('?')[0] + "?NodeID=" + row.ID);
+        nodeAttrGrid.load();
+        var listConfigGrid = mini.get("listConfigGrid");
+        listConfigGrid.setUrl(listConfigGrid.url.split('?')[0] + "?NodeID=" + row.ID);
+        listConfigGrid.load();
+        var queryConfigGrid = mini.get("queryConfigGrid");
+        queryConfigGrid.setUrl(queryConfigGrid.url.split('?')[0] + "?NodeID=" + row.ID);
+        queryConfigGrid.load();
+        var relationGrid = mini.get("relationGrid");
+        relationGrid.setUrl(relationGrid.url.split('?')[0] + "?NodeID=" + row.ID);
+        relationGrid.load();
+    }
+
+    function OnCellBeginEdit(e) {
+        var record = e.record, field = e.field;
+        if (record["AttrType"] == "System" && (record["IsEdit"] == "False" || field == "AttrField")) {
+                e.cancel = true;
+        }
+    }
+
+    function OnCellEndEdit(e) {
+        var field = e.field,row = e.row,grid= e.sender;
+        if(field=="InputType")
+        {
+            var value = row[field];
+            if(value.indexOf("Combobox")>=0)
+            {
+                var defaultData  = {IsEnum:"True"};
+                grid.updateRow(row,defaultData);
+            }
+            else
+            {
+                var defaultData  = {IsEnum:"False",TextName:"",EnumKey:""};
+                grid.updateRow(row,defaultData);
+            }
+            if(value.indexOf("ButtonEdit")>=0)
+            {
+                var defaultData  = {ReturnParams:"value:ID,text:Name"};
+                grid.updateRow(row,defaultData);
+            }
+            else
+            {
+                var defaultData  = {SelectorKey:"",ReturnParams:""};
+                grid.updateRow(row,defaultData);
+            }
+        }
+    }
+
+    function OnDrawCell(e) {
+        var record = e.record, field = e.field;
+        if (record["AttrType"] == "System" && (record["IsEdit"] == "False" || field == "AttrField")) {
+            e.cellStyle = "background:#F0F0F0";
+        }
+    }
+
+    function OnBeforeSelect(e) {
+        var record = e.record;
+        if (record["IsEdit"] == "False") {
+            e.cancel = true;
+        }
+    }
+
+    function addAttr(GridID) {
+        var nodeGrid = mini.get("mygrid");
+        var row = nodeGrid.getSelected();
+        if (!row) { alert("请选择一个节点信息"); return; }
+        var newRow = { DataType: "Varchar", InputType: "TextBox", ValidateType: "None", IsEnum: "False", Required: "False", VType: "" };
+        mini.get("nodeAttrGrid").addRow(newRow, 0);
+    }
+
+
+    function saveList(gridID, method) {
+        var nodeGrid = mini.get("mygrid");
+        var row = nodeGrid.getSelected();
+        if (!row) { alert("请选择一个节点信息"); return; }
+        var grid = mini.get(gridID);
+        var data = grid.getChanges();
+        //data[0].InputType
+        //11:48:06.638 "Combobox"
+        var enumFields = [];
+        var popupFields = [];
+        for (var i = 0; i < data.length; i++) {
+            var _data  = data[i];
+            var SelectorKeyCon =_data.SelectorKey != '' && _data.SelectorKey != null; 
+            var ReturnParamsCon = _data.ReturnParams != '' && _data.ReturnParams != null; 
+            var InputTypeCon =  _data.InputType&&  _data.InputType.indexOf("ButtonEdit")>=0;
+            if(InputTypeCon)
+            {
+                if (!(ReturnParamsCon && SelectorKeyCon))
+                    popupFields.push(_data["AttrField"]);
+            }
+
+            var EnumKeyCon = _data.EnumKey != '' && _data.EnumKey != null;
+            var IsEnumCon = _data.IsEnum == 'True';
+            var InputTypeCon = _data.InputType&&  _data.InputType.indexOf("Combobox")>=0;
+            if (!EnumKeyCon && !IsEnumCon && !InputTypeCon) continue;
+            if (!(EnumKeyCon && IsEnumCon && InputTypeCon))
+                enumFields.push(_data["AttrField"]);
+
+        }
+        if (enumFields.length) {
+            msgUI("枚举字段【" + enumFields.join(',') + "】</br>必须指定Combobox类型、勾选枚举、枚举Key不能为空");
+            return;
+        }
+        if (popupFields.length) {
+            msgUI("弹出选择字段【" + popupFields.join(',') + "】</br>弹出选择控件，选择页面、返回值格式不能为空");
+            return;
+        }
+        if (!method) { msgUI("请输入方法名"); return; }
+        addExecuteParam("ListData", mini.encode(data));
+        addExecuteParam("NodeID", row.ID);
+        execute(method, {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                msgUI("保存成功", 1, function () { grid.reload(); });
+            }
+        });
+    }
+
+
+
+
+    function moveup(gridID) {
+
+        var grid = mini.get(gridID);
+        var row = grid.getSelected();
+        if (row == null) return;
+        if (!row.ID) {
+            //刚添加没有保存的数据
+            var ary = []; ary.push(row);
+            grid.moveUp(ary);
+        }
+        else {
+            addExecuteParam("ID", row.ID);
+            addExecuteParam("gridID", gridID);
+            execute("moveup", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    var index = grid.indexOf(row);
+                    grid.moveRow(row, index - 1);
+                }
+            });
+        }
+    }
+
+    function movedown(gridID) {
+
+        var grid = mini.get(gridID);
+        var row = grid.getSelected();
+        if (row == null) return;
+        if (!row.ID) {
+            //刚添加没有保存的数据
+            var ary = []; ary.push(row);
+            grid.moveDown(ary);
+        }
+        else {
+            addExecuteParam("ID", row.ID);
+            addExecuteParam("gridID", gridID);
+            execute("movedown", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    var index = grid.indexOf(row);
+                    grid.moveRow(row, index + 2);
+                }
+            });
+        }
+    }
+
+
+
+    function deleteAttr(gridID, method) {
+        var nodeGrid = mini.get("mygrid");
+        var row = nodeGrid.getSelected();
+        if (!row) { alert("请选择一个节点信息"); return; }
+        var dataGrid = mini.get(gridID);
+        var rows = dataGrid.getSelecteds();
+        if (rows.length <= 0) {
+            msgUI("请选择记录。");
+            return;
+        }
+        var listIDs = "";
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].AttrType == "System") {
+                msgUI("系统属性不允许删除"); return;
+            }
+            else {
+                listIDs += rows[i].ID + ",";
+            }
+        }
+        msgUI("你确认删除选中的记录吗？", 2, function (result) {
+            if (result != "ok")
+                return;
+            addExecuteParam("ListIDs", listIDs);
+            addExecuteParam("NodeID", row.ID);
+            execute(method, {
+                validateForm: false, showLoading: true, refresh: false, onComplete: function (data) {
+                    dataGrid.removeRows(rows);
+                    dataGrid.commitEdit(); dataGrid.accept();
+                }
+            });
+        });
+    }
+</script>

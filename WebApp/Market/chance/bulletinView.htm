@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="/CommonWebResource/CoreLib/Basic/jQuery/jquery-1.6.2.min.js" type="text/javascript"></script>
+    <script src="/CommonWebResource/CoreLib/MiniUI/miniui.js" type="text/javascript"></script>
+    <script src="common.js" type="text/javascript"></script>
+    <script src="/CommonWebResource/Theme/Default/MiniCssInc.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="mini-toolbar" id="btnDiv" style="width: 100%;">
+        <table>
+            <tr>
+                <td>
+                    <a class="mini-button" id="btnCancel" plain="true" iconcls="icon-cancel" onclick="closeWindow()">取消</a>
+                </td>
+                <td id="btnRight">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <table style="border-width: 1px; margin: 10px; border-color: Gray;">
+        <tr class="hideRow">
+            <td width="120px">
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                事件标题
+            </td>
+            <td id="bulletin_title">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                公告类型
+            </td>
+            <td id="bulletin_type">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                采购方式
+            </td>
+            <td id="bulletin_method">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                地区
+            </td>
+            <td id="bulletin_location">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                发布时间
+            </td>
+            <td id="bulletin_release_date">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                采购人
+            </td>
+            <td id="bulletin_tender">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                购买标书日期
+            </td>
+            <td id="bulletin_purchase_date">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                开标日期
+            </td>
+            <td id="bulletin_open_date">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                开标地点
+            </td>
+            <td id="bulletin_open_address">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                项目预算
+            </td>
+            <td id="bulletin_budget">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                开标截止日期
+            </td>
+            <td id="bulletin_deadline_date">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                正文内容
+            </td>
+            <td id="bulletin_content">
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        var url = apiUrl + "bulletin/" + getQueryString("Id") + "/?token=" + token;
+        url = encodeURI(url);
+
+
+        $.ajax({
+            url: url,
+            type: "get",
+            success: function (text) {
+                //增加新版报错分支
+                if (text && typeof (text) == "string" && text.indexOf("{\"errcode\"") == 0) {
+                    var fail = jQuery.parseJSON(text);
+                    var msg = getErrorFromHtml(fail.errmsg);
+                    msgUI(msg, 4);
+                    return;
+                }
+
+                var data = mini.decode(text);
+                if (data && data.error_code == 0) {
+                    var obj = data.data;
+
+                    $("#bulletin_title").html(obj.bulletin_title);
+                    $("#bulletin_type").html(obj.bulletin_type);
+                    $("#bulletin_method").html(obj.bulletin_method);
+                    $("#bulletin_location").html(obj.bulletin_location);
+                    $("#bulletin_release_date").html(obj.bulletin_release_date);
+                    $("#bulletin_tender").html(obj.bulletin_tender);
+
+                    $("#bulletin_purchase_date").html(obj.bulletin_purchase_date);
+                    $("#bulletin_open_date").html(obj.bulletin_open_date);
+                    $("#bulletin_open_address").html(obj.bulletin_open_address);
+                    $("#bulletin_budget").html(obj.bulletin_budget);
+                    $("#bulletin_deadline_date").html(obj.bulletin_deadline_date);
+                    $("#bulletin_content").html(obj.bulletin_content);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

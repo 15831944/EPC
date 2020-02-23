@@ -1,0 +1,93 @@
+﻿<div class="head" style="text-align: left; border-bottom: 1px solid #dbdbdb;">
+    <div class="qr-head-left">
+        <a onclick="$monitor.goback(this);loadDetail();" id="_fileList_back">
+            <span class="icon-back">返回</span>
+        </a>
+    </div>
+    <div id="_fileList_step" class="qr-head-right">
+        <img v-if="IsCur" onclick="openUpload();" style="width: 20px;" src="../../Scripts/css/images/pic.png"/>
+        <span v-if="!IsCur" onclick="onDeleteAttach();">{{Step}}</span>
+    </div>
+</div>
+<article id="_fileList_body" class="main">
+    <div id="scroller">
+        <div class="from-F2" id="_detail_FormDic_section">
+            <ul id="_detail_formDic">
+                <li v-for="dic in List" class="qr-fileitems-li">
+                    <div class="qr-fileitems-li-left">
+                        <img :src="dic.Src" :onclick="dic.Onclick"/>
+                    </div>
+                    <div class="qr-fileitems-li-center">
+                        <p>提交人：{{dic.SubmitUserName}}</p>
+                        <p>提交时间：{{dic.SubmitDate}}</p>
+                    </div>
+                    <div class="qr-fileitems-li-right" v-if="IsCur">
+                        <input v-if="dic.HasAuth" type="checkbox" name="checkboxinput" style="-webkit-appearance: checkbox;" v-model="Checked" :value="dic.Attachment" onclick="onChecked();">
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</article>
+
+<script type="text/javascript">
+    var id = getWXQueryString("ID");
+    var step = getWXQueryString("Step");
+</script>
+<script type="text/javascript">
+    var vmStep = new Vue({
+        el: '#_fileList_step',
+        data: {
+            Step: ""
+        }
+    })
+    var vmList = new Vue({
+        el: '#_fileList_body',
+        data: {
+            List: [],
+            Checked: []
+        }
+    })
+    loadTitle();
+    loadList();
+    function loadTitle() {
+        if (vmList.Checked.length > 0) {
+            vmStep.Step = "删除";
+            vmStep.IsCur = false;
+        }
+        else {
+            vmStep.IsCur = isCur == "true";
+            if (step == "Collact") vmStep.Step = "校对";
+            else if (step == "Audit") vmStep.Step = "审核";
+            else if (step == "Approve") vmStep.Step = "审定";
+            else vmStep.Step = "";
+        }
+    }
+    function loadList() {
+        $.ajax({
+            url: goodwayApiURL + "/api/Project/0/ProductAuditFile?ProductID=" + id + "&Step=" + step + "&Account=" + account + "&Token=" + token,
+            cache: false,
+            success: function (data, textStatus) {
+                if (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        data[i]["Src"] = goodwayApiURL + "/Files/" + data[i].FileID + "_" + data[i].FileName;
+                        data[i]["Onclick"] = "getPic('" + data[i].Attachment + "')";
+                        data[i]["SubmitDate"] = data[i]["SubmitDate"].replace(/T/g, " ")
+                    }
+                    vmList.List = data;
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+            }
+        });
+    }
+
+    function getPic(fileName) {
+        $monitor.go("/QrCode/UploadPic?FileID=" + fileName, "_Pic", "", function (info) { });
+    }
+
+    function openUpload() {
+        $monitor.go("/QrCode/UploadPic?ID=" + id + "&Step=" + head.AuditStep + "&Account=" + account + "&Token=" + token, "_Pic", "", function (info) { });
+    }
+</script>

@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "FileListTab";
+}
+<div class="mini-fit" style="padding-top: 5px;">
+    <div id="fileTabs"  class="mini-tabs" activeindex="0" style="width: 100%;
+        height: 100%;">
+    </div>
+</div>
+<script type="text/javascript">
+    var ID = getQueryString("ID");
+    mini.parse();
+    var nodeID = getQueryString("ID");
+    var configID = getQueryString("ConfigID");
+    var spaceID = getQueryString("SpaceID");
+    var tabs = mini.get("fileTabs");
+    var actionUrl = "getnodefiletabs?SpaceID=" + spaceID + "&ConfigID=" + configID + "&ID=" + nodeID;
+    tabs.load(actionUrl);
+</script>

@@ -1,0 +1,193 @@
+﻿@{
+    ViewBag.Title = "NodeEdit";
+}
+
+<div class="mini-toolbar" id="btnDiv" style="width: 100%; position: fixed; top: 0;
+        left: 0; z-index: 100;">
+    <table>
+        <tr>
+            <td>
+                <a class="mini-button" id="btnSave" plain="true" iconcls="icon-save" onclick="save();">
+                    保存
+                </a> <a class="mini-button" id="btnCancel" plain="true" iconcls="icon-cancel" onclick="closeWindow()">
+                    取消
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+<form id="dataForm" method="post" style="top: 30px; position: relative;">
+    <input name="ID" class="mini-hidden" />
+    <input name="SpaceID" class="mini-hidden" />
+    <div class="formDiv">
+        <fieldset>
+            <legend>节点定义编辑</legend>
+            <div>
+                <table width="100%" border="0" cellpadding="0" cellspacing="2">
+                    <tr>
+                        <td width="15%">
+                            节点名称
+                        </td>
+                        <td width="35%">
+                            <input name="Name" style="width: 100%" class="mini-textbox" required="true" vtype="maxLength:50" />
+                        </td>
+                        <td width="15%" align="left" style="padding-left: 20px">
+                            存储形式
+                        </td>
+                        <td width="35%">
+                            <input name='StorageType' class='mini-checkboxlist' style="width: 100%;" required='true' data='StorageType'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            是否借阅
+                        </td>
+                        <td>
+                            <input name='CanBorrow' class='mini-radiobuttonlist' style="width: 100%;" data='TrueFalse' onvaluechanged="onBorrowChanged" />
+                        </td>
+                        <td align="left" style="padding-left: 20px">
+                            借阅流程
+                        </td>
+                        <td>
+                            <input name='BorrowFlowKey' class='mini-combobox' style="width: 100%;" data='BorrowEnum' />
+                        </td>
+                    </tr>
+                    <tr hidden="hidden">
+                        <td>
+                            是否下载
+                        </td>
+                        <td>
+                            <input name='CanDownload' class='mini-radiobuttonlist' style="width: 100%;" data='TrueFalse' onvaluechanged="onDownloadChanged" />
+                        </td>
+                        <td align="left" style="padding-left: 20px">
+                            下载流程
+                        </td>
+                        <td>
+                            <input name='DownloadFlowKey' class='mini-combobox' style="width: 100%;" shownullitem="true" data='DownloadEnum' />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            自由节点&nbsp; <a href="javascript:$('#trIsFreeNodeHelp').show()">说明</a>
+                        </td>
+                        <td>
+                            <input name='IsFreeNode' class='mini-radiobuttonlist' style="width: 100%;" data='TrueFalse' />
+                        </td>
+                        <td align="left" style="padding-left: 20px">
+                            查询显示
+                        </td>
+                        <td>
+                            <input name='AllowDisplay' class='mini-radiobuttonlist' style="width: 100%;" data='TrueFalse' />
+                        </td>
+                    </tr>
+                    <tr id="trIsFreeNodeHelp" style="display:none">
+                        <td colspan="4">
+                            主要用于项目资料、图档的异构结构、手动创建目录的归档<br />
+                            自由节点在结构定义时不能增加下层节点，可以在实例中增加下层节点<br />
+                            增加的子孙节点的配置都一样（显示字段、文件关系）<br />
+                            项目归档时如果选择了自由节点，根据项目资料的结构自动创建档案的各级自由节点
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            快捷查询文字
+                        </td>
+                        <td colspan="3">
+                            <input name="QueryKeyText" style="width: 100%" class="mini-textbox" required="true"
+                                   vtype="maxLength:50" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            显示序号列
+                        </td>
+                        <td>
+                            <input name='IsShowIndex' class='mini-radiobuttonlist' style="width: 100%;" data='TrueFalse' />
+                        </td>
+                        <td align="left" style="padding-left: 20px">
+                            排序号
+                        </td>
+                        <td>
+                            <input name="SortIndex" style="width: 100%" class="mini-textbox" vtype="int" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>借阅下载车</legend>
+            <div>
+                <table>
+                    <tr class="hideRow">
+                        <td width="15%"></td>
+                        <td width="35%"></td>
+                        <td width="15%"></td>
+                        <td width="35%"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            名称显示全路径
+                        </td>
+                        <td>
+                            <input name='Ext_Car_UseFullName' class='mini-radiobuttonlist' style="width: 100%;" data='TrueFalse' />
+                        </td>
+                        <td align="left" style="padding-left: 20px">
+                            全路径分隔符
+                        </td>
+                        <td>
+                            <input name="Ext_Car_FullNameSplit" style="width: 100%" class="mini-textbox" vtype="maxLength:50" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            名称规则
+                        </td>
+                        <td>
+                            <input name="Ext_Car_NameFormat" style="width: 100%" class="mini-textbox" vtype="maxLength:50" />
+                        </td>
+                        <td colspan="2" style="padding-left: 20px"> 例如：“{FullName} > {Name}”<br />“{Name}（{FullName}）”</td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+</form>
+<script language="javascript" type="text/javascript">
+    @Html.GetEnum("System.TrueFalse")
+    @Html.GetEnum("DocConst.BorrowDownFlowKey", "BorrowEnum", "Borrow");
+    @Html.GetEnum("DocConst.BorrowDownFlowKey", "DownloadEnum", "Download");
+    var StorageType = [{ value: "Elec", text: "电子档" }, { value: "Phyc", text: "实物案卷" }]
+</script>
+<script type="text/javascript">
+    function onFormSetData(data) {
+        if (data.ExtentionJson) {
+            var extData = mini.decode(data.ExtentionJson);
+            var form = new mini.Form("#dataForm");
+            form.setData(extData, false);
+        }
+        onStorageTypeChanged();
+    }
+
+    function onBorrowChanged() {
+        var value = mini.getbyName("CanBorrow").getValue();
+        if (value == "True") {
+            mini.getbyName("BorrowFlowKey").setRequired(true);
+            mini.getbyName("BorrowFlowKey").setEnabled(true);
+        }
+        else {
+            mini.getbyName("BorrowFlowKey").setValue("");
+            mini.getbyName("BorrowFlowKey").setEnabled(false);
+        }
+    }
+
+    function onDownloadChanged() {
+        var value = mini.getbyName("CanDownload").getValue();
+        if (value == "True") {
+            mini.getbyName("DownloadFlowKey").setEnabled(true);
+        }
+        else {
+            mini.getbyName("DownloadFlowKey").setValue("");
+            mini.getbyName("DownloadFlowKey").setEnabled(false);
+        }
+    }
+</script>

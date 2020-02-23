@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "ConditionSettings";
+}
+
+
+<div id="formlayout" class="mini-layout" style="width: 100%; height: 100%;">
+    <div region="north" height="32" showspliticon="false" showheader="false" allowresize="false" splitsize="0"
+         style="border: 0;">
+        <div class="mini-toolbar" style="padding: 0px; border-left: 0; border-top: 0; border-right: 0;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        <a class="mini-button" iconcls="icon-save" onclick="returnValue();" plain="true">保存</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div title="center" region="center" style="border: 0;">
+        <form id="dataForm">
+            <input name="ID" class="mini-hidden" />
+            <div class="formDiv">
+                <fieldset>
+                    <legend>条件设置</legend>
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <td style="width: 100%;">
+                                                <a class="mini-button" iconcls="icon-add" onclick="addRow({ Group: 'Group1' }, { gridId: 'Condition' })" plain="true">增加</a>
+                                                <a class="mini-button" iconcls="icon-remove" onclick="delRow({ gridId: 'Condition' })" plain="true">删除</a>
+                                            </td>
+                                            <td style="white-space: nowrap;"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div id="Condition" class="mini-datagrid" style="width: 100%; height: auto" idfield="ID" showpager="false"
+                                     allowcelledit="true" allowcellselect="true" multiselect="true" editnextonenterkey="true" editnextrowcell="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn">
+                                        </div>
+                                        <div type="comboboxcolumn" autoshowpopup="true" field="FieldName" width="90" headeralign="center" allowsort="false" align="center">
+                                            字段名<input property="editor" class="mini-combobox" valuefield="value" , textfield="text" style="width:100%;" data="CBSFiled" />
+                                        </div>
+                                        <div type="comboboxcolumn" field="QueryMode" width="60" headeralign="center" allowsort="false" align="center" autoshowpopup="true">
+                                            运算符<input property="editor" class="mini-combobox" valuefield="value" textfield="text" data="queryModeEnum" style="width: 100%;" />
+                                        </div>
+                                        <div field="Value" width="100" headeralign="center" allowsort="false" align="left">
+                                            值<input property="editor" class="mini-textbox" style="width:100%;" />
+                                        </div>
+                                        <div field="Group" width="70" headeralign="center" allowsort="false" align="center">
+                                            分组<input property="editor" class="mini-textbox" style="width:100%;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum("Expenses.CBSNodeColumnInfo")
+
+    var queryModeEnum = [
+  { value: "Equal", text: "=" },
+  { value: "LessThan", text: "<" },
+  { value: "GreaterThan", text: ">" },
+  { value: "LessThanOrEqual", text: "<=" },
+  { value: "GreaterThanOrEqual", text: ">=" },
+  { value: "Like", text: "Like" },
+  { value: "In", text: "In" }];
+
+
+    var CBSFiled = [
+{ value: "RelateID", text: "关联业务ID" },
+{ value: "Name", text: "CBS名称" },
+{ value: "Code", text: "CBS编码" },
+{ value: "BusinessType", text: "业务类型" },
+{ value: "Area", text: "区域" },
+{ value: "Phase", text: "阶段" },
+{ value: "Scale", text: "规模" },
+{ value: "ProjectInfoID", text: "生产项目ID" },
+{ value: "EngineeringInfoID", text: "工程ID" },
+{ value: "ContractInfoID", text: "合同ID" },
+{ value: "ChargerUser", text: "负责人" },
+{ value: "ChargerUserName", text: "负责人姓名" },
+{ value: "ChargerDept", text: "责任部门" },
+{ value: "ChargerDeptName", text: "责任部门名称" },
+{ value: "ContractValue", text: "合同金额" },
+{ value: "ExtendField1", text: "扩展字段1" },
+{ value: "ExtendField1Name", text: "扩展字段1名称" },
+{ value: "ExtendField2", text: "扩展字段2" },
+{ value: "ExtendField2Name", text: "扩展字段1名称" },
+{ value: "ExtendField3", text: "扩展字段3" },
+{ value: "ExtendField3Name", text: "扩展字段3名称" },
+{ value: "ExtendField4", text: "扩展字段4" },
+{ value: "ExtendField4Name", text: "扩展字段4名称" },
+{ value: "ExtendField5", text: "扩展字段5" },
+{ value: "ExtendField5Name", text: "扩展字段5名称" }
+    ];
+</script>
+<script type="text/javascript">
+    function setData(data) {
+        var condition = mini.decode(data);
+        mini.get("Condition").setData(condition);
+    }
+
+    function returnValue() {
+        var dataGrid = mini.get("Condition");
+        dataGrid.commitEdit();
+        dataGrid.accept();
+        var data = dataGrid.getData();
+        closeWindow(data);
+    }
+</script>

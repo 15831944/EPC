@@ -1,0 +1,445 @@
+﻿@{
+    ViewBag.Title = "NodeSettings";
+}
+
+<div id="formlayout" class="mini-layout" style="width: 100%; height: 100%;">
+    <div title="north" region="north" height="36" showspliticon="false" showheader="false" allowresize="false"
+         splitsize="0" style="border: 0;">
+        <div class="mini-toolbar" id="btnDiv">
+            <table>
+                <tr>
+                    <td>
+                        <a class="mini-button" iconcls="icon-save" onclick="returnValue();" plain="true">确定</a>
+                    </td>
+                    <td id="btnRight">
+                        <a class="mini-button" onclick="showHelp()" iconcls="icon-help" plain="true">帮助</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div title="center" region="center" style="border: 0;">
+        <form id="dataForm" autogetdata="false">
+            <input name="ID" class="mini-hidden" />
+            <div class="formDiv">
+                <fieldset>
+                    <legend>说明</legend>
+                    <div>
+                        <table>
+                            <tr class="hideRow">
+                                <td width="15%"></td>
+                                <td width="35%"></td>
+                                <td width="15%"></td>
+                                <td width="35%"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <span>配置说明：默认值及SQL语句获取动态值时，使用占位符{} 来表示为动态获取的值。</span><br />
+                                    <span>占位符支持前缀{数据源编号.字段名};在数据源配置中如需要使用另一个数据源的动态数据时，注意数据源的排序，被使用数据源一定要在前。</span><br />
+                                    <span>固定占位符：{CBSInfo.字段名} 获取核算项目上的字段,{Parent.字段名} 获取CBS父节点的字段,{Param.字段名} 获取传入的参数的字段。</span><br />
+                                    <span>在父节点过滤条件设置时，只能使用输入参数中的字段（{Param.字段名}）或常量</span><br />
+                                </td>
+                            </tr>
+                            <tr><td colspan="4"><br /></td></tr>
+                            <tr>
+                                <td>更新数据</td>
+                                <td>
+                                    <input name="SynData" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value" enabled="false"
+                                           data="SetCBSOpportunity" allowinput="false" required="true" />
+                                </td>
+                                <td style="padding-left:20px;">仅更新数据</td>
+                                <td>
+                                    <input name="OnlyUpdate" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value"
+                                           data="trueOrFalse" allowinput="false" required="true" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>自动汇总</td>
+                                <td>
+                                    <div id="SummaryData" name="SummaryData" class="mini-checkboxlist" repeatitems="4" repeatlayout="table"
+                                         textfield="text" valuefield="value" data="summaryData">
+                                    </div>
+                                </td>
+                                <td style="padding-left:20px;"></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>数据源</legend>
+                    <div>
+                        <table>
+                            <tr class="hideRow">
+                                <td width="15%"></td>
+                                <td width="35%"></td>
+                                <td width="15%"></td>
+                                <td width="35%"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+                                        <table style="width: 100%;">
+                                            <tr>
+                                                <td style="width: 100%;">
+                                                    <a class="mini-button" iconcls="icon-add" onclick="addRow({ Group: 'Group1' }, { gridId: 'DataSourceInfo' })" plain="true">增加</a>
+                                                    <a class="mini-button" iconcls="icon-remove" onclick="delRow({ gridId: 'DataSourceInfo' })" plain="true">删除</a>
+                                                    <a class="mini-button" iconcls="icon-up" onclick="moveUp('DataSourceInfo');">上移</a>
+                                                    <a class="mini-button" iconcls="icon-down" onclick="moveDown('DataSourceInfo');">下移</a>
+                                                </td>
+                                                <td style="white-space: nowrap;"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div id="DataSourceInfo" class="mini-datagrid" style="width: 100%; height: auto" idfield="ID" showpager="false"
+                                         allowcelledit="true" allowcellselect="true" multiselect="true" editnextonenterkey="true" editnextrowcell="true">
+                                        <div property="columns">
+                                            <div type="checkcolumn">
+                                            </div>
+                                            <div field="Code" width="200" headeralign="center" allowsort="false" align="left" vtype="required">
+                                                编号<input property="editor" class="mini-textbox" style="width:100%;" />
+                                            </div>
+                                            <div type="comboboxcolumn" autoshowpopup="true" field="SourceType" width="120" headeralign="center" allowsort="false" align="center" vtype="required">
+                                                类型<input property="editor" class="mini-combobox" valuefield="value" , textfield="text" style="width:100%;" data="sourceType" />
+                                            </div>
+                                            <div type="comboboxcolumn" autoshowpopup="true" field="ConnName" width="120" headeralign="center" allowsort="false" align="center" vtype="required">
+                                                数据库链接<input property="editor" class="mini-combobox" valuefield="value" , textfield="text" style="width:100%;" data="ConnEnum" />
+                                            </div>
+                                            <div field="SQL" width="*" headeralign="center" allowsort="false" align="left" vtype="required">
+                                                SQL<input property="editor" class="mini-textarea" style="width:100%;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </fieldset>
+                <fieldset id="locationArea" style="display:none;">
+                    <legend>核算项目匹配条件</legend>
+                    <div>
+                        <table>
+                            <tr class="hideRow">
+                                <td width="15%"></td>
+                                <td width="35%"></td>
+                                <td width="15%"></td>
+                                <td width="35%"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+                                        <table style="width: 100%;">
+                                            <tr>
+                                                <td style="width: 100%;">
+                                                    <a class="mini-button" iconcls="icon-add" onclick="addRow({ Group: 'Group1' }, { gridId: 'LocationCondition' })" plain="true">增加</a>
+                                                    <a class="mini-button" iconcls="icon-remove" onclick="delRow({ gridId: 'LocationCondition' })" plain="true">删除</a>
+                                                    <a class="mini-button" iconcls="icon-up" onclick="moveUp('LocationCondition');">上移</a>
+                                                    <a class="mini-button" iconcls="icon-down" onclick="moveDown('LocationCondition');">下移</a>
+                                                </td>
+                                                <td style="white-space: nowrap;"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div id="LocationCondition" class="mini-datagrid" style="width: 100%; height: auto" idfield="ID" showpager="false"
+                                         allowcelledit="true" allowcellselect="true" multiselect="true" editnextonenterkey="true" editnextrowcell="true">
+                                        <div property="columns">
+                                            <div type="checkcolumn">
+                                            </div>
+                                            <div type="comboboxcolumn" autoshowpopup="true" field="Field" width="200" headeralign="center" allowsort="false" align="center" vtype="required">
+                                                字段<input property="editor" class="mini-combobox" valuefield="value" textfield="text" style="width:100%;" data="CBSInfoField" />
+                                            </div>
+                                            <div type="comboboxcolumn" autoshowpopup="true" field="QueryMode" width="120" headeralign="center" allowsort="false" align="center" vtype="required">
+                                                运算符<input property="editor" class="mini-combobox" valuefield="value" , textfield="text" style="width:100%;" data="queryModeEnum" />
+                                            </div>
+                                            <div field="Value" width="*" headeralign="center" allowsort="false" align="left" vtype="required">
+                                                值<input property="editor" class="mini-textbox" style="width:100%;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>父节点过滤</legend>
+                    <div>
+                        <table>
+                            <tr class="hideRow">
+                                <td width="15%"></td>
+                                <td width="35%"></td>
+                                <td width="15%"></td>
+                                <td width="35%"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+                                        <table style="width: 100%;">
+                                            <tr>
+                                                <td style="width: 100%;">
+                                                    <a class="mini-button" iconcls="icon-add" onclick="addRow({ Group: 'Group1' }, { gridId: 'ParentFilter' })" plain="true">增加</a>
+                                                    <a class="mini-button" iconcls="icon-remove" onclick="delRow({ gridId: 'ParentFilter' })" plain="true">删除</a>
+                                                    <a class="mini-button" iconcls="icon-up" onclick="moveUp('ParentFilter');">上移</a>
+                                                    <a class="mini-button" iconcls="icon-down" onclick="moveDown('ParentFilter');">下移</a>
+                                                </td>
+                                                <td style="white-space: nowrap;"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div id="ParentFilter" class="mini-datagrid" style="width: 100%; height: auto" idfield="ID" showpager="false"
+                                         allowcelledit="true" allowcellselect="true" multiselect="true" editnextonenterkey="true" editnextrowcell="true">
+                                        <div property="columns">
+                                            <div type="checkcolumn">
+                                            </div>
+                                            <div type="comboboxcolumn" autoshowpopup="true" field="Field" width="200" headeralign="center" allowsort="false" align="center" vtype="required">
+                                                字段<input property="editor" class="mini-combobox" valuefield="value" textfield="text" style="width:100%;" data="CBSFiled" />
+                                            </div>
+                                            <div type="comboboxcolumn" autoshowpopup="true" field="QueryMode" width="120" headeralign="center" allowsort="false" align="center" vtype="required">
+                                                运算符<input property="editor" class="mini-combobox" valuefield="value" , textfield="text" style="width:100%;" data="queryModeEnum" />
+                                            </div>
+                                            <div field="Value" width="*" headeralign="center" allowsort="false" align="left" vtype="required">
+                                                值<input property="editor" class="mini-textbox" style="width:100%;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>默认数据设置</legend>
+                    <table>
+                        <tr class="hideRow">
+                            <td width="15%"></td>
+                            <td width="35%"></td>
+                            <td width="15%"></td>
+                            <td width="35%"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <td style="width: 100%;">
+                                                <a class="mini-button" iconcls="icon-add" onclick="addRow({}, { gridId: 'AutoDataAdapter', isLast: true })" plain="true">增加</a>
+                                                <a class="mini-button" iconcls="icon-remove" onclick="delRow({ gridId: 'AutoDataAdapter' })" plain="true">删除</a>
+                                                <a class="mini-button" iconcls="icon-up" onclick="moveUp('AutoDataAdapter');">上移</a>
+                                                <a class="mini-button" iconcls="icon-down" onclick="moveDown('AutoDataAdapter');">下移</a>
+                                            </td>
+                                            <td style="white-space: nowrap;"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div id="AutoDataAdapter" class="mini-datagrid" style="width: 100%; height: auto" idfield="ID" showpager="false"
+                                     oncellbeginedit="onAdapterCellBeginEdit" allowcelledit="true" allowcellselect="true" multiselect="true" editnextonenterkey="true" editnextrowcell="true">
+                                    <div property="columns">
+                                        <div type="checkcolumn">
+                                        </div>
+                                        <div type="comboboxcolumn" autoshowpopup="true" field="Field" width="200" headeralign="center" allowsort="false" align="center" vtype="required">
+                                            字段<input property="editor" class="mini-combobox" valuefield="value" textfield="text" style="width:100%;" data="CBSFiled" />
+                                        </div>
+                                        <div field="DefaultValue" displayfield="DefaultValue" width="*" headeralign="center" allowsort="false" align="left" autoshowpopup="true">
+                                            默认值
+                                            <input property="editor" class="mini-combobox" style="width: 100%" shownullitem="true" allowinput="true"
+                                                   data="dafaultValues" onitemclick="commitEdit" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum(typeof(Config.ConnEnum))
+    @Html.GetEnum(typeof(Expenses.Logic.CBSDefineType))
+    @Html.GetEnum(typeof(Expenses.Logic.SetCBSOpportunity))
+
+    var autoCreateMethod = "@Html.Raw(ViewBag.AutoCreateMethod)";
+
+    var queryModeEnum = [
+   { value: "Equal", text: "=" },
+   { value: "LessThan", text: "<" },
+   { value: "GreaterThan", text: ">" },
+   { value: "LessThanOrEqual", text: "<=" },
+   { value: "GreaterThanOrEqual", text: ">=" },
+   { value: "Like", text: "Like" },
+   { value: "In", text: "In" }];
+</script>
+<script type="text/javascript">
+    var sourceType = [{ value: "Main", text: "主要" },
+{ value: "Assist", text: "辅助" }];
+    var trueOrFalse = [{ value: "true", text: "是" },
+{ value: "false", text: "否" }];
+
+    var summaryData = [{ value: "ContractValue", text: "合同额" }, { value: "BudgetValue", text: "预算金额" }, { value: "ProductionValue", text: "产值金额" }];
+
+
+    var dafaultValues = [
+{ value: "{CurrentTime}", text: "{CurrentTime}" },
+{ value: "{CurrentDate}", text: "{CurrentDate}" },
+{ value: "{CurrentUserID}", text: "{CurrentUserID}" },
+{ value: "{CurrentUserName}", text: "{CurrentUserName}" },
+{ value: "{CurrentUserOrgID}", text: "{CurrentUserOrgID}" },
+{ value: "{CurrentUserOrgName}", text: "{CurrentUserOrgName}" },
+{ value: "{CurrentUserCorpID}", text: "{CurrentUserCorpID}" },
+{ value: "{CurrentUserCorpName}", text: "{CurrentUserCorpName}" }
+    ];
+
+    var CBSInfoField = [
+{ value: "ID", text: "主键ID" },
+{ value: "CBSDefineInfoID", text: "核算模式ID" },
+{ value: "Name", text: "核算项目名称" },
+{ value: "Code", text: "核算项目编号" },
+{ value: "BuildBasis", text: "立项依据" },
+{ value: "RelateID", text: "业务关联ID" },
+{ value: "ProjectInfoID", text: "生产项目ID" },
+{ value: "EngineeringInfoID", text: "工程ID" },
+{ value: "ContractInfoID", text: "合同ID" },
+{ value: "ChargerUser", text: "负责人" },
+{ value: "ChargerUserName", text: "负责人姓名" },
+{ value: "ChargerDept", text: "责任部门" },
+{ value: "ChargerDeptName", text: "责任部门名称" },
+{ value: "ContractValue", text: "合同金额" },
+{ value: "ProductionValue", text: "产值金额" },
+{ value: "CreateFormID", text: "CreateFormID" },
+{ value: "ModifyFormID", text: "ModifyFormID" },
+{ value: "ExtendField1", text: "扩展字段1" },
+{ value: "ExtendField1Name", text: "扩展字段1名称" },
+{ value: "ExtendField2", text: "扩展字段2" },
+{ value: "ExtendField2Name", text: "扩展字段1名称" },
+{ value: "ExtendField3", text: "扩展字段3" },
+{ value: "ExtendField3Name", text: "扩展字段3名称" },
+{ value: "ExtendField4", text: "扩展字段4" },
+{ value: "ExtendField4Name", text: "扩展字段4名称" },
+{ value: "ExtendField5", text: "扩展字段5" },
+{ value: "ExtendField5Name", text: "扩展字段5名称" },
+{ value: "ExtraField6", text: "扩展字段6" },
+{ value: "ExtraField6Name", text: "扩展字段6名称" },
+{ value: "ExtraField7", text: "扩展字段7" },
+{ value: "ExtraField7Name", text: "扩展字段7名称" },
+{ value: "ExtraField8", text: "扩展字段8" },
+{ value: "ExtraField8Name", text: "扩展字段8名称" },
+{ value: "ExtraField9", text: "扩展字段9" },
+{ value: "ExtraField9Name", text: "扩展字段9名称" },
+{ value: "ExtraField10", text: "扩展字段10" },
+{ value: "ExtraField10Name", text: "扩展字段10名称" }
+    ];
+
+    var CBSFiled = [
+{ value: "ID", text: "主键ID" },
+{ value: "RelateID", text: "关联业务ID" },
+{ value: "RelateState", text: "关联业务State" },
+{ value: "Name", text: "CBS名称" },
+{ value: "Code", text: "CBS编码" },
+{ value: "NodeType", text: "节点类型" },
+{ value: "Weight", text: "权重" },
+{ value: "BusinessType", text: "业务类型" },
+{ value: "Area", text: "区域" },
+{ value: "Phase", text: "阶段" },
+{ value: "Scale", text: "规模" },
+{ value: "ProjectInfoID", text: "生产项目ID" },
+{ value: "EngineeringInfoID", text: "工程ID" },
+{ value: "ContractInfoID", text: "合同ID" },
+{ value: "ChargerUser", text: "负责人" },
+{ value: "ChargerUserName", text: "负责人姓名" },
+{ value: "ChargerDept", text: "责任部门" },
+{ value: "ChargerDeptName", text: "责任部门名称" },
+{ value: "TaxRate", text: "税率" },
+{ value: "ContractValue", text: "合同金额" },
+{ value: "ContractTaxValue", text: "合同税金" },
+{ value: "ContractClearValue", text: "合同不含税金额" },
+{ value: "ProductionValue", text: "产值金额" },
+{ value: "CreateFormID", text: "CreateFormID" },
+{ value: "ModifyFormID", text: "ModifyFormID" },
+{ value: "ExtendField1", text: "扩展字段1" },
+{ value: "ExtendField1Name", text: "扩展字段1名称" },
+{ value: "ExtendField2", text: "扩展字段2" },
+{ value: "ExtendField2Name", text: "扩展字段1名称" },
+{ value: "ExtendField3", text: "扩展字段3" },
+{ value: "ExtendField3Name", text: "扩展字段3名称" },
+{ value: "ExtendField4", text: "扩展字段4" },
+{ value: "ExtendField4Name", text: "扩展字段4名称" },
+{ value: "ExtendField5", text: "扩展字段5" },
+{ value: "ExtendField5Name", text: "扩展字段5名称" }
+    ];
+
+    var synDataMethod = getQueryString("SynData");
+    function setData(data) {
+        if (data) {
+            var formData = mini.decode(data);
+            var form = new mini.Form("dataForm");
+            form.setData(formData);
+            mini.getbyName("SynData").setValue(synDataMethod);
+            form.setChanged(false);
+            mini.get("DataSourceInfo").setData(mini.decode(formData.DataSourceInfo));
+            mini.get("AutoDataAdapter").setData(mini.decode(formData.AutoDataAdapter));
+            mini.get("LocationCondition").setData(mini.decode(formData.LocationCondition));
+            mini.get("ParentFilter").setData(mini.decode(formData.ParentFilter));
+            if (synDataMethod != autoCreateMethod) {
+                $("#locationArea").show();
+            }
+            else {
+                $("#locationArea").hide();
+            }
+        }
+    }
+
+
+    function onAdapterCellBeginEdit(e) {
+        var field = e.field;
+        var record = e.record;
+    }
+
+    function returnValue() {
+        var form = new mini.Form("dataForm");
+        var dataSourceGrid = mini.get("DataSourceInfo");
+        var mappingInfoGrid = mini.get("AutoDataAdapter");
+        var locationGrid = mini.get("LocationCondition");
+        var parentFilterGrid = mini.get("ParentFilter");
+        form.validate();
+        if (form.isValid() == false) return;
+
+        dataSourceGrid.commitEdit();
+        dataSourceGrid.validate();
+        if (dataSourceGrid.isValid() == false) return;
+
+        mappingInfoGrid.commitEdit();
+        mappingInfoGrid.validate();
+        if (mappingInfoGrid.isValid() == false) return;
+
+        locationGrid.commitEdit();
+        locationGrid.validate();
+        if (locationGrid.isValid() == false) return;
+
+        parentFilterGrid.commitEdit();
+        parentFilterGrid.validate();
+        if (parentFilterGrid.isValid() == false) return;
+
+        var data = form.getData();
+        data["DataSourceInfo"] = mini.encode(dataSourceGrid.getData());
+        data["AutoDataAdapter"] = mini.encode(mappingInfoGrid.getData());
+        data["LocationCondition"] = mini.encode(locationGrid.getData());
+        data["ParentFilter"] = mini.encode(parentFilterGrid.getData());
+        closeWindow(data);
+    }
+
+    function moveUp(gridId) {
+        var dataGrid = mini.get("#" + gridId);
+        var rows = dataGrid.getSelecteds();
+        dataGrid.moveUp(rows);
+    }
+
+    function moveDown(gridId) {
+        var dataGrid = mini.get("#" + gridId);
+        var rows = dataGrid.getSelecteds();
+        dataGrid.moveDown(rows);
+    }
+
+
+</script>

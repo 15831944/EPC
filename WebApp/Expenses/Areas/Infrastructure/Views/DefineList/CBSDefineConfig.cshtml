@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "CBSDefineConfig";
+}
+
+<div class="mini-fit" style="padding-top: 5px;">
+    <div id="mainTab" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;">
+        <div title="CBS结构定义" url="../CBSDefineNode/TreeList?DefineID=@ViewBag.DefineID">
+        </div>
+        <div title="预算定义" url="../BudgetDefine/TreeList?DefineID=@ViewBag.DefineID">
+        </div>
+        <div title="权责收入定义" url="../IncomeDefine/DefineList?DefineID=@ViewBag.DefineID">
+        </div>
+        @{
+            if (ViewBag.AutoBuild)
+            {
+                <div title="自动立项设置" url="AutoCreateConfig?ID=@ViewBag.DefineID">
+                </div>
+            }
+        }
+        <div title="产值节点定义" url="../ProductionDefine/DefineList?DefineID=@ViewBag.DefineID">
+        </div>
+    </div>
+</div>

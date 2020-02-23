@@ -1,0 +1,298 @@
+﻿@{
+    ViewBag.Title = "DefineList";
+}
+
+<div id="mainLayout" class="mini-layout" style="width: 100%; height: 100%;">
+    <div title="west" region="west" width="700" expanded="true" showspliticon="false" showheader="false" style="border-top:0px;border-bottom:0px;">
+        <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        <a class="mini-button" iconcls="icon-add" onclick="addUnit" plain="true">增加产值单元</a>
+                        <a class="mini-button" iconcls="icon-remove" onclick="removeUnit" plain="true">删除</a>
+                        <a class="mini-button" iconcls="icon-save" onclick="saveData();" plain="true">保存</a>
+                    </td>
+                    <td style="white-space: nowrap;"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="mini-fit">
+            <div id="dataGrid" url="" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID" multiselect="true"
+                 onselectionchanged="onSelectionChanged"
+                 showpager="false" allowcellselect="true" editnextonenterkey="true" editnextrowcell="true" allowcelledit="true">
+                <div property="columns">
+                    <div type="indexcolumn">
+                    </div>
+                    <div field="Name" width="120" headeralign="center" allowsort="false">
+                        名称
+                    </div>
+                    <div field="Code" width="90" headeralign="center" allowsort="false" align="center">
+                        编号
+                    </div>
+                    <div type="comboboxcolumn" autoshowpopup="true" field="ProductionType" headeralign="center" width="100" allowsort="false" align="center">
+                        产值确认方式<input property="editor" class="mini-combobox" style="width:100%;" data="ProductionType" />
+                    </div>
+                    <div field="IsDefault" type="checkboxcolumn" truevalue="true" falsevalue="false" width="60" headeralign="center" align="center">默认</div>
+                    <div field="Description" width="200" headeralign="center" allowsort="false" align="left">
+                        描述说明<input property="editor" class="mini-textbox" style="width: 100%;" />
+                    </div>
+                    <div field="Condition" headeralign="center" width="70" allowsort="false" align="left">
+                        条件
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div title="center" region="center" style="border-top:0px;border-bottom:0px;">
+        <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        <a class="mini-button" iconcls="icon-add" onclick="addDetail" plain="true">增加节点模板</a>
+                        <a class="mini-button" iconcls="icon-remove" onclick="removeDetail" plain="true">删除</a>
+                        <a class="mini-button" iconcls="icon-save" onclick="saveDetailData" plain="true">保存</a>
+                        <a class="mini-button" iconcls="icon-up" onclick="moveup();" plain="true">上移</a>
+                        <a class="mini-button" iconcls="icon-down" onclick="movedown();" plain="true">下移</a>
+                    </td>
+                    <td style="white-space: nowrap;"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="mini-fit">
+            <div id="detailGrid" url="" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID" multiselect="true" showpager="false"
+                 showsummaryrow="true" ondrawsummarycell="onDrawSummaryCell" showsummaryrow="true" onshowrowdetail="onShowRowDetail"
+                 allowcellselect="true" editnextonenterkey="true" editnextrowcell="true" allowcelledit="true">
+                <div property="columns">
+                    <div type="checkcolumn">
+                    </div>
+                    <div type="expandcolumn"></div>
+                    <div field="ProgressDefineName" width="*" headeralign="center" allowsort="true" align="left">
+                        节点模板名称
+                    </div>
+                    <div field="Scale" summarytype="sum" width="80" headeralign="center" allowsort="true" align="right">
+                        占比%
+                        <input property="editor" class="mini-textbox" style="width: 100%;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="detailGrid_Form" style="display:none;">
+    <div id="defineProgressNodeGrid" class="mini-datagrid" style="width:100%;height:250px;" url="" showpager="false">
+        <div property="columns">
+            <div field="Name" width="*" headeralign="center" allowsort="true">
+                节点名称
+            </div>
+            <div field="Scale" width="100" allowsort="false" align="right" headeralign="center">
+                比例%
+            </div>
+            <div field="TotalScale" width="100" allowsort="false" align="right" headeralign="center">
+                累计比例%
+            </div>
+            <div field="IsIncomeNode" width="100" allowsort="false" align="right" headeralign="center">
+                收入节点
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum(typeof(Expenses.Logic.ProductionType))
+</script>
+<script type="text/javascript">
+    var defineID = getQueryString("DefineID");
+    $("#dataGrid").attr("url", "GetDefineList?DefineID=" + defineID);
+
+    var trueOrFalse = [{ value: "true", text: "是" }, { value: "false", text: "否" }];
+    addGridEnum("defineProgressNodeGrid", "IsIncomeNode", "trueOrFalse");
+
+
+    addGridButton("dataGrid", "Condition", {
+        linkText: '设置条件', onButtonClick: function (row) {
+            var url = "ConditionSettings";
+            openWindow(url, {
+                width: 750, height: 400, title: "设置条件", data: row["Condition"], onDestroy: function (data) {
+                    if (data != "close")
+                        row["Condition"] = mini.encode(data);
+                }
+            });
+        }
+    });
+
+    function addUnit() {
+        var url = "/MvcConfig/UI/List/PageView?TmplCode=DefineProductionUnitSelector&DefineID=" + defineID;
+        openWindow(url, {
+            refresh: false, title: "产值单元选择", width: 700, height: 600,
+            onDestroy: function (data) {
+                if (!data || data.length == 0 || data == "close") { return; }
+                addExecuteParam("ListData", mini.encode(data));
+                addExecuteParam("DefineID", defineID);
+                execute("AddDefine", {
+                    showLoading: true, refresh: false, onComplete: function (data) {
+                        mini.get("dataGrid").reload();
+                    }, validateForm: false
+                });
+            }
+        });
+    }
+
+    function removeUnit() {
+        var dataGrid = mini.get("dataGrid");
+        var rows = dataGrid.getSelecteds();
+        if (rows.length == 0) {
+            msgUI("请至少选择一条记录"); return;
+        }
+        msgUI("您确定要删除吗？", 2, function (result) {
+            if (result != "ok") return;
+            var ids = "";
+            for (var i = 0; i < rows.length; i++) {
+                if (i == rows.length - 1) {
+                    ids += rows[i].ID;
+                }
+                else {
+                    ids += rows[i].ID + ",";
+                }
+            }
+            addExecuteParam("ListIDs", ids);
+            execute("RemoveDefine", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    dataGrid.reload();
+                    mini.get("detailGrid").clearRows();
+                }, validateForm: false
+            });
+        });
+    }
+
+    function saveData() {
+        var dataGrid = mini.get("dataGrid");
+        dataGrid.commitEdit(); dataGrid.accept();
+        var list = dataGrid.getData();
+        addExecuteParam("DefineID", defineID);
+        addExecuteParam("ListData", mini.encode(list));
+        execute("SaveData", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                dataGrid.reload();
+            }, validateForm: false
+        });
+    }
+
+    function onDrawSummaryCell(e) {
+        var result = e.result;
+        e.cellStyle = "text-align:right; color:Brown";
+    }
+
+    function addDetail() {
+        var dataGrid = mini.get("dataGrid");
+        var row = dataGrid.getSelected();
+        if (!row) {
+            msgUI("请选择一个收入单元配置信息"); return;
+        }
+        var url = "/MvcConfig/UI/List/PageView?TmplCode=ProgressDefineSelector";
+        openWindow(url, {
+            refresh: false, title: "节点模板选择", width: 500, height: 600,
+            onDestroy: function (data) {
+                if (!data || data.length == 0 || data == "close") { return; }
+                addExecuteParam("ListData", mini.encode(data));
+                addExecuteParam("DefineProductionID", row.ID);
+                execute("AddDetail", {
+                    showLoading: true, refresh: false, onComplete: function (data) {
+                        mini.get("detailGrid").reload();
+                    }, validateForm: false
+                });
+            }
+        });
+    }
+
+    function saveDetailData() {
+        var detailGrid = mini.get("detailGrid");
+        detailGrid.commitEdit(); detailGrid.accept();
+        var rows = detailGrid.getData();
+        addExecuteParam("ListData", mini.encode(rows));
+        execute("SaveDetail", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                detailGrid.reload();
+            }, validateForm: false
+        });
+    }
+
+    function removeDetail() {
+        var detailGrid = mini.get("detailGrid");
+        var rows = detailGrid.getSelecteds();
+        if (rows.length == 0) {
+            msgUI("请至少选择一条记录"); return;
+        }
+        msgUI("您确定需要删除吗？", 2, function (result) {
+            if (result != "ok") return;
+            var ids = "";
+            for (var i = 0; i < rows.length; i++) {
+                if (i == rows.length - 1) {
+                    ids += rows[i].ID;
+                }
+                else {
+                    ids += rows[i].ID + ",";
+                }
+            }
+            addExecuteParam("ListIDs", ids);
+            execute("RemoveDetail", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    detailGrid.reload();
+                }, validateForm: false
+            });
+        });
+    }
+
+    function onSelectionChanged(e) {
+        var detailGrid = mini.get("detailGrid");
+        if (e.selected && e.selected.ID) {
+            detailGrid.setUrl("GetDetailList?DefineProductionID=" + e.selected.ID);
+            detailGrid.load();
+        }
+        else {
+            detailGrid.clearRows();
+        }
+    }
+
+    function moveup() {
+        var dataGrid = mini.get("detailGrid");
+        var row = dataGrid.getSelected();
+        if (row) {
+            addExecuteParam("detailID", row.ID);
+            execute("MoveUp", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    var rows = [];
+                    rows.push(row);
+                    dataGrid.moveUp(rows);
+                }, validateForm: false
+            });
+        }
+    }
+
+    function movedown() {
+        var dataGrid = mini.get("detailGrid");
+        var row = dataGrid.getSelected();
+        if (row) {
+            addExecuteParam("detailID", row.ID);
+            execute("MoveDown", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    var rows = [];
+                    rows.push(row);
+                    dataGrid.moveDown(rows);
+                }, validateForm: false
+            });
+        }
+    }
+
+    var detailGrid_Form = document.getElementById("detailGrid_Form");
+    function onShowRowDetail(e) {
+        var grid = e.sender;
+        var row = e.record;
+        var td = grid.getRowDetailCellEl(row);
+        td.appendChild(detailGrid_Form);
+        detailGrid_Form.style.display = "block";
+        var progressNodeGrid = mini.get("defineProgressNodeGrid");
+        progressNodeGrid.setUrl("GetProgressNodeDefine?ProgressDefineID=" + row.ProgressDefineID);
+        progressNodeGrid.load();
+    }
+
+
+</script>

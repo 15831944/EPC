@@ -1,0 +1,95 @@
+﻿@{
+    ViewBag.Title = "IkDict";
+}
+
+<div class="mini-splitter" style="width:100%;height:100%;">
+    <div size="50%" showCollapseButton="false" @*style="padding:5px;"*@>
+        <div class="mini-tabs" activeindex="0" style="width: 100%; height: 100%; padding: 0px;" borderstyle="border:0px;">
+            <div title="自定义分词" name="extDict">
+                    <div class="mini-toolbar gw-grid-toolbar">
+                        <table>
+                        <tr>
+                            <td>
+                                <a class="mini-button" id="btnAdd" plain="true" iconcls="icon-add" onclick="addRow({},{'gridId':'extDictGrid'});">增加</a>
+                                <a class="mini-button" id="btnDelete" plain="true" iconcls="icon-remove" onclick="delRow({'gridId':'extDictGrid'});">删除</a>
+                                <a class="mini-button" id="btnSave" plain="true" iconcls="icon-save" onclick="saveDictList();">保存</a>
+                                <a class="mini-button" id="btnUpdate" plain="true" iconcls="icon-save" onclick="updateEsData();">更新历史数据</a>
+                            </td>
+                            <td class="gw-toolbar-right">
+                                <input id="key" class="mini-buttonedit gw-searchbox" emptytext="请输入编号或名称" onenter="quickSearch('word',{'gridId':'extDictGrid','queryBoxId':'extDictKey'});"
+                                    onbuttonclick="quickSearch('word',{'gridId':'extDictGrid','queryBoxId':'extDictKey'});" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="mini-fit">
+                    <div id="extDictGrid" class="mini-datagrid" url="GetDictList" idField="word" style="width:100%;height:100%;"
+                         multiSelect="true" allowCellEdit="true" allowCellSelect="true" editNextOnEnterKey="true"  editNextRowCell="true" 
+                         sortMode="client" showColumns="false" showpager="false">
+                        <div property="columns">
+                            <div type="checkcolumn"></div>
+                            <div name="word"  field="word" headerAlign="center" allowSort="true" width="*" >
+                                <input property="editor" class="mini-textbox" style="width:100%;"/>
+                            </div>                  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div showCollapseButton="false">
+        <div class="mini-tabs" activeindex="0" style="width: 100%; height: 100%; padding: 0px;" borderstyle="border:0px;">
+            <div title="自定义禁止词" name="extStops">
+                <div class="mini-toolbar gw-grid-toolbar">
+                    <table>
+                        <tr>
+                            <td>
+                                <a class="mini-button" id="btnSwAdd" plain="true" iconcls="icon-add" onclick="addRow({},{'gridId':'extStopsGrid'});">增加</a>
+                                <a class="mini-button" id="btnSwDelete" plain="true" iconcls="icon-remove" onclick="delRow({'gridId':'extStopsGrid'});">删除</a>
+                                <a class="mini-button" id="btnSwSave" plain="true" iconcls="icon-save" onclick="saveStopWordList();">保存</a>
+                            </td>
+                            <td class="gw-toolbar-right">
+                                <input id="extStopsKey" class="mini-buttonedit gw-searchbox" emptytext="请输入编号或名称" onenter="quickSearch('word',{'gridId':'extStopsGrid','queryBoxId':'extStopsKey'});"
+                                    onbuttonclick="quickSearch('word',{'gridId':'extStopsGrid','queryBoxId':'extStopsKey'});" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="mini-fit">
+                    <div id="extStopsGrid" class="mini-datagrid" url="GetStopWordList" idField="word" style="width:100%;height:100%;"
+                         multiSelect="true" allowCellEdit="true" allowCellSelect="true" editNextOnEnterKey="true"  editNextRowCell="true" 
+                         sortMode="client" showColumns="false" showpager="false">
+                        <div property="columns">
+                            <div type="checkcolumn"></div>
+                            <div name="word"  field="word" headerAlign="center" allowSort="true" width="*" >
+                                <input property="editor" class="mini-textbox" style="width:100%;"/>
+                            </div>                  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>        
+</div>
+<script type="text/javascript">
+    function saveDictList() {
+        var grid = mini.get("extDictGrid");
+        addExecuteParam("ListData", mini.encode(grid.getData()));
+        execute("SaveDictList", {
+            gridId: "extDictGrid", validateForm: false, showLoading: true, refresh: true
+        });
+    }
+    function saveStopWordList() {
+        var grid = mini.get("extStopsGrid");
+        addExecuteParam("ListData", mini.encode(grid.getData()));
+        execute("SaveStopWordList", {
+            gridId: "extStopsGrid", validateForm: false, showLoading: true, refresh: true
+        });
+    }
+
+    function updateEsData() {
+        execute("EpdateEsData", {
+            title: "正在更新...", validateForm: false, showLoading: true, refresh: true
+        });
+    }
+</script>

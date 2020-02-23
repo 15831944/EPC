@@ -1,0 +1,306 @@
+﻿@{
+    ViewBag.Title = "ProjectAnalysis";
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+}
+<div class="mini-toolbar" style="padding: 2px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                @Html.ExportButton()
+            </td>
+            <td style="white-space: nowrap;">
+                <input class="mini-buttonedit searchbox" id="key" emptytext="请输入项目名称或项目编号" style="width: 200px;"
+                       onenter="tabSearch();" onbuttonclick="tabSearch();" />
+                <a class="mini-button" onclick="showWindow('queryWindow')" iconcls="icon-find" plain="true">
+                    详细查询
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit" style="height: 100px;" id="GridArea">
+    <div id="dataGrid" url="GetList" class="mini-datagrid" style="width: 100%; height: 100%;"
+         idfield="ID" frozenstartcolumn="0" frozenendcolumn="2" multiselect="true" showsummaryrow="true"
+         ondrawsummarycell="onDrawSummaryCell" sortfield="ProjectContractValue">
+        <div property="columns">
+            <div type="indexcolumn">
+            </div>
+            <div field="Code" width="100" allowsort="true" headeralign="center" allowsort="true"
+                 align="center">
+                项目编号
+            </div>
+            <div field="Name" width="250" headeralign="center" allowsort="true" allowsort="true"
+                 align="left">
+                项目名称
+            </div>
+            <div field="ProjectClass" width="90" headeralign="center" allowsort="true" allowsort="true"
+                 align="center">
+                业务类型
+            </div>
+            <div field="Phase" headeralign="center" align="center" width="110" allowsort="true">
+                设计阶段
+            </div>
+            <div field="ChargerDeptName" width="120" headeralign="center" allowsort="true" allowsort="true"
+                 align="center">
+                主责部门
+            </div>
+            <div field="ChargerUserName" width="90" headeralign="center" allowsort="true" allowsort="true"
+                 align="center">
+                项目负责人
+            </div>
+            <div field="CreateDate" headeralign="center" width="90" allowsort="true" align="center"
+                 dateformat="yyyy-MM-dd">
+                立项日期
+            </div>
+            <div header='合同信息' headeralign='center'>
+                <div property='columns'>
+                    <div field="ProjectContractValue" summarytype='sum' datatype="currency"
+                         width="110" headeralign="center" allowsort="true" align="right">
+                        合同金额（元）
+                    </div>
+                    <div field="RemainValue" summarytype='sum' datatype="currency" width="110"
+                         headeralign="center" allowsort="true" align="right">
+                        剩余合同额（元）
+                    </div>
+                    <div field="ReceiptRate" width="100" headeralign="center" allowsort="true" align="right">
+                        到款率（%）
+                    </div>
+                </div>
+            </div>
+            <div header='到账信息' headeralign='center'>
+                <div property='columns'>
+                    <div field="ProjectInvoiceValue" summarytype='sum' datatype="currency"
+                         width="110" headeralign="center" allowsort="true" align="right">
+                        开票总额（元）
+                    </div>
+                    <div field="ProjectReceiptValue" summarytype='sum' datatype="currency"
+                         width="110" headeralign="center" allowsort="true" align="right">
+                        到款总额（元）
+                    </div>
+                    <div field="ReceivableValue" summarytype='sum' datatype="currency"
+                         width="110" headeralign="center" allowsort="true" align="right">
+                        财务应收款（元）
+                    </div>
+                    <div field="MarketReceivableValue" summarytype='sum' datatype="currency"
+                         width="110" headeralign="center" allowsort="true" align="right">
+                        经营应收款（元）
+                    </div>
+                </div>
+            </div>
+            <div header='费用支出' headeralign='center'>
+                <div property='columns'>
+                    <div field="ProjectCostDirectValue" summarytype='sum' datatype="currency"
+                         width="110" headeralign="center" allowsort="true" align="right" renderer="onCusLinkRender">
+                        项目成本（元）
+                    </div>
+                    <div field="ProjectCostPaymentValue" summarytype='sum' datatype="currency"
+                         width="110" headeralign="center" allowsort="true" align="right" renderer="onCusLinkRender">
+                        分包支付（元）
+                    </div>
+                    <div field="ProjectCostValue" summarytype='sum' datatype="currency"
+                         width="110" headeralign="center" allowsort="true" align="right" renderer="onCusLinkRender">
+                        总计（元）
+                    </div>
+                    <div field="CostRate" width="100" headeralign="center" allowsort="true" align="right">
+                        成本率（%）
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="queryWindow" class="mini-window" title="详细查询" style="width: 800px; display: none;"
+     showmodal="true" allowresize="false" allowdrag="true">
+    <div class="queryDiv">
+        <form id="queryForm" method="post">
+            <table>
+                <tr>
+                    <td width="10%" align="center">
+                        项目编号
+                    </td>
+                    <td width="23%" align="left">
+                        <input name="$LK$Code" style="width: 85%;" class="mini-textbox" />
+                    </td>
+                    <td width="10%" align="center">
+                        项目名称
+                    </td>
+                    <td width="23%" align="left">
+                        <input name="$LK$Name" class="mini-textbox" style="width: 85%" />
+                    </td>
+                    <td width="10%" align="center">
+                        主责部门
+                    </td>
+                    <td width="23%" align="left">
+                        <input name="$LK$ChargerDeptName" class="mini-textbox" style="width: 85%" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        项目负责人
+                    </td>
+                    <td align="left">
+                        <input name="$LK$ChargerUserName" style="width: 85%;" class="mini-textbox" />
+                    </td>
+                    <td align="center">
+                        业务类型
+                    </td>
+                    <td align="left">
+                        <input class="mini-combobox" name="$EQ$ProjectClass" style="width: 85%;" valuefield="value"
+                               textfield="text" data="BusinessType" shownullitem="true" />
+                    </td>
+                    <td align="center">
+                        设计阶段
+                    </td>
+                    <td align="left">
+                        <input class="mini-combobox" name="$IL$Phase" style="width: 85%;" valuefield="value"
+                               textfield="text" data="Phase" shownullitem="true" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        立项日期
+                    </td>
+                    <td align="left">
+                        <input class="mini-datepicker" name="$FR$CreateDate" id="CreateDateStart" style="width: 85%;"
+                               ondrawdate="onDrawStartDate(e,'CreateDateEnd')" />
+                    </td>
+                    <td align="center">
+                        至
+                    </td>
+                    <td align="left">
+                        <input class="mini-datepicker" name="$TO$CreateDate" id="CreateDateEnd" style="width: 85%;"
+                               ondrawdate="onDrawEndDate(e,'CreateDateStart')" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        成本发生日期
+                    </td>
+                    <td align="left">
+                        <input class="mini-datepicker" name="$FR$CostDate" id="CostDateStart" style="width: 85%;"
+                               ondrawdate="onDrawStartDate(e,'CostDateEnd')" />
+                    </td>
+                    <td align="center">
+                        至
+                    </td>
+                    <td align="left">
+                        <input class="mini-datepicker" name="$TO$CostDate" id="CostDateEnd" style="width: 85%;"
+                               ondrawdate="onDrawEndDate(e,'CostDateStart')" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <div>
+            <a class="mini-button" onclick="search()" iconcls="icon-find" style="margin-right: 20px;">
+                查询
+            </a><a class="mini-button" onclick="clearQueryForm()" iconcls="icon-undo">清空</a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum("Market.BusinessType")
+    @Html.GetEnum("Project.Phase")
+</script>
+<script type="text/javascript">
+
+    addGridLink('dataGrid', 'Name', '/Market/Basic/ProjectInfo/Index?ID={ID}', { funcType: 'view', height: '90%', width: '80%' });
+    addGridLink('dataGrid', 'ProjectContractValue', '/MvcConfig/UI/List/PageView?TmplCode=ProjectContractInfoList&ProjectInfoId={ID}', { funcType: 'view', height: '90%', width: '80%' });
+    addGridLink('dataGrid', 'ProjectInvoiceValue', '/MvcConfig/UI/List/PageView?TmplCode=ProjectInvoiceList&ProjectInfoId={ID}', { funcType: 'view', height: '90%', width: '80%' });
+    addGridLink('dataGrid', 'ProjectReceiptValue', '/MvcConfig/UI/List/PageView?TmplCode=ProjectReceipt&ProjectInfoId={ID}', { funcType: 'view', height: '90%', width: '80%' });
+    //addGridLink('dataGrid', 'ProjectCostDirectValue', '/MvcConfig/UI/List/PageView?TmplCode=ProjectCostDirectGroup&ProjectInfoId={ID}', { funcType: 'view', height: '90%', width: '80%' });
+    //addGridLink('dataGrid', 'ProjectCostPaymentValue', '/MvcConfig/UI/List/PageView?TmplCode=ProjectCostDetail&ProjectID={ID}&SubjectCode=Payment', { funcType: 'view', height: '90%', width: '80%' });
+    //addGridLink('dataGrid', 'ProjectCostValue', '/MvcConfig/UI/List/PageView?TmplCode=ProjectCostAllGroup&ProjectInfoId={ID}', { funcType: 'view', height: '90%', width: '80%' });
+
+    normalParamSettings.searchFields = "Name,Code";
+
+    addGridEnum("dataGrid", "Phase", "Phase");
+    addGridEnum("dataGrid", "ProjectClass", "BusinessType");
+
+    function onCusLinkRender(e) {
+        var cls = "";
+        var uid = e.record._uid;
+        if (e.value == 0) {
+            e.cellStyle = "text-align:right; color:#c4c4c4";
+            return e.value;
+        }
+        var s = '<a ' + cls + 'href="javascript:void(0)" onclick="onCusGridLink(\'' + uid + '\',\'' + e.field + '\',\'' + e.sender.id + '\');">' + mini.formatNumber(e.value, "n") + '</a>';
+        return s;
+    }
+
+    function onCusGridLink(UID, field, GridID) {
+        var dataGrid = mini.get(GridID);
+        var row = dataGrid.getRowByUID(UID);
+        queryData = {};
+        queryData["$EQ$ProjectID"] = row.ID;
+        queryData["$FR$CostDate"] = mini.getbyName("$FR$CostDate").getValue();
+        queryData["$TO$CostDate"] = mini.getbyName("$TO$CostDate").getValue();
+        var url = ''; var width = 600; var height = "80%"; var title = "项目支出";
+        switch (field) {
+            case "ProjectCostDirectValue":
+                url = "CostItemSummaryList";
+                queryData["$EQ$CostType"] = "Production";
+                title = "报销支出";
+                break;
+            case "ProjectCostPaymentValue":
+                url = "/MvcConfig/UI/List/PageView?TmplCode=ProjectCostDetail";
+                width = "70%"; height = "75%";
+                queryData["$EQ$SubjectCode"] = "Payment";
+                title = "分包支出";
+                break;
+            case "ProjectCostValue":
+                url = "CostItemSummaryList";
+                break;
+            default:
+                break;
+        }
+        if (url == '') return;
+        openWindow(url, { data: queryData, width: width, height: height, title: title });
+    }
+
+    //计算合计
+    function onDrawSummaryCell(e) {
+        var result = e.result;
+        if (result.sumData && e.field) {
+            if (result.sumData[e.field] != undefined) {
+                e.cellHtml = result.sumData[e.field];
+                e.cellStyle = "text-align:right; color:Brown";
+            }
+            else if (result.avgData[e.field] != undefined) {
+                e.cellHtml = "平均：" + result.avgData[e.field];
+                e.cellStyle = "text-align:center; color:Brown;datatype:currency";
+            }
+            else if (e.field == "Name") {
+                e.cellHtml = "合计：";
+                e.cellStyle = " text-align: left;color:Brown";
+            }
+            else {
+                e.cellHtml = "";
+                e.cellStyle = "text-align:right; color:Brown";
+            }
+        }
+        else {
+            e.cellStyle = "text-align:right; color:Brown";
+        }
+    }
+
+    function onDrawStartDate(e, endID) {
+        var date = e.date;
+        var end = mini.get(endID).value;
+        if (end == null || end == "" || end == undefined)
+            return;
+        if (date.getTime() > end.getTime()) {
+            e.allowSelect = false;
+        }
+    }
+
+    function onDrawEndDate(e, startID) {
+        var date = e.date;
+        var start = mini.get(startID).value;
+        if (start == null || start == "" || start == undefined)
+            return;
+        var date = e.date;
+        if (date.getTime() < start.getTime()) {
+            e.allowSelect = false;
+        }
+    }
+</script>

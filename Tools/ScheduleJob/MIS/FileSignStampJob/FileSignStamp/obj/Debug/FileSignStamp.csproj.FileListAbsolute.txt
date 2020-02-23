@@ -1,0 +1,16 @@
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\FileSignStamp\bin\Debug\Resources\borderconfig.xml
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\FileSignStamp\bin\Debug\Resources\CAStamp.png
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\FileSignStamp\bin\Debug\Resources\FrameDefaultAtt.xml
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\FileSignStamp\bin\Debug\Resources\金慧签章.pfx
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\FileSignStamp\bin\Debug\FileSignStamp.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\FileSignStamp\bin\Debug\FileSignStamp.pdb
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\FileSignStamp\bin\Debug\Common.Logic.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\FileSignStamp\bin\Debug\itextsharp.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\FileSignStamp\bin\Debug\Quartz.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\FileSignStamp\bin\Debug\log4net.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\FileSignStamp\bin\Debug\Newtonsoft.Json.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\FileSignStamp\bin\Debug\Common.Logic.pdb
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\FileSignStamp\obj\Debug\FileSignStamp.csprojResolveAssemblyReference.cache
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\FileSignStamp\obj\Debug\FileSignStamp.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\FileSignStamp\obj\Debug\FileSignStamp.pdb
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\FileSignStamp\bin\Debug\itextsharp.xml

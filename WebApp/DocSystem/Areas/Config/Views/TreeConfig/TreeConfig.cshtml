@@ -1,0 +1,133 @@
+﻿@{
+    ViewBag.Title = "TreeConfig";
+}
+<div id="mainlayout" class="mini-layout" style="width: 100%; height: 100%;" splitsize="3">
+    <div title="" region="west" width="200" expanded="true" showspliticon="false">
+        <div class="mini-fit">
+            <div id="mygrid" url="TreeConfigList" onselectionchanged="onRowSelectChange" class="mini-datagrid"
+                style="width: 100%; height: 100%;" idfield="ID" multiselect="false" allowunselect='false'
+                borderstyle="border:0px;" selectonload='true'>
+                <div property="columns">
+                    <div type="checkcolumn">
+                    </div>
+                    <div field="Name" width="*" headeralign="center" allowsort="true">
+                        树配置项</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div title="center" region="center">
+        <div id="formlayout" class="mini-layout" style="width: 100%; height: 100%;">
+            <div region="north" height="32" showspliticon="false" showheader="false" allowresize="false"
+                splitsize="0" style="border: 0;">
+                <div class="mini-toolbar" style="padding: 0px; border-left: 0; border-top: 0; border-right: 0;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 100%;">
+                                <a class="mini-button" iconcls="icon-save" onclick="save();" plain="true">保存</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div title="center" region="center" style="border: 0;">
+                <div id="pageform">
+                    <input name="ID" class="mini-hidden" />
+                    <div style="padding-left: 20px; padding-top: 10px;">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="2">
+                            <tr>
+                                <td>
+                                    显示字段
+                                </td>
+                                <td colspan="3" style="padding-right: 40px;">
+                                    <input name="TreeDisplay" style="width: 100%" class="mini-textbox" required="true" vtype="maxLength:50" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="15%">
+                                </td>
+                                <td width="35%;" style="padding-right: 40px;">
+                                </td>
+                                <td width="15%">
+                                </td>
+                                <td width="35%;" style="padding-right: 40px;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" style="padding-right: 40px; height: 400px;">
+                                    <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+                                        <table style="width: 100%;">
+                                            <tr>
+                                                <td style="width: 100%;">
+                                                    <a class="mini-button" iconcls="icon-add" onclick="addRow" plain="true">添加</a>
+                                                </td>
+                                                <td style="white-space: nowrap;">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="mini-fit">
+                                        <div id="sortGrid" class="mini-datagrid" allowcelledit="true" allowcellselect="true" multiselect="true"
+                                            editnextonenterkey="true" showpager="false" style="width: 100%; height: 300px;" idfield="ID"
+                                            multiselect="true">
+                                            <div property="columns">
+                                                <div type="checkcolumn">
+                                                </div>
+                                                <div field="remove" width="60" headeralign="center" align="center">
+                                                    移除</div>
+                                                <div field="SortField" width="*" headeralign="center" allowsort="true">
+                                                    字段名
+                                                    <input property="editor" class="mini-textbox" style="width: 100%;" minheight="50" /></div>
+                                                <div field="SortDir" type="comboboxcolumn" width="200" autoshowpopup="true" headeralign="center"
+                                                    allowsort="true" align="center">
+                                                    排序<input property="editor" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value"
+                                                        data="[{text:'asc',value:'asc'},{text:'desc',value:'desc'}]" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function onRowSelectChange(e) {
+        var row = e.selected;
+        mini.getbyName("ID").setValue(row.ID);
+        mini.getbyName("TreeDisplay").setValue(row.TreeDisplay);
+        var data = mini.decode(row.TreeSort);
+        mini.get("sortGrid").setData(data);
+    }
+
+    function addRow() {
+        var grid = mini.get("sortGrid");
+        var newRow = { SortDir: "asc" };
+        var index = grid.getData().length + 1;
+        grid.addRow(newRow, index);
+    }
+
+    function save() {
+        var grid = mini.get("sortGrid");
+        grid.commitEdit();
+        var data = grid.getData();
+        var form = new mini.Form("#pageform");
+        var formData = form.getData();
+        addExecuteParam("FormData", mini.encode(formData));
+        addExecuteParam("ListData", mini.encode(data));
+        execute("save", { showLoading: true, refresh: false, onComplete: function (data) {
+            msgUI("保存成功");
+            mini.get("sortGrid").setData(mini.decode(data.TreeSort));
+        }
+        });
+    }
+    addGridButton("sortGrid", "remove", { linkText: '移除', onButtonClick: function (row) {
+        var grid = mini.get("sortGrid");
+        grid.removeRow(row, true);
+    }
+    });
+</script>

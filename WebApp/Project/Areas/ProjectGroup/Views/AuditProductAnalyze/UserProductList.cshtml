@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "UserProductList";
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+}
+
+<div class="mini-toolbar" style="padding: 2px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="white-space: nowrap; text-align: right">
+                <input id="key" class="mini-buttonedit gw-searchbox" emptytext="请输入员工姓名或所属部门" onenter="quickSearch('Name,DeptName', { gridId: 'dataGrid' });"
+                    onbuttonclick="quickSearch('Name,DeptName', {gridId:'dataGrid' });" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit" style="height: 100px;" id="GridArea">
+    <div id="dataGrid" url="GetUserProductList" class="mini-datagrid" style="width: 100%; height: 100%;" ondrawcell="onDrawCell"
+        idfield="ID" sortorder="desc">
+        <div property="columns">
+            <div type="indexcolumn">
+            </div>
+            <div field="Code" width="100" allowsort="true" headeralign="center" allowsort="true"
+                align="center">
+                员工编号
+            </div>
+            <div field="Name" width="100" allowsort="true" headeralign="center" align="center" allowsort="true"
+                align="center">
+                员工姓名
+            </div>
+            <div field="DeptName" width="120" headeralign="center" align="center" allowsort="true" allowsort="true"
+                align="center">
+                所属部门
+            </div>
+            <div field="A0" width="80" headeralign="center" align="center" allowsort="true">
+                A0
+            </div>
+            <div field="A1" width="80" headeralign="center" align="center" allowsort="true">
+                A1
+            </div>
+            <div field="A2" width="80" headeralign="center" align="center" allowsort="true">
+                A2
+            </div>
+            <div field="A3" width="80" headeralign="center" align="center" allowsort="true">
+                A3
+            </div>
+            <div field="A4" width="80" headeralign="center" align="center" allowsort="true">
+                A4
+            </div>
+            <div field="Other" width="80" headeralign="center" align="center" allowsort="true">
+                其他
+            </div>
+            <div field="ToA1" width="80" headeralign="center" align="center" allowsort="true">
+                折合A1
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+</script>
+<script type="text/javascript">
+
+    function onDrawCell(e) {
+        var field = e.field;
+        var record = e.record;
+        if (field == "Name") {
+            if (e.cellHtml != '' || e.cellHtml != null)
+                e.cellHtml = "<span style='cursor:pointer;color:blue;text-decoration:underline' onclick=onGridLink('" + e.record.ID + "')>" + e.value + "</span>&nbsp; ";
+        }
+    }
+
+
+    function onGridLink(UID) {
+        var dataGrid = mini.get("dataGrid");
+        var row = dataGrid.getRowByUID(UID);
+        var tabData = GetTabsData();
+        var Year, Month, Quarter, FileType;
+        queryData = {};
+        //for (var i = 0; i < tabData.length; i++) {
+        //    queryData["$IN$" + tabData[i].queryfield] = tabData[i].value;
+        //}
+        for (var i = 0; i < tabData.length; i++) {
+            if (tabData[i].queryfield == "Year")
+                Year = tabData[i].value == "undefine" ? "" : tabData[i].value;
+            else if (tabData[i].queryfield == "Month")
+                Month = tabData[i].value == "undefine" ? "" : tabData[i].value;
+            else if (tabData[i].queryfield == "Quarter")
+                Quarter = tabData[i].value == "undefine" ? "" : tabData[i].value;
+            else if (tabData[i].queryfield == "FileType")
+                FileType = tabData[i].value == "undefine" ? "" : tabData[i].value;
+        }
+
+
+        //var url = "/MvcConfig/UI/List/PageView?TmplCode=DeptAchievementDisplayLink&ID=" + UID + "&Year=" + Year + "&Month=" + Month + "&Quarter=" + Quarter + "&FileType=" + FileType;
+        var url = "/MvcConfig/UI/List/PageView?TmplCode=PersonAchievementDisplayLink&ID=" + UID + (Year == undefined ? "" : "&Year=" + Year) + (Month == undefined ? "" : "&Month=" + Month) + (Quarter == undefined ? "" : "&Quarter=" + Quarter) + (FileType == undefined ? "" : "&FileType=" + FileType);
+
+        var width = "80%"; var height = "80%";
+        openWindow(url, { data: queryData, width: width, height: height, title: "查看" });
+    }
+</script>

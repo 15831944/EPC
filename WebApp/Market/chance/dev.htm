@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="/CommonWebResource/CoreLib/Basic/jQuery/jquery-1.6.2.min.js" type="text/javascript"></script>
+    <script src="/CommonWebResource/CoreLib/MiniUI/miniui.js" type="text/javascript"></script>
+    <script src="common.js" type="text/javascript"></script>
+    <script src="/CommonWebResource/Theme/Default/MiniCssInc.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="mini-toolbar gw-grid-toolbar">
+        <table>
+            <tr>
+                <td>
+                </td>
+                <td class="gw-toolbar-right">
+                    地区：
+                    <input id="location" class="mini-combobox" style="width: 150px;" data="enumLocation" shownullitem="true" allowinput="true" />
+                    关键词：
+                    <input id="keyword" class="mini-textbox" />
+                    <a class="mini-button" id="btnSearch" iconcls="icon-search" onclick="search();">查询</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="mini-fit">
+        <div id="dataGrid" class="mini-datagrid" style="width: 100%; height: 100%;" multiselect="true" totalfield="data.count" datafield="data.results" pagesizefield="page_size" ajaxtype="get" page_size="50" pagesize="50"
+            renderer="onLinkRender">
+            <div property="columns">
+                <div type="checkcolumn">
+                </div>
+                <div field="dev_project_name" width="*" renderer="onLinkRender">
+                    项目名称</div>
+                <div field="dev_construction_company" width="100">
+                    建设单位</div>
+                <div field="dev_location" width="200">
+                    地区</div>
+                <div field="dev_release_date" width="100">
+                    发布时间</div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $("div").ajaxSend(function (e, xhr, opt) {
+            var page = getQueryString("pageIndex", opt.url);
+            opt.url += "&page=" + page;
+        });
+        function onLinkRender(e) {
+            var s = '<a href="#" onclick="openWindow(\'' + e.row.dev_uuid + '\');">' + e.value + '</a>';
+            return s;
+        }
+        function openWindow(id) {
+            mini.open({
+                url: "/Market/chance/devView.htm?Id=" + id,
+                title: "招投标事件详情",
+                width: "80%",
+                height: "80%"
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        var url = apiUrl + "search/dev/?token=" + token;
+        url = encodeURI(url);
+        $("#dataGrid").attr("url", url);
+        mini.parse();
+        var grid = mini.get("dataGrid");
+        mini.get("keyword").setValue(defaultKeyword);
+        mini.get("location").setValue(defaultLocation);
+        function search() {
+            grid.load({ keyword: mini.get("keyword").getValue(), location: mini.get("location").getValue() });
+        }
+        search();
+    </script>
+</body>
+</html>

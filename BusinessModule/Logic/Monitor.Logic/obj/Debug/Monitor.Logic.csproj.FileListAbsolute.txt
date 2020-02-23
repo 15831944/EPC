@@ -1,0 +1,14 @@
+E:\产品代码\EPM\BusinessModule\Logic\Monitor.Logic\bin\Debug\Monitor.Logic.dll.config
+E:\产品代码\EPM\BusinessModule\Logic\Monitor.Logic\bin\Debug\Monitor.Logic.dll
+E:\产品代码\EPM\BusinessModule\Logic\Monitor.Logic\bin\Debug\Monitor.Logic.pdb
+E:\产品代码\EPM\BusinessModule\Logic\Monitor.Logic\bin\Debug\EntityFramework.dll
+E:\产品代码\EPM\BusinessModule\Logic\Monitor.Logic\bin\Debug\Newtonsoft.Json.dll
+E:\产品代码\EPM\BusinessModule\Logic\Monitor.Logic\obj\Debug\Monitor.Logic.dll
+E:\产品代码\EPM\BusinessModule\Logic\Monitor.Logic\obj\Debug\Monitor.Logic.pdb
+D:\Files\Code\OtherWork\上海金慧\EPM产品\BusinessModule\Logic\Monitor.Logic\bin\Debug\Monitor.Logic.dll.config
+D:\Files\Code\OtherWork\上海金慧\EPM产品\BusinessModule\Logic\Monitor.Logic\bin\Debug\Monitor.Logic.dll
+D:\Files\Code\OtherWork\上海金慧\EPM产品\BusinessModule\Logic\Monitor.Logic\bin\Debug\Monitor.Logic.pdb
+D:\Files\Code\OtherWork\上海金慧\EPM产品\BusinessModule\Logic\Monitor.Logic\bin\Debug\EntityFramework.dll
+D:\Files\Code\OtherWork\上海金慧\EPM产品\BusinessModule\Logic\Monitor.Logic\bin\Debug\Newtonsoft.Json.dll
+D:\Files\Code\OtherWork\上海金慧\EPM产品\BusinessModule\Logic\Monitor.Logic\obj\Debug\Monitor.Logic.dll
+D:\Files\Code\OtherWork\上海金慧\EPM产品\BusinessModule\Logic\Monitor.Logic\obj\Debug\Monitor.Logic.pdb

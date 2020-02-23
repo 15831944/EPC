@@ -1,0 +1,314 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Net;
+using System.IO;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
+using System.Windows.Browser;
+using BeSl.Controls.Utility;
+using BeSl.Controls.File.Upload;
+
+namespace BeSl.Controls.File.UploadControl
+{
+    public class MultiFileUploadControl : FileUploadControl
+    {
+        #region 变量和属性
+
+        private int m_count = 0;  // 上传文件数
+        private ScrollHelper m_scrollHelper;    // 支持Silverlight鼠标滚轮
+        private ObservableCollection<FileUploader> m_files;   // 要上传的文件集合
+
+        public int MaxConcurrentUploads { get; set; }   // 最大同时上传文件数
+        public bool Multiselect { get; set; }   // 是否允许多选
+        public int MaxNumberToUpload { get; set; }  // 一次最大上传文件数(针对多文件上传)
+
+        #endregion
+
+        #region 模板及依赖属性
+
+        protected ItemsControl fileList;
+        protected ScrollViewer filesScrollViewer;
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            fileList = GetTemplateChild("FileList") as ItemsControl;
+            filesScrollViewer = GetTemplateChild("FilesScrollViewer") as ScrollViewer;
+        }
+
+        #endregion
+
+        #region 构造函数
+
+        public MultiFileUploadControl()
+        {
+            this.DefaultStyleKey = typeof(MultiFileUploadControl);
+            this.Init();
+        }
+
+        // 初始化控件
+        private void Init()
+        {
+            m_files = new ObservableCollection<FileUploader>();
+            m_files.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(files_CollectionChanged);
+
+            MaxConcurrentUploads = 1;
+            MaxNumberToUpload = -1;
+            Multiselect = true;
+
+            m_scrollHelper = new ScrollHelper(filesScrollViewer);
+        }
+
+        #endregion
+
+        #region FileUploadControl成员
+
+        // 获取配置上传配置信息类
+        public override UploadConfig UploadConfig
+        {
+            get
+            {
+                if (m_uploadConfig == null)
+                {
+                    m_uploadConfig = new UploadConfig(this.MaximumUpload, this.MaxNumberToUpload, this.Filter, this.UploadUrl, this.ContinueSize, this.IsLog);
+                }
+
+                return m_uploadConfig;
+            }
+        }
+
+        // 加载控件时触发
+        protected override void OnFileUploadControlLoaded(object sender, RoutedEventArgs e)
+        {
+            fileList.ItemsSource = m_files;
+
+            base.OnFileUploadControlLoaded(sender, e);
+        }
+
+
+        // 上传属性改变时触发
+        protected override void OnUploadPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "FileLength" || e.PropertyName == "BytesUploaded")
+            {
+                files_CollectionChanged(null, null);
+            }
+        }
+
+        // 上传进度改变时触发
+        protected override void OnUploadProgressChanged(object sender, BeSl.Controls.File.Upload.UploadProgressChangedEventArgs args)
+        {
+            base.OnUploadProgressChanged(sender, args);
+        }
+
+        // 上传状态改变时触发
+        protected override void OnUploadStatusChanged(object sender, EventArgs e)
+        {
+            FileUploader fu = sender as FileUploader;
+
+            if (fu.UploadStatus == UploadStatus.Complete)
+            {
+                if (!String.IsNullOrEmpty(fu.CompletedFileString) && UploadedFilesString.IndexOf(fu.CompletedFileString) < 0)
+                {
+                    UploadedFilesString += fu.CompletedFileString + ",";
+                }
+
+                if (IsUploading)
+                {
+                    UploadFile();
+                }
+            }
+            else if (fu.UploadStatus == UploadStatus.Removed)
+            {
+                m_files.Remove(fu);
+
+                if (IsUploading)
+                {
+                    UploadFile();
+                }
+            }
+            else if (fu.UploadStatus == UploadStatus.Uploading && m_files.Count(f => f.UploadStatus == UploadStatus.Uploading) < MaxConcurrentUploads)
+            {
+                UploadFile();
+            }
+        }
+
+        // 上传文件操作
+        protected override void UploadFile()
+        {
+            base.UploadFile();
+
+            while ((m_files.Count(f => f.UploadStatus == UploadStatus.Uploading || f.UploadStatus == UploadStatus.Resizing) < MaxConcurrentUploads) && IsUploading)
+            {
+                if (m_files.Count(f => f.UploadStatus != UploadStatus.Complete && f.UploadStatus != UploadStatus.Uploading && f.UploadStatus != UploadStatus.Resizing) > 0)
+                {
+                    FileUploader fu = m_files.First(f => f.UploadStatus != UploadStatus.Complete && f.UploadStatus != UploadStatus.Uploading && f.UploadStatus != UploadStatus.Resizing);
+                    fu.Upload();
+                }
+                else if (m_files.Count(f => f.UploadStatus == UploadStatus.Uploading || f.UploadStatus == UploadStatus.Resizing) == 0)
+                {
+                    IsUploading = false;
+                    uploadButton.Content = "上传";
+                    this.UploadedFilesString = this.UploadedFilesString.TrimEnd(',');
+
+                    if (!string.IsNullOrEmpty(JsCompleteFunction))
+                    {
+                        try
+                        {
+                            HtmlPage.Window.Invoke(JsCompleteFunction, this.UploadedFilesString);
+                        }
+                        catch (Exception e) { }
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        // 点击上传文件按钮时触发
+        protected override void OnAddFilesButtonClick(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = Filter;
+            dlg.Multiselect = Multiselect;
+
+            if ((bool)dlg.ShowDialog())
+            {
+                foreach (FileInfo file in dlg.Files)
+                {
+                    try
+                    {
+                        FileUploader fileUploader = new FileUploader(this.Dispatcher, file, UploadConfig);
+
+                        if (UploadChunkSize > 0)
+                            fileUploader.ChunkSize = UploadChunkSize;
+
+                        if (IsResizeImage)
+                        {
+                            fileUploader.IsResizeImage = IsResizeImage;
+                            fileUploader.ImageSize = ImageSize;
+                        }
+
+                        if (MaxNumberToUpload > -1)
+                        {
+                            m_count++;
+                            if (m_count > MaxNumberToUpload)
+                            {
+                                MessageBox.Show("上传文件数已超过最大允许值！");
+                                break;
+                            }
+                        }
+
+                        if (MaximumTotalUpload >= 0 && TotalUploadingSize + fileUploader.FileLength > MaximumTotalUpload)
+                        {
+                            MessageBox.Show("总上传文件大小已超过最大允许值！");
+                            break;
+                        }
+
+                        if (MaximumUpload >= 0 && fileUploader.FileLength > MaximumUpload)
+                        {
+                            MessageBox.Show(string.Format("文件 '{0}' 已超过最大上传文件大小。", fileUploader.FileName));
+                            continue;
+                        }
+
+                        fileUploader.DisplayThumbnail = (bool)displayThumbailChkBox.IsChecked;
+                        fileUploader.UploadStatusChanged += new EventHandler(OnUploadStatusChanged);
+                        fileUploader.UploadProgressChanged += new UploadProgressChangedEvent(OnUploadProgressChanged);
+                        fileUploader.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(OnUploadPropertyChanged);
+                        m_files.Add(fileUploader);
+                    }
+                    catch (IOException ioex)
+                    {
+                        MessageBox.Show("文件“" + file.Name + "”不可读，请确认文件是否打开中且拥有读权限！");
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("加载文件“" + file.Name + "”失败，请重试！");
+                        break;
+                    }
+                }
+            }
+        }
+
+        // 点击上传文件按钮是触发
+        protected override void OnUploadButtonClick(object sender, RoutedEventArgs e)
+        {
+            if ((string)uploadButton.Content == "上传")
+            {
+                m_startTime = DateTime.Now;
+
+                uploadButton.Content = "取消";
+                UploadFile();
+            }
+            else
+            {
+                var q = m_files.Where(f => f.UploadStatus == UploadStatus.Uploading);
+                foreach (FileUploader fu in q)
+                {
+                    fu.CancelUpload();
+                }
+
+                IsUploading = false;
+                uploadButton.Content = "上传";
+            }
+        }
+
+        // 点击清除文件按钮
+        protected override void OnClearFileButtonClick(object sender, RoutedEventArgs e)
+        {
+            var q = m_files.Where(f => f.UploadStatus == UploadStatus.Uploading);
+
+            foreach (FileUploader fu in q)
+            {
+                fu.CancelUpload();
+            }
+
+            timeLeftTextBlock.Text = "";
+            m_files.Clear();
+        }
+
+        // 点击显示缩略图按钮时触发
+        protected override void OnDisplayThumbailChkBoxChecked(object sender, RoutedEventArgs e)
+        {
+            CheckBox chkbox = sender as CheckBox;
+
+            foreach (FileUploader fu in m_files)
+            {
+                if (fu.DisplayThumbnail != chkbox.IsChecked)
+                {
+                    fu.DisplayThumbnail = (bool)chkbox.IsChecked;
+                }
+            }
+        }
+
+        #endregion
+
+        #region 私有函数
+
+        // 文件数发生变化时触发
+        protected void files_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            countTextBlock.Text = "文件总数: " + m_files.Count.ToString();
+            TotalUploadingSize = m_files.Sum(f => f.FileLength);
+            TotalUploadedSize = m_files.Sum(f => f.BytesUploaded);
+            totalSizeTextBlock.Text = string.Format("{0} of {1}",
+                new ByteConverter().Convert(TotalUploadedSize, this.GetType(), null, null).ToString(),
+                new ByteConverter().Convert(TotalUploadingSize, this.GetType(), null, null).ToString());
+            progressBar.Maximum = TotalUploadingSize;
+            progressBar.Value = TotalUploadedSize;
+        }
+
+        #endregion
+    }
+}

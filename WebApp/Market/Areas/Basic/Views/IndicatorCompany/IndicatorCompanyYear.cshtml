@@ -1,0 +1,202 @@
+﻿@{
+    ViewBag.Title = "公司年度指标";
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+}
+<div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" iconcls="icon-save" onclick="save();" plain="true" id="btnsave">暂存</a>
+                <a class="mini-button" iconcls="icon-edit" onclick="upgrade();" plain="true" id="btnupgrade">变更</a>
+                <a class="mini-button" iconcls="icon-ok" onclick="publish();" plain="true" id="btnpublish">发布</a>
+                <a class="mini-button" iconcls="icon-search" onclick="getversionlist()" plain="true" id="btnversion">版本信息</a>
+            </td>
+            <td style="white-space: nowrap;"></td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit" id="GridArea">
+    <div id="dataGrid" url="GetYearList" class="mini-datagrid" style="width: 100%; height: 100%;"
+         idfield="ID" multiselect="false" showpager="false" allowcelledit="true" allowcellselect="true"
+         editnextonenterkey="true" editnextrowcell="true" showsummaryrow="true" ondrawsummarycell="onDrawSummaryCell"
+         ondrawcell="OnCellDrawing" onload="setButton" oncellbeginedit="OnCellBeginEdit">
+        <div property="columns">
+            <div type="indexcolumn" width="35px">
+            </div>
+            @{
+                var categories = ViewBag.Categories as List<Market.Logic.Domain.S_KPI_Category>;
+                if (categories.Count > 0)
+                {
+                    <div field="BusiniessCategory" headeralign="center" width="120" align="center">
+                        业务类型
+                    </div>
+                }
+                var list = ViewBag.IndicatorDefines as List<Market.Logic.Domain.S_KPI_IndicatorConfig>;
+                if (list != null)
+                {
+                    foreach (var item in list)
+                    {
+                        var iwidth = item.IndicatorName.Length * 14;
+
+                        <div name="@item.IndicatorCode" summarytype="sum" field="@item.IndicatorCode" vtype="float" datatype="currency" headeralign="center" width="@iwidth" align="right">
+                            @item.IndicatorName
+                            <input property="editor" class="mini-textbox" style="width: 100%;" />
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+@Html.GetEnum("Market.BusiniessCategory");
+    var writeFields = "@Html.Raw(ViewBag.WriteFields)";
+</script>
+<script type="text/javascript">
+    addGridEnum("dataGrid", "BusiniessCategory", "BusiniessCategory");
+
+    function onDrawSummaryCell(e) {
+        var result = e.result;
+        e.cellStyle = "text-align:right; color:Brown";
+    }
+
+    function OnCellDrawing(e) {
+        var rec = e.record;
+        var field = e.field;
+        if (writeFields.indexOf(field) < 0) e.cellStyle = "background:#ecedef";
+        var CurrentVersion = rec.CurrentVersion;
+        if (CurrentVersion == "Yes") {
+            e.cellStyle = "background:#ecedef";
+        }
+    }
+
+    function OnCellBeginEdit(e) {
+        var grid = e.sender;
+        var field = e.field;
+        var rec = e.record;
+        var CurrentVersion = rec.CurrentVersion;
+        if (CurrentVersion == "Yes") {
+            e.cancel = true; return;
+        }
+    }
+
+    function setButton(e) {
+        var actionflag = e.result.Flag;
+        if (actionflag) {
+            $("#btnsave").hide();
+            $("#btnpublish").hide();
+            $("#btnupgrade").show();
+            $("#btnversion").show();
+        }
+        else {
+            $("#btnupgrade").hide();
+            $("#btnsave").show();
+            $("#btnpublish").show();
+            $("#btnversion").show();
+        }
+    }
+
+    function save() {
+        var dataGrid = mini.get("dataGrid");
+        dataGrid.commitEdit(); dataGrid.accept();
+        var tabData = GetTabsData();
+        var belongYear = 0;
+        for (var i = 0; i < tabData.length; i++) {
+            var tabDataInfo = tabData[i];
+            if (tabDataInfo.queryfield == "BelongYear") {
+                belongYear = tabDataInfo.value;
+                break;
+            }
+        }
+        var data = dataGrid.getData();
+        addExecuteParam("ListData", mini.encode(data));
+        addExecuteParam("Year", belongYear);
+        execute("SaveData", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                msgUI("保存成功");
+                dataGrid.reload();
+            }, validateForm: true
+        });
+    }
+
+
+    function upgrade() {
+        var dataGrid = mini.get("dataGrid");
+        var tabData = GetTabsData();
+        var belongYear = 0;
+        for (var i = 0; i < tabData.length; i++) {
+            var tabDataInfo = tabData[i];
+            if (tabDataInfo.queryfield == "BelongYear") {
+                belongYear = tabDataInfo.value;
+                break;
+            }
+        }
+        addExecuteParam("Year", belongYear);
+        execute("Upgrade", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                msgUI("变更成功");
+                dataGrid.reload();
+                $("#btnsave").show();
+                $("#btnpublish").show();
+            }, validateForm: false
+        });
+    }
+
+
+    function publish() {
+        var dataGrid = mini.get("dataGrid");
+        dataGrid.commitEdit(); dataGrid.accept();
+        var tabData = GetTabsData();
+        var belongYear = 0;
+        for (var i = 0; i < tabData.length; i++) {
+            var tabDataInfo = tabData[i];
+            if (tabDataInfo.queryfield == "BelongYear") {
+                belongYear = tabDataInfo.value;
+                break;
+            }
+        }
+        msgUI("确定要发布本次指标吗？", 2, function (action) {
+            if (action == "ok") {
+                var data = dataGrid.getData();
+                addExecuteParam("ListData", mini.encode(data));
+                addExecuteParam("Year", belongYear);
+                execute("Publish", {
+                    showLoading: true, refresh: false, onComplete: function (data) {
+                        msgUI("发布成功");
+                        dataGrid.reload();
+                        $("#btnupgrade").show();
+                    }, validateForm: true
+                });
+            }
+        });
+    }
+
+    function cusTabSearch(tabData, normalSettings) {
+        var belongYear = 0;
+        for (var i = 0; i < tabData.length; i++) {
+            var tabDataInfo = tabData[i];
+            if (tabDataInfo.queryfield == "BelongYear") {
+                belongYear = tabDataInfo.value;
+                break;
+            }
+        }
+        var dataGrid = mini.get("dataGrid");
+        dataGrid.load({ Year: belongYear });
+    }
+
+
+    function getversionlist() {
+        var tabData = GetTabsData();
+        var belongYear = 0;
+        for (var i = 0; i < tabData.length; i++) {
+            var tabDataInfo = tabData[i];
+            if (tabDataInfo.queryfield == "BelongYear") {
+                belongYear = tabDataInfo.value;
+                break;
+            }
+        }
+        var IndicatorType = "@Market.Logic.IndicatorType.YearIndicator";
+        var url = "/Market/Basic/IndicatorCompany/VersionList?Year=" + belongYear + "&IndicatorType=" + IndicatorType;
+        openWindow(url, { title: '版本信息', width: '500', height: '400', funcType: 'view' });
+    }
+</script>

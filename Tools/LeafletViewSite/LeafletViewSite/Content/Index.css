@@ -1,0 +1,376 @@
+﻿body {
+    height: 100%;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    -js-display: flex;
+    padding: 0;
+}
+
+.map-wrapper {
+    display: block;
+    position: absolute;
+    height: calc(100%);
+    min-height:550px;
+    width: 100%;
+    z-index: 1;
+    text-align: center;
+    border-right: 1px solid #e7e7e7;
+}
+
+#map {
+    height: 100%;
+}
+
+.version-info {
+    margin-bottom: 4px;
+    height: 30px;
+    line-height: 18px;
+    display:none;
+}
+
+.preview-container {
+    position: relative;
+    width: calc(100% - 400px);
+}
+.version-name {
+    margin-right:18px;
+}
+
+.version-title {
+    padding: 10px;
+    z-index: 1000;
+    position: absolute;
+    -webkit-transform: translate(-50%, 0);
+    -ms-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+    background-color: #333333;
+    color: #ffffff;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    height: 19px;
+    font-size: 12px;
+    font-family: "Microsoft YaHei";
+    width:395px;
+}
+
+.version-item {
+    float: left;
+    margin-right: 10px;
+    color:#504d4d;
+    font-family:'Microsoft YaHei';
+    font-size:13px;
+}
+
+.cur-version-item {
+    float: left;
+    margin-right: 10px;
+}
+
+.version-select {
+    float: left;
+    margin-right: 10px;
+}
+
+.version-select>select {
+    width:58px;
+    border:1px solid #eae4e4;
+}
+
+.version-download {
+    color:#00a1e9;
+    text-decoration:underline;
+    cursor:pointer;
+}
+
+.comment-container {
+    width: 400px;
+    border: 1px solid #e7e7e7;
+    background-color: #f5f5f5;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    -js-display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.top-head {
+    padding: 14px 10px 2px 10px;
+    font-size: 14px;
+    color: #333333;
+}
+
+
+.doc-name {
+    font-size: 15px;
+    font-family: "Microsoft YaHei";
+    color:#000;
+}
+
+.comment-body {
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    -js-display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.text-ellipsis {
+    margin-bottom:3px;
+}
+
+.content {
+    -webkit-flex: 1px;
+    -ms-flex: 1px;
+    flex: 1px;
+    border: 1px solid #e7e7e7;
+    background-color: #ffffff;
+    overflow-y: auto;
+    min-height: 400px;
+    font-family: "Microsoft YaHei";
+}
+
+.subitem-area-wrapper {
+    padding-top: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    position: relative;
+}
+
+.subitem-item-area {
+    background-color:#f5f5f5;
+}
+
+.arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    top: 0px;
+    left: 60px;
+    border-width: 12px;
+    border-top-width: 0;
+    border-bottom-color: #f5f5f5;
+}
+.item-area {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    -js-display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+
+.title-item {
+    padding: 10px 0px 4px 15px;
+    position: relative;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    -js-display: flex;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    font-size: 12px;
+    font-family: 'Microsoft YaHei';
+}
+
+.u_icon {
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+    border: 1px;
+    margin-top: 4px;
+}
+
+.middle-body {
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    -js-display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    margin-left: 10px;
+    font-size:12px;
+    color:#848080;
+    overflow:hidden;
+    white-space:nowrap;
+}
+
+.msg-item {
+    padding-left: 65px;
+    padding-bottom: 4px;
+    word-wrap: break-word;
+    font-size: 11px;
+    font-family: "Microsoft YaHei";
+    color: #000;
+    display:block;
+}
+
+.subitem-msg-item {
+    padding-left: 65px;
+    word-wrap: break-word;
+    font-size: 11px;
+    font-family: "Microsoft YaHei";
+    color: #000;
+    display:block;
+}
+
+.ant-btn-primary {
+    background-color: #00a1e9;
+    color: #fff;
+    display: inline-block;
+    margin-bottom: 0;
+    -ms-touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    line-height: 1.15;
+    padding: 0 15px;
+    font-size: 12px;
+    border-radius: 4px;
+    height: 28px;
+}
+._msg, ._delete,._subitemDelete {
+    margin-right:10px;
+    cursor: pointer;
+    display:none;
+}
+
+.send-container {
+    border: 1px solid #e7e7e7;
+    border-top: none;
+    background-color: #ffffff;
+}
+
+.btn-container {
+    padding: 0px 10px 10px 10px;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    -js-display: flex;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+}
+
+.btn-sel-user {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+.lable-company {
+    background-color: #f4fcfc;
+    margin-left: 5px;
+    padding-left: 5px;
+    color:#5a5858;
+}
+
+.anticon-download:before {
+    content: "\E6B7";
+}
+
+.ant-input {
+    width: calc(100% - 10px);
+    border: 1px solid #eae4e4;
+    margin-left:15px;
+    height:25px;
+    width:260px;
+    margin-top:10px;
+}
+
+.ant-input-textarea {
+    width: calc(100% - 10px);
+    border: none;
+    background:transparent;
+    border-style:none;
+    box-shadow: none;
+    resize: none;
+}
+
+.ant-input-affix-wrapper {
+    display: none;
+}
+._attention_desc_ {
+    width: 300px;
+    position: absolute;
+    padding: 10px;
+    border-radius: 3px;
+    left: 42px;
+    color: #9a9a9a;
+    font-size: 12px;
+    z-index: 100;
+    background-color: #fff;
+    box-shadow: 0 0 1px 1px #cdcdcd;
+}
+._add_input_ {
+    position: absolute;
+    width: 340px;
+    height: 180px;
+    border-radius: 5px;
+    left: 46px;
+    top: 43px;
+    background-color: #fff;
+}
+.common-annotation-area {
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    box-shadow: 0 0 1px 1px #BBCCD0;
+}
+.common-annotation-area textarea {
+    height: 150px;
+    width: 96%;
+    margin: auto;
+    padding: 10px;
+    outline: 0;
+    border: none;
+    resize: none;
+    display: block;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+}
+ ._add_input_ .btn-area {
+    height: 38px !important;
+    width: 100%;
+    background-color: #fafafa;
+    border-top: solid 1px #f1f1f1;
+}
+._btn-ok {
+    cursor: pointer;
+    text-align: center;
+    float: right;
+    margin: 3px 5px;
+    width: 54px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 2px;
+    background-color: #00a1e9;
+    color: #fff;
+}
+._btn-cancel {
+    cursor: pointer;
+    text-align: center;
+    float: right;
+    margin: 3px 5px;
+    width: 54px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 2px;
+    background-color: #efefef;
+    color: #9a9a9a;
+}
+
+.selected {
+    border-left: 3px solid #ffad01 !important;
+}

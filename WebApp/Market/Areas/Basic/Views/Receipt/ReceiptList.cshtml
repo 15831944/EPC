@@ -1,0 +1,111 @@
+﻿@{
+    ViewBag.Title = "收款管理列表";
+}
+<div class="mini-toolbar" style="padding: 2px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" iconcls="icon-add" onclick="add({url:'ReceiptEdit',width:'70%',height:'90%'});"
+                    plain="true">增加</a>
+                <a class="mini-button" iconcls="icon-edit" onclick="edit({url:'ReceiptEdit',width:'70%',height:'90%'});"
+                    plain="true">编辑</a>
+                <a class="mini-button" iconcls="icon-remove" onclick="del()" plain="true">删除</a>
+            </td>
+            <td style="white-space: nowrap;">
+                <input class="mini-buttonedit searchbox" id="key" emptytext="请输入付款单位或合同名称" style="width: 200px;"
+                    onenter="quickSearch('ContractName,CustomerName');" onbuttonclick="quickSearch('ContractName,CustomerName');" />
+                <a class="mini-button" onclick="showWindow('queryWindow')" iconcls="icon-find" plain="true">详细查询</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit" style="height: 100px;">
+    <div id="dataGrid" url="GetList" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID"
+        showsummaryrow="true" ondrawsummarycell="onDrawSummaryCell" multiselect="true">
+        <div property="columns">
+            <div type="checkcolumn">
+            </div>
+            <div field="PayerUnitName" width="300" headeralign="center" allowsort="true">
+                付款单位
+            </div>
+            <div field="ContractName" width="300" headeralign="center" allowsort="true">
+                合同名称
+            </div>
+            <div field="ContractCode" width="150" headeralign="center" allowsort="true">
+                合同编号
+            </div>
+            <div field="Amount" datatype="currency" headeralign="center" width="120" allowsort="true" align="right"
+                summarytype='sum' datatype="currency" currencyunit="￥">
+                收款金额（元）
+            </div>
+            <div field="ReceiptType" headeralign="center" width="120" allowsort="true" align="center">
+                收款方式
+            </div>
+            <div field="ArrivedDate" width="150" headeralign="center" dateformat="yyyy-MM-dd" allowsort="true" align="center">
+                收款日期
+            </div>
+        </div>
+    </div>
+</div>
+<div id="queryWindow" class="mini-window" title="详细查询" style="width: 750px;" showmodal="true" allowresize="false"
+    allowdrag="true">
+    <div class="queryDiv">
+        <form id="queryForm" method="post">
+            <table>
+                <tr>
+                    <td width="10%" align="center">合同名称
+                    </td>
+                    <td width="23%" align="left">
+                        <input name="$LK$ContractName" style="width: 85%;" class="mini-textbox" />
+                    </td>
+                    <td width="10%" align="center">合同编号
+                    </td>
+                    <td width="23%" align="left">
+                        <input name="$LK$ContractCode" style="width: 85%;" class="mini-textbox" />
+                    </td>
+                    <td width="10%" align="center">付款单位
+                    </td>
+                    <td width="23%" align="left">
+                        <input name="$LK$CustomerName" style="width: 85%;" class="mini-textbox" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">付款日期
+                    </td>
+                    <td align="left">
+                        <input class="mini-datepicker" name="$FR$ArrivedDate" style="width: 85%;" />
+                    </td>
+                    <td align="center">至
+                    </td>
+                    <td align="left">
+                        <input class="mini-datepicker" name="$TO$ArrivedDate" style="width: 85%;" />
+                    </td>
+                    <td align="center"></td>
+                    <td align="left"></td>
+                </tr>
+            </table>
+        </form>
+        <div>
+            <a class="mini-button" onclick="search()" iconcls="icon-find" style="margin-right: 20px;">查询</a>
+            <a class="mini-button" onclick="clearQueryForm()" iconcls="icon-undo">清空</a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum("Market.ReceiptType");
+</script>
+<script type="text/javascript">
+    addGridEnum("dataGrid", "ReceiptType", "ReceiptType");
+    addGridLink("dataGrid", "CustomerSubName", "ReceiptEdit?ID={ID}", { funcType: "view", height: "80%", width: "70%" });
+
+    function onDrawSummaryCell(e) {
+        if (e.field == "ContractCode") {
+            e.cellHtml = "合计：";
+            e.cellStyle = "text-align:left; color:Brown";
+        }
+        else if (e.result.sumData && e.result.sumData[e.field]) {
+            e.cellStyle = "text-align:right; color:Brown;datatype:currency";
+            e.cellHtml =  e.result.sumData[e.field] ;
+        }
+    }
+</script>

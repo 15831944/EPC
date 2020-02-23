@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "Tag";
+}
+<div class="mini-toolbar" style="padding: 0px;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <div id="rbl" class="mini-radiobuttonlist" onvaluechanged="valuechanged()" repeatitems="1"
+                    repeatlayout="table" repeatdirection="vertical" textfield="Name" valuefield="ID">
+                </div>
+            </td>
+            <td style="white-space: nowrap;">
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit" style="padding-top: 0px;">
+    <div id="maintab" bodystyle="padding:0px;border-bottom:0px;border-left:0px;border-right:0px;"
+        class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;">
+        <div title="Title" showheader="false" headerstyle="display:none;">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    mini.parse();
+    var mainTabs = mini.get("maintab"); var tab = mainTabs.getTabs()[0];
+    var IsEdit = "@Request["$IsEdit"]";
+    var State = getQueryString("State");
+    var spaceID = getQueryString("SpaceID");
+    var rbl = mini.get("rbl");
+    if (!spaceID) alert("请指定图档空间ID");
+    else {
+        var url = "getnodeconfiginfo?SpaceID=" + spaceID + "&$QueryType=" + "@Request["$QueryType"]";
+        rbl.load(url);
+        rbl.on("valuechanged", function (e) {
+            var configID = this.getValue();
+            tab.url = "List?SpaceID=" + spaceID + "&ConfigID=" + configID + "&ShowAdvanceQuery=false&QueryType=Node";
+            if (State != "" && typeof State != "undefined" && State != null)
+                tab.url = "List?SpaceID=" + spaceID + "&ConfigID=" + configID + "&ShowAdvanceQuery=false&QueryType=Node" + "&State=" + State;
+            else if (IsEdit == "true")
+                tab.url = "List?SpaceID=" + spaceID + "&ConfigID=" + configID + "&ShowAdvanceQuery=false&QueryType=Node" + "&$IsEdit=true&$IsSelect=true";
+            if ("@Request["$QueryType"]" == "Sealup")
+                tab.url += "&State=Published&State=Normal";
+            mainTabs.reloadTab(tab);
+        });
+    }
+    if (rbl.data.length > 0) {
+        rbl.setValue(rbl.data[0].ID);
+        tab.url = "List?SpaceID=" + spaceID + "&ConfigID=" + rbl.data[0].ID + "&ShowAdvanceQuery=false&QueryType=Node";
+        if (State != "" && typeof State != "undefined" && State != null)
+            tab.url = "List?SpaceID=" + spaceID + "&ConfigID=" + rbl.data[0].ID + "&ShowAdvanceQuery=false&QueryType=Node" + "&State=" + State;
+        else if (IsEdit == "true")
+            tab.url = "List?SpaceID=" + spaceID + "&ConfigID=" + rbl.data[0].ID + "&ShowAdvanceQuery=false&QueryType=Node" + "&$IsEdit=true&$IsSelect=true";
+        if ("@Request["$QueryType"]" == "Sealup")
+            tab.url += "&State=Published&State=Normal";
+        mainTabs.reloadTab(tab);
+    }
+
+    function valuechanged() {
+        var spaceID = getQueryString("SpaceID");
+        var rbl = mini.get("rbl");
+        var configID = rbl.getValue();
+        var mainTabs = mini.get("maintab"); var tab = mainTabs.getTabs()[0];
+        tab.url = "List?SpaceID=" + spaceID + "&ConfigID=" + configID;
+        mainTabs.reloadTab(tab);
+    }
+</script>

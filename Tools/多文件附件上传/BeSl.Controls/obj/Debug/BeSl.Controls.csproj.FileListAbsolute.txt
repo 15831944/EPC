@@ -1,0 +1,4 @@
+D:\project\Test\BaseFrame\SilverLight\多文件附件上传\BeSl.Controls\Bin\Debug\BeSl.Controls.dll
+D:\project\Test\BaseFrame\SilverLight\多文件附件上传\BeSl.Controls\Bin\Debug\BeSl.Controls.pdb
+D:\project\Test\BaseFrame\SilverLight\多文件附件上传\BeSl.Controls\obj\Debug\BeSl.Controls.dll
+D:\project\Test\BaseFrame\SilverLight\多文件附件上传\BeSl.Controls\obj\Debug\BeSl.Controls.pdb

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="gb2312" standalone="no"?>
+<border>
+	<Horizontal>
+		<A0>
+      <Barcode Height="4.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <QRcode ExtWidth="16" ExtHeight="16.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <Sign SignExtWidth="16.5" SignExtHeight="7.0" Height="3.00"  Angle="0" CorrectPosX="0" CorrectPosY="0"/>
+      <CoSign CoSignExtWidth="11.2" CoSignExtHeight="4.8" CoSignDateExtWidth="25.5" CoSignDateExtHeight="5" CoSignMajorExtWidth="11.5" CoSignMajorExtHeight="8" Height="3.00" Angle="90" CorrectPosX="0" CorrectPosY="0"/>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="-18" RelativePosY="0"/>
+      </Stamp>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="18" RelativePosY="0"/>
+      </Stamp>
+    </A0>
+		<A1>
+      <Barcode Height="4.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <QRcode ExtWidth="16" ExtHeight="16.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <Sign SignExtWidth="16.5" SignExtHeight="7.0" Height="3.00"  Angle="0" CorrectPosX="0" CorrectPosY="0"/>
+      <CoSign CoSignExtWidth="11.2" CoSignExtHeight="4.8" CoSignDateExtWidth="25.5" CoSignDateExtHeight="5" CoSignMajorExtWidth="11.5" CoSignMajorExtHeight="8" Height="3.00" Angle="90" CorrectPosX="0" CorrectPosY="0"/>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="-18" RelativePosY="0"/>
+      </Stamp>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="18" RelativePosY="0"/>
+      </Stamp>
+		</A1>
+		<A2>
+      <Barcode Height="4.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <QRcode ExtWidth="16" ExtHeight="16.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <Sign SignExtWidth="16.5" SignExtHeight="7.0" Height="3.00"  Angle="0" CorrectPosX="0" CorrectPosY="0"/>
+      <CoSign CoSignExtWidth="11.2" CoSignExtHeight="4.8" CoSignDateExtWidth="25.5" CoSignDateExtHeight="5" CoSignMajorExtWidth="11.5" CoSignMajorExtHeight="8" Height="3.00" Angle="90" CorrectPosX="0" CorrectPosY="0"/>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="-18" RelativePosY="0"/>
+      </Stamp>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="18" RelativePosY="0"/>
+      </Stamp>
+    </A2>
+		<A3>
+      <Barcode Height="4.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <QRcode ExtWidth="16" ExtHeight="16.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <Sign SignExtWidth="16.5" SignExtHeight="7.0" Height="3.00"  Angle="0" CorrectPosX="0" CorrectPosY="0"/>
+      <CoSign CoSignExtWidth="11.2" CoSignExtHeight="4.8" CoSignDateExtWidth="25.5" CoSignDateExtHeight="5" CoSignMajorExtWidth="11.5" CoSignMajorExtHeight="8" Height="3.00" Angle="90" CorrectPosX="0" CorrectPosY="0"/>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="-18" RelativePosY="0"/>
+      </Stamp>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="18" RelativePosY="0"/>
+      </Stamp>
+    </A3>
+		<A4>
+      <Barcode Height="4.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <QRcode ExtWidth="16" ExtHeight="16.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <Sign SignExtWidth="16.5" SignExtHeight="7.0" Height="3.00"  Angle="0" CorrectPosX="0" CorrectPosY="0"/>
+      <CoSign CoSignExtWidth="11.2" CoSignExtHeight="4.8" CoSignDateExtWidth="25.5" CoSignDateExtHeight="5" CoSignMajorExtWidth="11.5" CoSignMajorExtHeight="8" Height="3.00" Angle="90" CorrectPosX="0" CorrectPosY="0"/>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="-18" RelativePosY="0"/>
+      </Stamp>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="18" RelativePosY="0"/>
+      </Stamp>
+    </A4>
+	</Horizontal>
+	<Vertical>
+		<A0>
+      <Barcode Height="4.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <QRcode ExtWidth="16" ExtHeight="16.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <Sign SignExtWidth="16.5" SignExtHeight="7.0" Height="3.00"  Angle="0" CorrectPosX="0" CorrectPosY="0"/>
+      <CoSign CoSignExtWidth="11.2" CoSignExtHeight="4.8" CoSignDateExtWidth="25.5" CoSignDateExtHeight="5" CoSignMajorExtWidth="11.5" CoSignMajorExtHeight="8" Height="3.00" Angle="90" CorrectPosX="0" CorrectPosY="0"/>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="-18" RelativePosY="0"/>
+      </Stamp>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="18" RelativePosY="0"/>
+      </Stamp>
+    </A0>
+		<A1>
+      <Barcode Height="4.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <QRcode ExtWidth="16" ExtHeight="16.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <Sign SignExtWidth="16.5" SignExtHeight="7.0" Height="3.00"  Angle="0" CorrectPosX="0" CorrectPosY="0"/>
+      <CoSign CoSignExtWidth="11.2" CoSignExtHeight="4.8" CoSignDateExtWidth="25.5" CoSignDateExtHeight="5" CoSignMajorExtWidth="11.5" CoSignMajorExtHeight="8" Height="3.00" Angle="90" CorrectPosX="0" CorrectPosY="0"/>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="-18" RelativePosY="0"/>
+      </Stamp>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="18" RelativePosY="0"/>
+      </Stamp>
+    </A1>
+		<A2>
+      <Barcode Height="4.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <QRcode ExtWidth="16" ExtHeight="16.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <Sign SignExtWidth="16.5" SignExtHeight="7.0" Height="3.00"  Angle="0" CorrectPosX="0" CorrectPosY="0"/>
+      <CoSign CoSignExtWidth="11.2" CoSignExtHeight="4.8" CoSignDateExtWidth="25.5" CoSignDateExtHeight="5" CoSignMajorExtWidth="11.5" CoSignMajorExtHeight="8" Height="3.00" Angle="90" CorrectPosX="0" CorrectPosY="0"/>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="-18" RelativePosY="0"/>
+      </Stamp>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="18" RelativePosY="0"/>
+      </Stamp>
+    </A2>
+		<A3>
+      <Barcode Height="4.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <QRcode ExtWidth="16" ExtHeight="16.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <Sign SignExtWidth="16.5" SignExtHeight="7.0" Height="3.00"  Angle="0" CorrectPosX="0" CorrectPosY="0"/>
+      <CoSign CoSignExtWidth="11.2" CoSignExtHeight="4.8" CoSignDateExtWidth="25.5" CoSignDateExtHeight="5" CoSignMajorExtWidth="11.5" CoSignMajorExtHeight="8" Height="3.00" Angle="90" CorrectPosX="0" CorrectPosY="0"/>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="-18" RelativePosY="0"/>
+      </Stamp>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="18" RelativePosY="0"/>
+      </Stamp>
+    </A3>
+		<A4>
+      <Barcode Height="4.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <QRcode ExtWidth="16" ExtHeight="16.00" Angle="0.00" CorrectPosX="0" CorrectPosY="0"/>
+      <Sign SignExtWidth="16.5" SignExtHeight="7.0" Height="3.00"  Angle="0" CorrectPosX="0" CorrectPosY="0"/>
+      <CoSign CoSignExtWidth="11.2" CoSignExtHeight="4.8" CoSignDateExtWidth="25.5" CoSignDateExtHeight="5" CoSignMajorExtWidth="11.5" CoSignMajorExtHeight="8" Height="3.00" Angle="90" CorrectPosX="0" CorrectPosY="0"/>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="-18" RelativePosY="0"/>
+      </Stamp>
+      <Stamp StampExtWidth="18" StampExtHeight="8" Angle="0.00" CorrectPosX="0" CorrectPosY="0">
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="0" RelativePosY="8"/>
+        <ChildStamp StampExtWidth="18" StampExtHeight="8.0" Angle="0" RelativePosX="18" RelativePosY="0"/>
+      </Stamp>
+    </A4>
+	</Vertical>
+</border>

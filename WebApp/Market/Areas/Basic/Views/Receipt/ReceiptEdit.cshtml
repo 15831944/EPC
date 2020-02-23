@@ -1,0 +1,788 @@
+﻿@{
+    ViewBag.Title = "ReceiptEdit";
+}
+
+<div id="formlayout" class="mini-layout" style="width: 100%; height: 100%;">
+    <div region="north" height="32" showspliticon="false" showheader="false" allowresize="false" splitsize="0"
+         style="border: 0;">
+        <div class="mini-toolbar" style="padding: 0px; border-left: 0; border-top: 0; border-right: 0;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        <a class="mini-button" iconcls="icon-save" onclick="saveReceipt();" plain="true">保存</a>
+                        <a class="mini-button" iconcls="icon-cancel" onclick="closeWindow()" plain="true">取消</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div title="center" region="center" style="border: 0;">
+        <form id="dataForm" method="post" style="position: relative;">
+            <input name="ID" class="mini-hidden" />
+            <input name="CustomerName" class="mini-hidden" />
+            <input name="CustomerFullID" class="mini-hidden" />
+            <input name="RegisterID" class="mini-hidden" />
+            <div class="formDiv">
+                <h1 style="text-align: center">到款管理</h1>
+                <fieldset>
+                    <legend>基本信息</legend>
+                    <div style="padding-left: 20px;">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="2">
+                            <tr>
+                                <td width="15%"></td>
+                                <td width="35%;" style="padding-right: 40px;"></td>
+                                <td width="15%"></td>
+                                <td width="35%;" style="padding-right: 40px;"></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    合同名称
+                                </td>
+                                <td colspan="3" style="padding-right: 40px;">
+                                    <input name="ContractInfoID" textname="ContractName" onbuttonclick="onContractSelecting" required="true"
+                                           class="mini-buttonedit" allowinput='false' style="width: 100%" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    合同甲方
+                                </td>
+                                <td colspan="3" style="padding-right: 40px;">
+                                    <input name="CustomerID" textname="CustomerName" class="mini-buttonedit" style="width: 100%" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    付款单位
+                                </td>
+                                <td colspan="3" style="padding-right: 40px;">
+                                    <input name="PayerUnit" textname='PayerUnitName' required='true' allowinput='false' multiselect='false' shownullitem='true' valuefromselect='true'
+                                           onbuttonclick="" class="mini-combobox" style="width: 100%" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    收款金额（元）
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    <input name='Amount' class='mini-spinner' required='true' allowinput='true' format='n' increment='1' allowlimitvalue='false' changeonmousewheel='false' onvaluechanged='onReceiptValueChanged' style='width:100%;' />
+                                </td>
+                                <td>
+                                    收款日期
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    <input name="ArrivedDate" class="mini-datepicker" required="true" style="width: 100%" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    大写
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    <input name="ChineseAmount" style="width: 100%" class="mini-textbox" />
+                                </td>
+                                <td>
+                                    收款经办人
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    <input name="OperatorID" textname="Operator" class="mini-buttonedit" style="width: 100%" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    付款方式
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    <input name="ReceiptType" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value"
+                                           data="ReceiptType" allowinput="false" />
+                                </td>
+                                <td></td>
+                                <td style="padding-right: 40px;"></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    备注
+                                </td>
+                                <td colspan="3" style="padding-right: 40px;">
+                                    <input name="Remark" class="mini-textarea" style="width: 100%; height: 100px;" vtype="maxLength:500" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </fieldset>
+                <fieldset id="RegisterInfo">
+                    <legend>到款信息登记</legend>
+                    <div style="padding-left: 20px;">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="2">
+                            <tr>
+                                <td width="15%">
+                                    收款总金额（元）
+                                </td>
+                                <td width="35%;" style="padding-right: 40px;">
+                                    <input name='ReceiptRegisterValue' class='mini-spinner' format='n' increment='1' allowlimitvalue='false' changeonmousewheel='false' style='width:100%;' />
+                                </td>
+                                <td width="15%">
+                                    已认领金额（元）
+                                </td>
+                                <td width="35%;" style="padding-right: 40px;">
+                                    <input name='ConfirmValue' class='mini-spinner' format='n' increment='1' allowlimitvalue='false' changeonmousewheel='false' style='width:100%;' />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    可认领金额（元）
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    <input name='RemainValue' class='mini-spinner' format='n' increment='1' allowlimitvalue='false' changeonmousewheel='false' style='width:100%;' />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </fieldset>
+                <fieldset id="ContractInfo">
+                    <legend>合同相关信息</legend>
+                    <div style="padding-left: 20px;">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="2">
+                            <tr>
+                                <td width="15%">
+                                    合同金额（元）
+                                </td>
+                                <td width="35%;" style="padding-right: 40px;">
+                                    <input name="ContractValue" style="width: 100%" class="mini-textbox" />
+                                </td>
+                                <td width="15%">
+                                    已收款金额（元）
+                                </td>
+                                <td width="35%;" style="padding-right: 40px;">
+                                    <input name="ContractReceiptValue" style="width: 100%" class="mini-textbox" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    剩余未收款金额（元）
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    <input name="RemainReceiptValue" style="width: 100%" class="mini-textbox" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>关联开票信息</legend>
+                    <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="width: 100%;">
+                                    <a class="mini-button" iconcls="icon-add" onclick="addInvoice();" plain="true">增加</a>
+                                    <a class="mini-button" iconcls="icon-remove" onclick="removeInvoice();" plain="true">删除</a>
+                                </td>
+                                <td style="white-space: nowrap;"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="invoiceGrid" url="" class="mini-datagrid" style="width: 100%; height: auto;" idfield="ID" showpager="false"
+                         multiselect="true" allowcelledit="true" allowcellselect="true">
+                        <div property="columns">
+                            <div type="indexcolumn">
+                            </div>
+                            <div type="checkcolumn">
+                            </div>
+                            <div field="Amount" width="120" datatype="currency" headeralign="center" align="right">
+                                发票金额（元）
+                            </div>
+                            <div field="InvoiceDate" width="120" headeralign="center" dateformat="yyyy-MM" align="center">
+                                开票日期
+                            </div>
+                            <div field="SumRelationValue" width="120" datatype="currency" headeralign="center" align="right">
+                                已经冲销金额（元）
+                            </div>
+                            <div field="RelationValue" headeralign="center" datatype="currency" width="120" align="right" vtype="required;float">
+                                本次冲销金额（元）<input property="editor" class="mini-textbox" style="width: 100%;" />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>关联计划收款信息</legend>
+                    <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="width: 100%;">
+                                    <a class="mini-button" iconcls="icon-add" onclick="addPlan();" plain="true">增加</a>
+                                    <a class="mini-button" iconcls="icon-remove" onclick="removePlan();" plain="true">删除</a>
+                                </td>
+                                <td style="white-space: nowrap;"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="planReceiptGrid" url="" class="mini-datagrid" style="width: 100%; height: auto;" idfield="ID" showsummaryrow="true"
+                         showpager="false" multiselect="true" allowcelledit="true" allowcellselect="true" ondrawsummarycell="onDrawSummaryCell"
+                        oncellendedit="onPlanGridEndEdit">
+                        <div property="columns">
+                            <div type="indexcolumn">
+                            </div>
+                            <div type="checkcolumn">
+                            </div>
+                            <div field="Name" width="*" headeralign="center">
+                                计划收款名称
+                            </div>
+                            <div name="ProjectName" field="ProjectName" width="120" headeralign="center">
+                                关联项目
+                            </div>
+                            <div field="PlanReceiptValue" name="PlanReceiptValue" width="120" datatype="currency" headeralign="center" align="right" summarytype="sum">
+                                计划收款金额（元）
+                            </div>
+                            <div field="PlanReceiptDate" width="120" headeralign="center" dateformat="yyyy-MM" align="center">
+                                计划收款日期
+                            </div>
+                            <div field="RelationValue" name="RelationValue" headeralign="center" datatype="currency" width="120" align="right" vtype="required;float" summarytype="sum">
+                                收款金额（元）<input property="editor" class="mini-textbox" style="width: 100%;" />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>关联项目信息</legend>
+                    <div id="projectReceiptGrid" url="" class="mini-datagrid" style="width: 100%; height: auto;" idfield="ID" showsummaryrow="true"
+                         showpager="false" multiselect="true" allowcelledit="true" allowcellselect="true" ondrawsummarycell="onDrawSummaryCell" sortMode='client'
+                        oncellendedit="onProjectGridEndEdit">
+                        <div property="columns">
+                            <div type="indexcolumn">
+                            </div>
+                            <div name="ProjectID" field="ProjectID" displayfield="ProjectName" width="150" headeralign="center">
+                                项目名称
+                            </div>
+                            <div name="ProjectCode" field="ProjectCode" width="120" headeralign="center">
+                                项目编号
+                            </div>
+                            <div name="ChargerDept" field="ChargerDept" displayfield="ChargerDeptName" width="120" headeralign="center">
+                                项目部门
+                            </div>
+                            <div name="Scale" field="Scale" visible="true" width="90" align="right" summaryType="sum">
+                                合同占比（%） 
+                            </div>
+                            <div field="ProjectValue" name="ProjectValue" headeralign="center" datatype="currency" width="100" align="right" summarytype="sum">
+                                项目合同额（元）
+                            </div>
+                            <div field="SumRelationValue" width="100" datatype="currency" headeralign="center" align="right" summarytype="sum">
+                                已收款金额（元）
+                            </div>
+                            <div field="RelationValue" headeralign="center" datatype="currency" width="100" align="right" vtype="required;float" summarytype="sum">
+                                本次分配金额（元）<input property="editor" class="mini-textbox" style="width: 100%;" />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>各部门分配信息</legend>
+                    <div id="deptReceiptGrid" url="" class="mini-datagrid" style="width: 100%; height: auto;" idfield="ID" showsummaryrow="true" sortMode='client'
+                         showpager="false" multiselect="true" allowcelledit="true" allowcellselect="true" ondrawsummarycell="onDrawSummaryCell">
+                        <div property="columns">
+                            <div type="indexcolumn">
+                            </div>
+                            <div name="Dept" field="Dept" displayfield="DeptName" width="150" headeralign="center">
+                                部门名称
+                            </div>
+                            <div name="Scale" field="Scale" visible="true" width="90" align="right" summaryType="sum" >
+                                合同占比（%） 
+                            </div>
+                            <div field="DeptValue" name="DeptValue" headeralign="center" datatype="currency" width="100" align="right" summarytype="sum">
+                                部门合同额（元）
+                            </div>
+                            <div field="SumRelationValue" width="100" datatype="currency" headeralign="center" align="right" summarytype="sum">
+                                已收款金额（元）
+                            </div>
+                            <div field="RelationValue" headeralign="center" datatype="currency" width="100" align="right" vtype="required;float" summarytype="sum">
+                                本次分配金额（元）<input property="editor" class="mini-textbox" style="width: 100%;" />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    @Html.GetEnum("Market.ReceiptType");
+</script>
+<script src="/Market/Scripts/Market.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+    function pageLoad() {
+        setFormItemDisabled("ChineseAmount");
+        setFormItemDisabled("ContractValue");
+        setFormItemDisabled("ContractReceiptValue");
+        setFormItemDisabled("RemainReceiptValue");
+        setFormItemDisabled("CustomerID");
+        setFormItemDisabled("OperatorID");
+        var ID = getQueryString("ID");
+        if (ID) {
+            var planGrid = mini.get("planReceiptGrid");
+            var url = "GetPlanRelationList?ReceiptID=" + ID;
+            planGrid.setUrl(url);
+            planGrid.load();
+
+            var invoiceGrid = mini.get("invoiceGrid");
+            var url = "GetInvoiceRelationList?ReceiptID=" + ID;
+            invoiceGrid.setUrl(url);
+            invoiceGrid.load();
+
+            var deptGrid = mini.get("deptReceiptGrid");
+            var url = "GetDeptRelationList?ReceiptID=" + ID;
+            deptGrid.setUrl(url);
+            deptGrid.load();
+
+            var projectGrid = mini.get("projectReceiptGrid");
+            var url = "GetProjectRelationList?ReceiptID=" + ID;
+            projectGrid.setUrl(url);
+            projectGrid.load();
+        }
+    }
+
+    function onFormSetData(data) {
+        if (data.RegisterID) {
+            $("#RegisterInfo").show();
+            $("#ContractInfo").hide();
+        }
+        else {
+            $("#RegisterInfo").hide();
+            $("#ContractInfo").show();
+        }
+        setFormItemDisabled("ReceiptRegisterValue");
+        setFormItemDisabled("ConfirmValue");
+        setFormItemDisabled("RemainValue");
+
+        initialCustomerCombobox();
+
+        //到款认领
+        var customerID = getQueryString("CustomerID");
+        if (customerID) {
+            //合同下拉列表框赋值
+            execute("/Market/Basic/Customer/GetCustomer?cId=" + customerID, {
+                showLoading: false, refresh: false, onComplete: function (data) {
+                    if (data && data != '') {
+                        var tmpList = [];
+
+                        tmpList.push({ value: data.ID, text: data.Name });
+
+                        var payUnitCo = mini.getbyName("PayerUnit");
+                        payUnitCo.load(tmpList);
+                        payUnitCo.setValue(data.ID);
+                        setFormItemDisabled("PayerUnit");
+                    }
+                }, validateForm: false, async: false, resetFormData: false
+            });
+        }
+
+        if (data.InvoiceID) {
+            setFormItemDisabled("ContractInfoID");
+            var invoiceGrid = mini.get("invoiceGrid");
+            var invoiceList = mini.decode(data.InvoiceList);
+            for (var i = 0; i < invoiceList.length; i++) {
+                var invoice = invoiceList[i];
+                var row = invoiceGrid.findRow(function (data) { if (data.InvoiceID == invoice.ID) { return true; } });
+                if (!row) {
+                    row = {
+                        InvoiceID: invoice.ID,
+                        Amount: invoice.Amount, InvoiceDate: invoice.InvoiceDate,
+                        SumRelationValue: invoice.SumRelationValue,
+                        RelationValue: invoice.RemainRelationValue
+                    };
+                    invoiceGrid.addRow(row);
+                }
+            }
+            //autoSumRelationValue();
+        }
+
+        //汇票不可编辑
+        if (data.ReceiptType.indexOf('汇票') != -1) {
+            setFormItemDisabled("ContractInfoID");
+            setFormItemDisabled("CustomerID");
+            setFormItemDisabled("Amount");
+            setFormItemDisabled("ArrivedDate");
+            setFormItemDisabled("ReceiptType");
+            $('.mini-toolbar').css("display", "none");
+        }
+
+
+        var AmoutCo = mini.getbyName("Amount");
+        var chineseNumber = ArabiaToChinese(AmoutCo.getValue());
+        mini.getbyName("ChineseAmount").setValue(chineseNumber);
+    }
+
+    function initialCustomerCombobox() {
+        var PayerUnit = mini.getbyName("PayerUnit");
+        var contractID = mini.getbyName("ContractInfoID").getValue();
+        var url = "/Market/Common/GetContractPaymentDetail?ContractInfoID=" + contractID;
+        PayerUnit.setUrl(url);
+        if (!PayerUnit.getValue()) {
+            var list = PayerUnit.getData();
+            for (var i = 0; i < list.length; i++) {
+                if (list[i]["value"]) {
+                    PayerUnit.setValue(list[i]["value"]);
+                    PayerUnit.doValueChanged();
+                    break;
+                }
+            }
+        }
+    }
+
+    function onContractSelecting(e) {
+        var CustomerID = getQueryString("CustomerID");
+        var url = "/Market/Basic/Selector/ReceiptContractSeletor";
+        if (CustomerID)
+            url += "?PayerID=" + CustomerID;
+        openWindow(url, {
+            refresh: false, title: "合同选择", width: "80%", height: " 80%", addQueryString: false,
+            onDestroy: function (data) {
+                if (!data || data == "close") { return; }
+                e.sender.setValue(data.ID);
+                e.sender.setText(data.Name);
+                mini.getbyName("CustomerID").setValue(data.PartyA);
+                mini.getbyName("CustomerID").setText(data.PartyAName);
+                mini.getbyName("CustomerFullID").setValue(data.CustomerFullID);
+                initialCustomerCombobox();
+
+                var contractValue = parseFloat(data.ContractRMBAmount);
+                if (isNaN(contractValue)) contractValue = 0;
+                mini.getbyName("ContractValue").setValue(contractValue);
+                var sumReceiptValue = parseFloat(data.SumReceiptValue);
+                if (isNaN(sumReceiptValue)) sumReceiptValue = 0;
+                mini.getbyName("ContractReceiptValue").setValue(sumReceiptValue);
+
+                var dataGrid = mini.get("planReceiptGrid");
+                if (data.PlanReceipt && data.PlanReceipt.length > 0) {
+                    for (var i = 0; i < data.PlanReceipt.length; i++) {
+                        var planReceipt = data.PlanReceipt[i];
+                        var row = dataGrid.findRow(function (data) { if (data.PlanID == planReceipt.ID) { return true; } });
+                        if (!row) {
+                            row = {
+                                PlanID: planReceipt.ID, Name: planReceipt.Name, Code: planReceipt.Code,
+                                PlanReceiptValue: planReceipt.PlanReceiptValue, PlanReceiptDate: planReceipt.PlanReceiptDate,
+                                RelationValue: planReceipt.PlanReceiptValue, ProjectID: planReceipt.ProjectID, ProjectName: planReceipt.ProjectName
+                            };
+                            dataGrid.addRow(row);
+                        }
+                    }
+                }
+                var invoiceGrid = mini.get("invoiceGrid");
+                if (data.InvoiceList && data.InvoiceList.length > 0) {
+                    for (var i = 0; i < data.InvoiceList.length; i++) {
+                        var invoice = data.InvoiceList[i];
+                        var row = invoiceGrid.findRow(function (data) { if (data.InvoiceID == invoice.ID) { return true; } });
+                        if (!row) {
+                            row = {
+                                InvoiceID: invoice.ID,
+                                Amount: invoice.Amount, InvoiceDate: invoice.InvoiceDate,
+                                SumRelationValue: invoice.SumRelationValue,
+                                RelationValue: invoice.RemainRelationValue
+                            };
+                            invoiceGrid.addRow(row);
+                        }
+                    }
+                }
+                var projectGrid = mini.get("projectReceiptGrid");
+                projectGrid.removeRows(projectGrid.findRows(function (row) { return row["ContractInfoID"] != data["ID"]; }));
+                if (data.ProjectRelation && data.ProjectRelation.length > 0) {
+                    for (var i = 0; i < data.ProjectRelation.length; i++) {
+                        var projectRelation = data.ProjectRelation[i];
+                        var row = projectGrid.findRow(function (data) { if (data.ProjectID == projectRelation.ProjectID) { return true; } });
+                        if (!row) {
+                            row = {
+                                ProjectID: projectRelation.ProjectID, ProjectName: projectRelation.ProjectName, Scale: projectRelation.Scale,
+                                ChargerDept: projectRelation.ChargerDept, ChargerDeptName: projectRelation.ChargerDeptName,
+                                ProjectValue: projectRelation.ProjectValue, SumRelationValue: projectRelation.SumRelationValue,
+                                ProjectCode: projectRelation.ProjectCode, RelationValue: 0
+                            };
+                            projectGrid.addRow(row);
+                        }
+                    }
+                }
+
+                var deptGrid = mini.get("deptReceiptGrid");
+                deptGrid.removeRows(deptGrid.findRows(function (row) { return row["ContractInfoID"] != data["ID"]; }));
+                if (data.DeptRelation && data.DeptRelation.length > 0) {
+                    for (var i = 0; i < data.DeptRelation.length; i++) {
+                        var deptRelation = data.DeptRelation[i];
+                        var row = deptGrid.findRow(function (data) { if (data.Dept == deptRelation.Dept) { return true; } });
+                        if (!row) {
+                            row = {
+                                Dept: deptRelation.Dept, DeptName: deptRelation.DeptName, Scale: deptRelation.Scale,
+                                DeptValue: deptRelation.DeptValue, SumRelationValue: deptRelation.SumDeptReceiptValue,
+                                RelationValue: 0
+                            };
+                            deptGrid.addRow(row);
+                        }
+                    }
+                }
+                autoSumRelationValue();
+                autoCalProjectValueByPlan();
+            }
+        });
+    }
+
+    function autoSumRelationValue() {
+        var dataGrid = mini.get("invoiceGrid"); dataGrid.commitEdit(); dataGrid.accept();
+        var list = dataGrid.getData();
+        var sumValue = 0;
+        for (var i = 0; i < list.length; i++) {
+            var item = list[i];
+            var relationValue = parseFloat(item.RelationValue);
+            if (isNaN(relationValue)) relationValue = 0;
+            sumValue += relationValue;
+        }
+        var receiptAmoutCo = mini.getbyName("Amount");
+        if (receiptAmoutCo) {
+            receiptAmoutCo.setValue(sumValue);
+            receiptAmoutCo.doValueChanged();
+        }
+    }
+    
+    function onPlanGridEndEdit(e) {
+        var field = e.field, value = e.value, row = e.row;
+        if (field == "RelationValue") {
+            var projectGrid = mini.get("projectReceiptGrid")
+            var project = row["ProjectID"];
+            var row = projectGrid.findRow(function (row) { return row["ProjectID"] == project; });
+            if (row) {
+                autoCalProjectValueByPlan();
+            }
+        }
+    }
+    function onProjectGridEndEdit(e) {
+        var field = e.field, value = e.value, row = e.row;
+        if (field == "RelationValue") {
+            var deptGrid = mini.get("deptReceiptGrid")
+            var dept = row["ChargerDept"];
+            var row = deptGrid.findRow(function (row) { return row["Dept"] == dept; });
+            if (row) {
+                autoCalDeptValueByProject();
+            }
+        }
+    }
+
+    function autoCalProjectValueByPlan()
+    {
+        //修改收款计划金额时，根据收款计划关联项目同步修改项目金额
+        var planGrid = mini.get("planReceiptGrid");
+        var projectGrid = mini.get("projectReceiptGrid");
+        var rows = projectGrid.getData();
+        for (var i = 0; i < rows.length; i++) {
+            var project = rows[i];
+            var planProjects = planGrid.findRows(function (row) { return row["ProjectID"] == project["ProjectID"]; });
+            if (planProjects.length) {
+                var relationValue = getListSumValue(planProjects, "RelationValue");
+                projectGrid.updateRow(project, { RelationValue: relationValue });
+            }
+        }
+        autoCalDeptValueByProject();
+    }
+
+    function autoCalDeptValueByProject()
+    {
+        //修改项目金额时，根据项目部门同步修改部门金额
+        var projectGrid = mini.get("projectReceiptGrid");
+        var deptGrid = mini.get("deptReceiptGrid");
+        var rows = deptGrid.getData();
+        for (var i = 0; i < rows.length; i++) {
+            var dept = rows[i];
+            var projectDepts = projectGrid.findRows(function (row) { return row["ChargerDept"] == dept["Dept"]; });
+            if (projectDepts.length)
+            {
+                var deptValue = getListSumValue(projectDepts, "RelationValue");
+                deptGrid.updateRow(dept, { RelationValue: deptValue });
+            }
+        }
+    }
+
+    function getListSumValue(list,field)
+    {
+        var sumValue = 0;
+        for (var i = 0; i < list.length; i++) {
+            var item = list[i];
+            var itemValue = 0;
+            if (item[field] && !isNaN(parseFloat(item[field])))
+                itemValue = parseFloat(item[field]);
+            sumValue += itemValue;
+        }
+        return sumValue;
+    }
+
+    function onReceiptValueChanged(e) {
+        var receiptValue = e.value;
+        var chineseNumber = ArabiaToChinese(receiptValue);
+        mini.getbyName("ChineseAmount").setValue(chineseNumber);
+        calValue();
+    }
+
+    function calValue() {
+        var receiptValue = parseFloat(mini.getbyName("Amount").getValue());
+        if (isNaN(receiptValue)) receiptValue = 0;
+        var contractValue = parseFloat(mini.getbyName("ContractValue").getValue());
+        if (isNaN(contractValue)) contractValue = 0;
+        var contractReceiptValue = parseFloat(mini.getbyName("ContractReceiptValue").getValue());
+        if (isNaN(contractReceiptValue)) contractReceiptValue = 0;
+        var remainValue = contractValue - contractReceiptValue - receiptValue;
+        mini.getbyName("RemainReceiptValue").setValue(remainValue);
+        var invoiceGrid = mini.get("invoiceGrid"); invoiceGrid.commitEdit();
+        var rows = invoiceGrid.getData();
+        if (rows.length == 1) { //如果发票只有一条那么就同步收款金额到发票冲销金额上
+            var row = rows[0];
+            row.RelationValue = receiptValue;
+            invoiceGrid.updateRow(row, row);
+        }
+
+        var deptGrid = mini.get("deptReceiptGrid"); deptGrid.commitEdit();
+        var deptData = deptGrid.getData();
+        if (deptData.length == 1)
+            deptGrid.updateRow(deptData[0], { RelationValue: receiptValue });
+        //for (var i = 0; i < deptData.length; i++) {
+        //    var row = deptData[i];
+        //    if (!row.Scale) continue;
+        //    var relationValue = (receiptValue * parseFloat(row.Scale) / 100).toFixed(2);
+        //    deptGrid.updateRow(row, { RelationValue: relationValue });
+        //}
+
+        var projectGrid = mini.get("projectReceiptGrid"); projectGrid.commitEdit();
+        var projectData = projectGrid.getData();
+        if (projectData.length == 1)
+            projectGrid.updateRow(projectData[0], { RelationValue: receiptValue });
+        //for (var i = 0; i < projectData.length; i++) {
+        //    var row = projectData[i];
+        //    if (!row.Scale) continue;
+        //    var relationValue = (receiptValue * parseFloat(row.Scale) / 100).toFixed(2);
+        //    projectGrid.updateRow(row, { RelationValue: relationValue });
+        //}
+    }
+
+    function saveReceipt() {
+        var planReceiptGrid = mini.get("planReceiptGrid");
+        if (planReceiptGrid) {
+            planReceiptGrid.commitEdit(); planReceiptGrid.accept();
+            var planData = planReceiptGrid.getData();
+            addExecuteParam("PlanReceiptData", mini.encode(planData));
+        }
+        var invoiceGrid = mini.get("invoiceGrid");
+        if (invoiceGrid) {
+            invoiceGrid.commitEdit(); invoiceGrid.accept();
+            var invoiceData = invoiceGrid.getData();
+            addExecuteParam("InvoiceData", mini.encode(invoiceData));
+        }
+
+        var deptReceiptGrid = mini.get("deptReceiptGrid");
+        deptReceiptGrid.commitEdit(); deptReceiptGrid.accept();
+        var daptData = deptReceiptGrid.getData();
+        addExecuteParam("DeptReceiptData", mini.encode(daptData));
+
+        var projectReceiptGrid = mini.get("projectReceiptGrid");
+        projectReceiptGrid.commitEdit(); projectReceiptGrid.accept();
+        var projectData = projectReceiptGrid.getData();
+        addExecuteParam("ProjectReceiptData", mini.encode(projectData));
+        save({ showLoading: true });
+    }
+
+    function addInvoice() {
+        var contractInfoCo = mini.getbyName("ContractInfoID");
+        var contractInfoID = contractInfoCo.getValue();
+        if (!contractInfoID) { msgUI("请先选择一个合同"); return }
+        var url = "/Market/Basic/Selector/InvoiceSelector?ContractInfoID=" + contractInfoID;
+        openWindow(url, {
+            refresh: false, title: "关联发票选择", width: "70%", height: "60%",
+            onDestroy: function (data) {
+                if (!data || data == "close") return;
+                var invoiceGrid = mini.get("invoiceGrid");
+                for (var i = 0; i < data.length; i++) {
+                    var invoice = data[i];
+                    var row = invoiceGrid.findRow(function (data) { if (data.InvoiceID == invoice.ID) { return true; } });
+                    if (!row) {
+                        row = {
+                            InvoiceID: invoice.ID,
+                            Amount: invoice.Amount, InvoiceDate: invoice.InvoiceDate,
+                            SumRelationValue: invoice.SumRelationValue,
+                            RelationValue: invoice.RemainRelationValue
+                        };
+                        invoiceGrid.addRow(row);
+                    }
+                }
+                autoSumRelationValue();
+            }
+        });
+    }
+
+    function removeInvoice() {
+        var invoiceGrid = mini.get("invoiceGrid");
+        var rows = invoiceGrid.getSelecteds();
+        if (rows.length == 0) { msgUI("请至少选择一条记录"); return; }
+        invoiceGrid.removeRows(rows);
+        invoiceGrid.commitEdit();
+        invoiceGrid.accept();
+        autoSumRelationValue();
+    }
+    
+    function addPlan() {
+        var contractInfoCo = mini.getbyName("ContractInfoID");
+        var contractInfoID = contractInfoCo.getValue();
+        if (!contractInfoID) { msgUI("请先选择一个合同"); return }
+        var url = "/Market/Basic/Selector/PlanReceiptSelector?ContractInfoID=" + contractInfoID;
+        openWindow(url, {
+            refresh: false, title: "关联收款计划选择", width: "70%", height: "60%",
+            onDestroy: function (data) {
+                if (!data || data == "close") return;
+                var dataGrid = mini.get("planReceiptGrid");
+                for (var i = 0; i < data.length; i++) {
+                    var planReceipt = data[i];
+                    var row = dataGrid.findRow(function (data) { if (data.PlanID == planReceipt.ID) { return true; } });
+                    if (!row) {
+                        row = {
+                            PlanID: planReceipt.ID, Name: planReceipt.Name, Code: planReceipt.Code,
+                            PlanReceiptValue: planReceipt.PlanReceiptValue, PlanReceiptDate: planReceipt.PlanReceiptDate,
+                            RelationValue: planReceipt.PlanReceiptValue, ProjectID: planReceipt.ProjectID, ProjectName: planReceipt.ProjectName
+                        };
+                        dataGrid.addRow(row);
+                    }
+                }
+                autoCalProjectValueByPlan();
+            }
+        });
+    }
+
+    function removePlan() {
+        var hasID = false;
+        var dataGrid = mini.get("planReceiptGrid");
+        var rows = dataGrid.getSelecteds();
+        if (rows.length == 0) { msgUI("请至少选择一条记录"); return; }
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i]["ID"]) {
+                hasID = true;
+                break;
+            }
+        }
+        if (hasID) 
+            msgUI("本次操作将直接删除数据，无需再次保存，您确定需要删除吗？", 2, function (result) {
+                if (result != "ok") return;
+                _func(rows);
+            });
+        else
+            _func(rows);
+        function _func() {
+            addExecuteParam("ReceiptID", mini.getbyName("ID").getValue());
+            addExecuteParam("DeleteList", mini.encode(rows));
+            execute("RemovePlanRelation", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    dataGrid.removeRows(rows);
+                    dataGrid.commitEdit();
+                    dataGrid.accept();
+                    autoCalProjectValueByPlan();
+                }, validateForm: false, async: false, resetFormData: false
+            });
+        }
+    }
+
+    function onDrawSummaryCell(e) {
+        if (e.column.summaryType)
+            e.cellHtml = "<div style='width: 100%; text-align: right;'>总计：" + (e.cellHtml.toFixed ? e.cellHtml.toFixed(2) : e.cellHtml) + "</div>"
+    }
+</script>

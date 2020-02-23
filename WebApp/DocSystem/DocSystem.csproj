@@ -1,0 +1,548 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{01A40A9D-4219-40B1-97CB-1BFDD69F0036}</ProjectGuid>
+    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DocSystem</RootNamespace>
+    <AssemblyName>DocSystem</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UseGlobalApplicationHostFile />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Config.Logic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BaseFrame\Resource\Dll\Config.Logic.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\BaseFrame\Resource\Dll\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Formula, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BaseFrame\Resource\Dll\Formula.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MvcAdapter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BaseFrame\Resource\Dll\MvcAdapter.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\BaseFrame\Resource\Dll\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\..\BaseFrame\Resource\Dll\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.AspNet.Razor.2.0.20710.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Areas\Analyze\AnalyzeAreaRegistration.cs" />
+    <Compile Include="Areas\Analyze\Controllers\DocInStatisticsController.cs" />
+    <Compile Include="Areas\ApplyInfo\ApplyInfoAreaRegistration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\ApplyInfo\Controllers\MyApplyController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\ApplyInfo\Controllers\MyBorrowController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\ApplyInfo\Controllers\MyDownloadController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\Car\CarAreaRegistration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\Car\Controllers\CarController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\Config\ConfigAreaRegistration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\Config\Controllers\FileConfigController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\Config\Controllers\NodeConfigController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\Config\Controllers\NodeStructConfigController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\Config\Controllers\ReorganizeConfigController.cs" />
+    <Compile Include="Areas\Config\Controllers\SpaceConfigController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\Config\Controllers\TreeConfigController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\DocSystemUI\Controllers\BorrowApplyController.cs" />
+    <Compile Include="Areas\DocSystemUI\Controllers\BorrowController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\DocSystemUI\Controllers\ChangePeriodApplyController.cs" />
+    <Compile Include="Areas\DocSystemUI\Controllers\DestroyApplyController.cs" />
+    <Compile Include="Areas\DocSystemUI\Controllers\DocumentSealUpApplyController.cs" />
+    <Compile Include="Areas\DocSystemUI\Controllers\DownloadApplyController.cs" />
+    <Compile Include="Areas\DocSystemUI\Controllers\DownloadController.cs" />
+    <Compile Include="Areas\DocSystemUI\Controllers\IdentifyApplyController.cs" />
+    <Compile Include="Areas\DocSystemUI\Controllers\DocumentRelieveSealApplyController.cs" />
+    <Compile Include="Areas\DocSystemUI\DocSystemUIAreaRegistration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\Manager\Controllers\FileManagerController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\Manager\Controllers\NodeManagerController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\Manager\ManagerAreaRegistration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\MaterialManage\Controllers\BorrowManageController.cs" />
+    <Compile Include="Areas\MaterialManage\Controllers\IdentifyManageController.cs" />
+    <Compile Include="Areas\MaterialManage\Controllers\LostDamageController.cs" />
+    <Compile Include="Areas\MaterialManage\MaterialManageAreaRegistration.cs" />
+    <Compile Include="Areas\Reorganize\Controllers\MainController.cs" />
+    <Compile Include="Areas\Reorganize\Controllers\PhysicalController.cs" />
+    <Compile Include="Areas\Reorganize\ReorganizeAreaRegistration.cs" />
+    <Compile Include="Areas\View\Controllers\AdvanceQueryController.cs" />
+    <Compile Include="Areas\View\Controllers\FileViewController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\View\Controllers\MyPortalController.cs" />
+    <Compile Include="Areas\View\Controllers\NodeViewController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\View\ViewAreaRegistration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="DocConstController.cs" />
+    <Compile Include="DocSystemFormContorllor.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="DocConfigController.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FileController.cs" />
+    <Compile Include="NodeController.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="Areas\ApplyInfo\Views\MyApply\MyApply.cshtml" />
+    <Content Include="Areas\ApplyInfo\Views\MyBorrow\MyBorrow.cshtml" />
+    <Content Include="Areas\ApplyInfo\Views\MyDownload\MyDownload.cshtml" />
+    <Content Include="Areas\ApplyInfo\Views\Web.config" />
+    <Content Include="Areas\ApplyInfo\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Car\Views\Car\Car.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Areas\Car\Views\Web.config" />
+    <Content Include="Areas\Car\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Config\Views\FileConfig\FileAttrSelect.cshtml" />
+    <Content Include="Areas\Config\Views\FileConfig\FileEdit.cshtml" />
+    <Content Include="Areas\Config\Views\FileConfig\FileList.cshtml" />
+    <Content Include="Areas\Config\Views\NodeConfig\FileSelect.cshtml" />
+    <Content Include="Areas\Config\Views\NodeConfig\NodeAttrSelect.cshtml" />
+    <Content Include="Areas\Config\Views\NodeConfig\NodeEdit.cshtml" />
+    <Content Include="Areas\Config\Views\NodeConfig\NodeList.cshtml" />
+    <Content Include="Areas\Config\Views\NodeStructConfig\NodeStructConfig.cshtml" />
+    <Content Include="Areas\Config\Views\NodeStructConfig\NodeStructEdit.cshtml" />
+    <Content Include="Areas\Config\Views\SpaceConfig\ConfigTab.cshtml" />
+    <Content Include="Areas\Config\Views\SpaceConfig\Edit.cshtml" />
+    <Content Include="Areas\Config\Views\SpaceConfig\List.cshtml" />
+    <Content Include="Areas\Config\Views\Space\SpaceConfigEdit.htm" />
+    <Content Include="Areas\Config\Views\Space\SpaceConfigList.htm" />
+    <Content Include="Areas\Config\Views\TreeConfig\TreeConfig.cshtml" />
+    <Content Include="Areas\Config\Views\Web.config" />
+    <Content Include="Areas\Config\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\DocSystemUI\Views\Web.config" />
+    <Content Include="Areas\DocSystemUI\Views\_ViewStart.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Areas\Manager\Views\FileManager\Edit.cshtml" />
+    <Content Include="Areas\Manager\Views\FileManager\List.cshtml" />
+    <Content Include="Areas\Manager\Views\FileManager\Tag.cshtml" />
+    <Content Include="Areas\Manager\Views\NodeManager\Edit.cshtml" />
+    <Content Include="Areas\Manager\Views\NodeManager\FileListTab.cshtml" />
+    <Content Include="Areas\Manager\Views\NodeManager\List.cshtml" />
+    <Content Include="Areas\Manager\Views\NodeManager\NodeSelected.cshtml" />
+    <Content Include="Areas\Manager\Views\NodeManager\Tag.cshtml" />
+    <Content Include="Areas\Manager\Views\NodeManager\Tree.cshtml" />
+    <Content Include="Areas\Manager\Views\NodeManager\TreeEdit.cshtml" />
+    <Content Include="Areas\Manager\Views\Web.config" />
+    <Content Include="Areas\Manager\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\View\Views\FileView\Edit.cshtml" />
+    <Content Include="Areas\View\Views\FileView\List.cshtml" />
+    <Content Include="Areas\View\Views\FileView\QueryList.cshtml" />
+    <Content Include="Areas\View\Views\FileView\Tag.cshtml" />
+    <Content Include="Areas\View\Views\NodeView\FileListTab.cshtml" />
+    <Content Include="Areas\View\Views\NodeView\List.cshtml" />
+    <Content Include="Areas\View\Views\NodeView\Tag.cshtml" />
+    <Content Include="Areas\View\Views\NodeView\Tree.cshtml" />
+    <Content Include="Areas\View\Views\NodeView\TreeEdit.cshtml" />
+    <Content Include="Areas\View\Views\Web.config" />
+    <Content Include="Areas\View\Views\_ViewStart.cshtml" />
+    <Content Include="Global.asax" />
+    <Content Include="Scripts\AdvanceQuery.js" />
+    <Content Include="Scripts\AdvanceSearch.js" />
+    <Content Include="Scripts\AtlasManage.js" />
+    <Content Include="Scripts\DocFunc.js" />
+    <Content Include="Scripts\DocSystem.css" />
+    <Content Include="Scripts\EsFullTextSearchContent.css" />
+    <Content Include="Scripts\FileView.css" />
+    <Content Include="Scripts\Images\add.png" />
+    <Content Include="Scripts\Images\advanced-search.png" />
+    <Content Include="Scripts\Images\back.png" />
+    <Content Include="Scripts\Images\cart.png" />
+    <Content Include="Scripts\Images\delete.png" />
+    <Content Include="Scripts\Images\dwg.png" />
+    <Content Include="Scripts\Images\excel.png" />
+    <Content Include="Scripts\Images\file.png" />
+    <Content Include="Scripts\Images\file_1.png" />
+    <Content Include="Scripts\Images\folder.png" />
+    <Content Include="Scripts\Images\image.png" />
+    <Content Include="Scripts\Images\node.png" />
+    <Content Include="Scripts\Images\nodeFile.png" />
+    <Content Include="Scripts\Images\NonePic.png" />
+    <Content Include="Scripts\Images\NoPic.jpg" />
+    <Content Include="Scripts\Images\NoPic.png" />
+    <Content Include="Scripts\Images\open-tree.png" />
+    <Content Include="Scripts\Images\pdf.png" />
+    <Content Include="Scripts\Images\search.png" />
+    <Content Include="Scripts\Images\time.png" />
+    <Content Include="Scripts\Images\Tips.png" />
+    <Content Include="Scripts\Images\word.png" />
+    <Content Include="Scripts\Images\NoFile.png" />
+    <Content Include="Scripts\MyPortal.css" />
+    <Content Include="Scripts\PictureDocumentIndex.css" />
+    <Content Include="Scripts\Reorganize\Images\bg01.png" />
+    <Content Include="Scripts\Reorganize\Images\bg02.png" />
+    <Content Include="Scripts\Reorganize\Images\edit12-0.png" />
+    <Content Include="Scripts\Reorganize\Images\edit12-1.png" />
+    <Content Include="Scripts\Reorganize\Images\edit12-2.png" />
+    <Content Include="Scripts\Reorganize\Images\edit12-3.png" />
+    <Content Include="Scripts\Reorganize\Images\edit12-4.png" />
+    <Content Include="Scripts\Reorganize\Images\edit12-5.png" />
+    <Content Include="Scripts\Reorganize\Images\file12.png" />
+    <Content Include="Scripts\Reorganize\Images\folder12.png" />
+    <Content Include="Scripts\Reorganize\Images\icon01.png" />
+    <Content Include="Scripts\Reorganize\Images\icon01on.png" />
+    <Content Include="Scripts\Reorganize\Images\icon02.png" />
+    <Content Include="Scripts\Reorganize\Images\icon02on.png" />
+    <Content Include="Scripts\Reorganize\Images\icon03.png" />
+    <Content Include="Scripts\Reorganize\Images\icon03on.png" />
+    <Content Include="Scripts\Reorganize\Images\icon04.png" />
+    <Content Include="Scripts\Reorganize\Images\td-icon01.png" />
+    <Content Include="Scripts\Reorganize\Images\td-icon02.png" />
+    <Content Include="Scripts\Reorganize\Images\user12.png" />
+    <Content Include="Scripts\Reorganize\index.css" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Areas\Analyze\Models\" />
+    <Folder Include="Areas\Analyze\Views\Shared\" />
+    <Folder Include="Areas\ApplyInfo\Models\" />
+    <Folder Include="Areas\ApplyInfo\Views\Shared\" />
+    <Folder Include="Areas\Car\Models\" />
+    <Folder Include="Areas\Car\Views\Shared\" />
+    <Folder Include="Areas\Config\Models\" />
+    <Folder Include="Areas\Config\Views\Shared\" />
+    <Folder Include="Areas\DocSystemUI\Models\" />
+    <Folder Include="Areas\DocSystemUI\Views\Shared\" />
+    <Folder Include="Areas\Manager\Models\" />
+    <Folder Include="Areas\Manager\Views\Shared\" />
+    <Folder Include="Areas\MaterialManage\Models\" />
+    <Folder Include="Areas\MaterialManage\Views\Shared\" />
+    <Folder Include="Areas\Reorganize\Models\" />
+    <Folder Include="Areas\Reorganize\Views\Shared\" />
+    <Folder Include="Areas\View\Models\" />
+    <Folder Include="Areas\View\Views\Shared\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\BusinessModule\BaseLogic\Base.Logic\Base.Logic.csproj">
+      <Project>{EC8BB43B-4F2B-4E79-9BE7-5521D4A86F62}</Project>
+      <Name>Base.Logic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BusinessModule\BaseLogic\Workflow.Logic\Workflow.Logic.csproj">
+      <Project>{ED0D8A90-6A47-4092-802B-869E4A76B41D}</Project>
+      <Name>Workflow.Logic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BusinessModule\Logic\DocSystem.Logic\DocSystem.Logic.csproj">
+      <Project>{2F7C2956-01DE-4E1F-AB40-013F9E35552C}</Project>
+      <Name>DocSystem.Logic</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_LayoutFlow.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_LayoutTab.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Error.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\PageView.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\View\Views\NodeView\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\View\Views\AdvanceQuery\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\View\Views\AdvanceQuery\QueryWin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\View\Views\AdvanceQuery\AttrSelector.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Reorganize\Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Reorganize\Views\Main\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Config\Views\ReorganizeConfig\Config.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Reorganize\Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Reorganize\Views\Main\Reorganize.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Manager\Views\NodeManager\SelectTag.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Manager\Views\FileManager\VersionList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\View\Views\MyPortal\Index.cshtml" />
+    <Content Include="Areas\Config\Views\ReorganizeConfig\SettingsField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\View\Views\FileView\AdvanceQueryList.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\Gallery.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Manager\Views\FileManager\GraphicList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\View\Views\FileView\GraphicList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Reorganize\Views\Physical\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Reorganize\Views\Physical\PhysicalReorganize.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Reorganize\Views\Physical\PhysicalVolumnReorganize.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Car\Views\Car\BorrowCar.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Car\Views\Car\DownloadCar.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\View\Views\NodeView\ListSelect.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Manager\Views\NodeManager\NormalStateListForm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Manager\Views\NodeManager\NormalStateListTab.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Reorganize\Views\Main\ElectronicReorganTabs.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Reorganize\Views\Physical\PhysicalReorganizeTabs.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\MaterialManage\Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\MaterialManage\Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\MaterialManage\Views\BorrowManage\RegisterForm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Reorganize\Views\Main\SetFileConfigMultiList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Analyze\Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Analyze\Views\DocInStatistics\DocumentType.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Analyze\Views\DocInStatistics\Department.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>11159</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

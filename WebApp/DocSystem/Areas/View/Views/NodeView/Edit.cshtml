@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Edit";
+}
+<div id="formlayout" class="mini-layout" style="width: 100%; height: 100%;">
+    <div region="north" height="32" showspliticon="false" showheader="false" allowresize="false" splitsize="0"
+         style="border: 0;">
+        <div class="mini-toolbar" style="padding: 0px; border-left: 0; border-top: 0; border-right: 0;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        @if (ViewBag.CanBorrow)
+                        {
+                            <a class="mini-button" iconcls="icon-save" onclick="icon-date" plain="true">借阅</a>
+                        }
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div title="center" region="center" style="border: 0;">
+        @Html.Raw(ViewBag.FormHtml)
+    </div>
+</div>
+<script type="text/javascript">
+    @{
+    var enumList = ViewBag.Enums as List<string>;
+    foreach (var item in enumList)
+    {
+        @Html.GetEnum(item);
+    }
+}
+</script>

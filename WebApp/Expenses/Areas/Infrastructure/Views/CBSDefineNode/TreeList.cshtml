@@ -1,0 +1,344 @@
+﻿@{
+    ViewBag.Title = "TreeList";
+}
+
+<div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" iconcls="icon-add" onclick="onAddChild();" plain="true">增加节点</a>
+                <a class="mini-button" iconcls="icon-add" onclick="onAddSubject();" plain="true">增加科目</a>
+                <a class="mini-button" iconcls="icon-remove" onclick="delNode();" plain="true">删除</a>
+                <a class="mini-button" iconcls="icon-save" onclick="saveData();" plain="true">保存</a>
+            </td>
+            <td style="white-space: nowrap;">
+                @*展开至：<input name="ExpandedNodeType" class="mini-combobox" style="width: 100px;" textfield="text" valuefield="value" data="NodeType" allowinput="false"
+                    onvaluechanged="collapseLevel" value="@ViewBag.ExpandLevel" />*@
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit">
+    <div id="dataTree" class="mini-treegrid" style="width:100%;height:100%;"
+         url="" showtreeicon="true" treecolumn="Name" idfield="ID" parentfield="ParentID" resultastree="false" ondrawcell="onDrawingCell"
+         allowcellselect="true" editnextonenterkey="true" editnextrowcell="true" allowcelledit="true" expandonload="true" oncellbeginedit="OnCellBeginEdit" oncellendedit="OnCellEndEdit"
+         sortfield="SortIndex" sortorder="asc" multiselect="true" contextmenu="#gridMenu" iconfield="NodeType" contextmenu="#gridMenu"
+         allowdrag="true" allowdrop="true" allowleafdropin="true" ongivefeedback="onGiveFeedback"
+         ondrop="onNodeDrop"
+         allowresize="true" fitcolumns="false">
+        <div property="columns">
+            <div type="checkcolumn"></div>
+            <div type="indexcolumn"></div>
+            <div name="Name" field="Name" headeralign="center" width="200">
+                名称<input property="editor" class="mini-textbox" style="width: 100%;" />
+            </div>
+            <div field="Code" headeralign="center" width="100">
+                编码
+                <input property="editor" class="mini-textbox" style="width: 100%;" />
+            </div>
+            <div type="comboboxcolumn" autoshowpopup="true" field="NodeType" headeralign="center" width="80" align="center">
+                类型
+                <input property="editor" class="mini-combobox" style="width:100%;" data="CBSNodeType" />
+            </div>
+            <div field="IsDynamic" type="checkboxcolumn" truevalue="true" falsevalue="false" width="60" headeralign="center" align="center">动态节点</div>
+            <div type="comboboxcolumn" autoshowpopup="true" field="AccountNodeType" headeralign="center" width="120" align="center">
+                节点类型
+                <input property="editor" class="mini-combobox" style="width:100%;" multiselect="true" data="AccountNodeType" />
+            </div>
+            @*<div type="comboboxcolumn" autoshowpopup="true" field="ConnName" headeralign="center" width="80" align="center">
+                    数据库
+                    <input property="editor" class="mini-combobox" style="width:100%;" data="ConnEnum" />
+                </div>
+                <div field="DynamicDataSource" headeralign="center" width="300">
+                    数据源<input property="editor" class="mini-textarea" style="width: 100%;" />
+                </div>*@
+            <div field="settings" headeralign="center" width="60">
+                数据同步
+            </div>
+            <div field="BudgetUnit" type="checkboxcolumn" truevalue="true" falsevalue="false" width="60" headeralign="center" align="center">预算单元</div>
+            <div field="IncomeUnit" type="checkboxcolumn" truevalue="true" falsevalue="false" width="60" headeralign="center" align="center">收入单元</div>
+            <div field="CostUnit" type="checkboxcolumn" truevalue="true" falsevalue="false" width="60" headeralign="center" align="center">成本单元</div>
+            <div field="ProductionUnit" type="checkboxcolumn" truevalue="true" falsevalue="false" width="60" headeralign="center" align="center">产值单元</div>
+            <div field="AnalysisUnit" type="checkboxcolumn" truevalue="true" falsevalue="false" width="60" headeralign="center" align="center">统计单元</div>
+            <div field="ModifyDate" width="100" headeralign="center" dateformat="yyyy-MM-dd" align="center">
+                最后修改日期
+            </div>
+            <div field="ModifyUserName" width="100" headeralign="center" align="center">
+                最后修改人
+            </div>
+        </div>
+    </div>
+</div>
+<ul id="gridMenu" class="mini-contextmenu" onbeforeopen="onBeforeOpen">
+    <li name="add" iconcls="icon-add" onclick="onAdd">下方插入行</li>
+    <li name="addChild" iconcls="icon-add" onclick="onAddSubject">增加科目</li>
+    <li name="remove" iconcls="icon-remove" onclick="delNode">删除行</li>
+</ul>
+
+<style type="text/css">
+    .Communal:before {
+        content: "\f097";
+        padding-right: 5px;
+        font-size: 14px;
+    }
+
+    .Reserved:before {
+        content: "\f097";
+        padding-right: 5px;
+        font-size: 14px;
+    }
+</style>
+<script type="text/javascript">
+    @Html.GetEnum(typeof(Expenses.Logic.CBSNodeType))
+    @Html.GetEnum(typeof(Expenses.Logic.AccountNodeType))
+    @Html.GetEnum(typeof(Config.ConnEnum))
+    var productionType = '@Expenses.Logic.AccountNodeType.Production.ToString()'
+</script>
+<script type="text/javascript">
+    var defineID = getQueryString("DefineID");
+    $("#dataTree").attr("url", "GetTree?DefineID=" + defineID);
+
+    addGridButton("dataTree", "settings", {
+        linkText: '设置', onButtonClick: function (row) {
+            var url = "NodeSettingList";
+            var width = 600; var height = 500
+            if (row.IsDynamic == "false") {
+                url = "StaticDefaultValue";
+                width = "90%";
+                height = "90%"
+            }
+            var title = row.Name + "详细设置";
+            openWindow(url, {
+                width: width, height: height, title: title, data: row["DynamicSettings"], onDestroy: function (data) {
+                    if (data != "close") {
+                        row["DynamicSettings"] = mini.encode(data);
+                    }
+                }
+            });
+        }
+    });
+
+    function onAddSubject() {
+        var dataTree = mini.get("dataTree");
+        var node = dataTree.getSelectedNode();
+        if (!node) {
+            msgUI("请选择一个节点");
+            return;
+        }
+        var url = "/Expenses/SubjectSelector/MultiTreeSelector";
+        openWindow(url, {
+            refresh: false, title: "科目选择", width: 700, height: 600,
+            onDestroy: function (data) {
+                if (!data || data.length == 0 || data == "close") return;
+                addExecuteParam("ParentID", node.ID);
+                addExecuteParam("ListData", mini.encode(data));
+                execute("AddSubject", {
+                    showLoading: true, refresh: false, onComplete: function (data) {
+                        dataTree.reload();
+                    }, validateForm: false
+                });
+            }
+        });
+    }
+
+    function OnCellBeginEdit(e) {
+        var record = e.record, field = e.field;
+        if (record.NodeType == "Subject") {
+            e.cancel = true; return;
+        }
+        else if (record.IsDynamic != "true" && (field == "DynamicDataSource" || field == "ConnName")) {
+            e.cancel = true; return;
+        }
+
+        if (field == 'ProductionUnit') {
+            if (record.AccountNodeType && record.AccountNodeType.indexOf(productionType) == -1)
+                e.cancel = true; return;
+        }
+    }
+
+    function OnCellEndEdit(e) {
+        var record = e.record, field = e.field;
+        var sender = e.sender;
+        if (field == "AccountNodeType") {
+            //var children = sender.getAllChildNodes(record);
+            //$.each(children, function (index, child) {
+            //    sender.updateNode(child, { AccountNodeType: e.value });
+            //})
+            if (record.AccountNodeType && record.AccountNodeType.indexOf(productionType) == -1) {
+                sender.updateNode(record, { ProductionUnit: 'false' });
+            }
+        }
+    }
+
+    function onDrawingCell(e) {
+        var treeGrid = e.sender;
+        var record = e.record;
+        var column = e.column;
+        var field = e.field;
+        if (record.NodeType == "Subject") {
+            e.cellStyle = "background:#F0F0F0;";
+        }
+        else if (record.IsDynamic != "true" && (field == "DynamicDataSource" || field == "ConnName")) {
+            e.cellStyle = "background:#F0F0F0;";
+        }
+    }
+
+    function onAddChild() {
+        var dataTree = mini.get("dataTree");
+        var node = dataTree.getSelectedNode();
+        if (!node) {
+            msgUI("您确定要新增一个根节点吗？", 2, function (result) {
+                if (result != "ok") return;
+                addNode();
+            });
+        }
+        else {
+            addExecuteParam("NodeID", node.ID);
+            addNode();
+        }
+
+        function addNode() {
+            addExecuteParam("AddMode", "add");
+            execute("AddNode", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    if (node) {
+                        dataTree.addNode(data, "add", node);
+                    }
+                    else {
+                        dataTree.addNode(data);
+                    }
+                }, validateForm: false
+            });
+        }
+    }
+
+    function onAdd() {
+        var dataTree = mini.get("dataTree");
+        var node = dataTree.getSelectedNode();
+        if (!node) {
+            msgUI("请选择一个节点");
+            return;
+        }
+        addExecuteParam("AddMode", "after");
+        addExecuteParam("NodeID", node.ID);
+        execute("AddNode", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                dataTree.addNode(data, "after", node);
+            }, validateForm: false
+        });
+    }
+
+    function delNode() {
+        var dataTree = mini.get("dataTree");
+        var nodes = dataTree.getSelecteds();
+        if (nodes.length == 0) {
+            msgUI("请至少选择一个科目"); return;
+        }
+
+        msgUI("您确定要删除选中的科目吗？", 2, function (result) {
+            if (result != "ok") return;
+            var ids = "";
+            for (var i = 0; i < nodes.length; i++) {
+                if (i == nodes.length - 1) {
+                    ids += nodes[i].ID;
+                }
+                else {
+                    ids += nodes[i].ID + ",";
+                }
+            }
+            addExecuteParam("Ids", ids);
+            execute("DeleteNodes", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    dataTree.removeNodes(nodes);
+                }, validateForm: false
+            });
+        });
+    }
+
+    function saveData() {
+        var tree = mini.get("dataTree");
+        tree.commitEdit(); tree.accept();
+        var nodes = tree.getList();
+        addExecuteParam("ListData", mini.encode(nodes));
+        execute("SaveNodes", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                tree.reload();
+            }, validateForm: false
+        });
+    }
+
+    function collapseLevel() {
+        var level = mini.getbyName("ExpandedNodeType").getValue();
+        var tree = mini.get("dataTree");
+        tree.expandAll();
+        tree.collapseLevel(level);
+    }
+
+    function treeSearch() {
+        var tree = mini.get("dataTree");
+        var key = mini.get("key").getValue();
+        if (key == "") {
+            tree.clearFilter();
+        } else {
+            key = key.toLowerCase();
+            tree.filter(function (node) {
+                var text = node.Name ? node.Name.toLowerCase() : "";
+                if (text.indexOf(key) != -1) {
+                    return true;
+                }
+            });
+        }
+    }
+
+    function onBeforeOpen(e) {
+        var dataTree = mini.get("dataTree");
+        var menu = e.sender;
+        var node = dataTree.getSelectedNode();
+        if (!node) {
+            e.cancel = true;
+            //阻止浏览器默认右键菜单
+            e.htmlEvent.preventDefault();
+            return;
+        }
+        var addItem = mini.getbyName("add", menu);
+        var removeItem = mini.getbyName("remove", menu);
+        var addChildItem = mini.getbyName("addChild", menu);
+        addItem.hide();
+        removeItem.hide();
+        addChildItem.hide();
+        if (node.ParentID == null) {
+            addChildItem.show();
+        }
+        else if (node.NodeType == "Subject") {
+            removeItem.show();
+        }
+        else {
+            addItem.show();
+            removeItem.show();
+            addChildItem.show();
+        }
+    }
+
+    function onGiveFeedback(e) {
+        var tree = e.sender;
+        var node = e.node;              //被拖拽的节点
+        var targetNode = e.targetNode;  //目标投放节点
+        var effect = e.effect;          //投放方式：add|before|after
+        if (node.ParentID == null) {
+            e.effect = "no";
+        }
+    }
+
+    function onNodeDrop(e) {
+        var tree = mini.get("dataTree");
+        addExecuteParam("sourceID", e.dragNode.ID);
+        addExecuteParam("targetID", e.dropNode.ID);
+        addExecuteParam("dragAction", e.dragAction);
+        execute("MoveNode", {
+            showLoading: false, refresh: false, onComplete: function (data) {
+                tree.updateNode(e.dragNode, data);
+                tree.acceptRecord(e.dragNode);
+            }, validateForm: false
+        });
+    }
+</script>

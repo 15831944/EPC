@@ -1,0 +1,174 @@
+﻿@{
+    ViewBag.Title = "开票登记列表";
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+}
+<div class="mini-toolbar" style="padding: 2px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" iconcls="icon-add" onclick="add({url:'InvoiceEdit',width:'70%',height:'90%'});"
+                    plain="true">增加</a>
+                <a class="mini-button" iconcls="icon-edit" onclick="edit({url:'InvoiceEdit',width:'70%',height:'90%'});"
+                    plain="true">编辑</a>
+                <a class="mini-button" iconcls="icon-remove" onclick="del({showLoading:true})" plain="true">删除</a>
+                <a class="mini-button" iconcls="icon-cancel" onclick="Invalid();" plain="true">开票作废</a>
+            </td>
+            <td style="white-space: nowrap;">
+                <input class="mini-buttonedit searchbox" id="key" emptytext="请输入付款单位或合同名称或合同编号" style="width: 300px;"
+                    onenter="tabSearch();" onbuttonclick="tabSearch();" />
+                <a class="mini-button" onclick="showWindow('queryWindow')" iconcls="icon-find" plain="true">详细查询</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit" style="height: 100px;" id="GridArea">
+    <div id="dataGrid" url="GetList" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID"
+        multiselect="true" showsummaryrow="true" ondrawsummarycell="onDrawSummaryCell">
+        <div property="columns">
+            <div type="checkcolumn">
+            </div>
+            <div field="PayerUnitSubName" width="300" headeralign="center" allowsort="true">
+                付款单位</div>
+            <div field="InvoiceType" width="120" headeralign="center" allowsort="true" align="center">
+                发票类型</div>
+            <div field="Amount" datatype="currency" width="120" headeralign="center" allowsort="true" align="right">
+                开票金额（元）</div>
+            <div field="RelationValue" datatype="currency" width="120" headeralign="center" allowsort="true"
+                align="right">
+                到款金额（元）</div>
+            <div field="ContractName" width="300" headeralign="center" allowsort="true">
+                合同名称</div>
+            <div field="ContractCode" width="120" headeralign="center" allowsort="true">
+                合同编号</div>
+            <div field="InvoiceMaker" headeralign="center" width="120" allowsort="true" align="center">
+                开票人</div>
+            <div field="InvoiceDate" dateformat="yyyy-MM-dd" headeralign="center" width="120" allowsort="true"
+                align="center">
+                开票日期</div>
+            <div field="State" width="80" headeralign="center" align="center" allowsort="true">
+                状态</div>
+            <div field="Remark" width="200" headeralign="center" allowsort="true">
+                备注</div>
+        </div>
+    </div>
+</div>
+<div id="queryWindow" class="mini-window" title="详细查询" style="width: 750px;" showmodal="true"
+    allowresize="false" allowdrag="true">
+    <div class="queryDiv">
+        <form id="queryForm" method="post">
+        <table>
+            <tr>
+                <td width="10%" align="center">
+                    付款单位
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$PayerUnit" style="width: 100%" class="mini-textbox" vtype="maxLength:50" />
+                </td>
+                <td width="10%" align="center">
+                    开票日期
+                </td>
+                <td width="23%" align="left">
+                    <input name="$FR$InvoiceDate" class="mini-datepicker" style="width: 100%" />
+                </td>
+                <td width="10%" align="center">
+                    至
+                </td>
+                <td width="23%" align="left">
+                    <input name="$TO$InvoiceDate" class="mini-datepicker" style="width: 100%" />
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    合同名称
+                </td>
+                <td align="left">
+                    <input name="$LK$ContractName" style="width: 100%" class="mini-textbox" vtype="maxLength:50" />
+                </td>
+                <td align="center">
+                    合同编号
+                </td>
+                <td align="left">
+                    <input name="$LK$ContractCode" style="width: 100%" class="mini-textbox" vtype="maxLength:50" />
+                </td>
+                <td align="center">
+                    开票人
+                </td>
+                <td align="left">
+                    <input name="$LK$InvoiceMaker" style="width: 100%" class="mini-textbox" vtype="maxLength:50" />
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    发票类型
+                </td>
+                <td align="left">
+                    <input name="$LK$InvoiceType" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value"
+                        data="InvoiceType" allowinput="false" />
+                </td>
+                <td align="center">
+                </td>
+                <td align="left">
+                </td>
+                <td align="center">
+                </td>
+                <td align="left">
+                </td>
+            </tr>
+        </table>
+        </form>
+        <div>
+            <a class="mini-button" onclick="tabSearch();" iconcls="icon-find" style="margin-right: 20px;">
+                查询</a>
+            <a class="mini-button" onclick="clearQueryForm()" iconcls="icon-undo">清空</a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum(typeof(Market.Logic.InvoiceState))
+    @Html.GetEnum("Market.InvoiceType")
+</script>
+<script type="text/javascript">
+    addGridEnum("dataGrid", "InvoiceType", "InvoiceType");
+    addGridEnum("dataGrid", "State", "InvoiceState");
+    addGridLink('dataGrid', 'PayerUnitSubName', 'InvoiceEdit?ID={ID}', { funcType: 'view', height: '90%', width: '80%' });
+    normalParamSettings.searchFields = "PayerUnit,ContractCode,ContractName";
+
+    function Invalid() {
+        var dataGrid = mini.get("dataGrid");
+        var rows = dataGrid.getSelecteds();
+        if (rows.length == 0) { msgUI("请选择一条发票记录"); return; }
+
+        msgUI("您确定需要作废选定的发票记录吗？", 2, function (data) {
+            if (data != "ok") return;
+            addExecuteParam("invoiceList", mini.encode(rows));
+            execute("Invalid", { showLoading: true, refresh: false, onComplete: function (data) {
+                dataGrid.reload();
+            }, validateForm: false
+            });
+        })
+    }
+
+    //计算合计
+    function onDrawSummaryCell(e) {
+        var result = e.result;
+        if (result.sumData && e.field) {
+            if (result.sumData[e.field] != undefined) {
+                e.cellHtml = result.sumData[e.field];
+                e.cellStyle = "text-align:right; color:Brown";
+            }
+            else if (result.avgData[e.field] != undefined) {
+                e.cellHtml = "平均：" + result.avgData[e.field];
+                e.cellStyle = "text-align:center; color:Brown;datatype:currency";
+            }
+            else {
+                e.cellHtml = "";
+                e.cellStyle = "text-align:right; color:Brown";
+            }
+        }
+        if (e.field == "Name") {
+            e.cellHtml = "总计：";
+            e.cellStyle = "text-align:right; color:Brown";
+        }
+    }
+
+</script>

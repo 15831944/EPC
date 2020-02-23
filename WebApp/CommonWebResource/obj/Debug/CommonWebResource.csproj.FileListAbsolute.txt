@@ -1,0 +1,8 @@
+E:\产品代码\EPM\WebApp\CommonWebResource\bin\CommonWebResource.dll
+E:\产品代码\EPM\WebApp\CommonWebResource\bin\CommonWebResource.pdb
+E:\产品代码\EPM\WebApp\CommonWebResource\obj\Debug\CommonWebResource.dll
+E:\产品代码\EPM\WebApp\CommonWebResource\obj\Debug\CommonWebResource.pdb
+D:\Files\Code\OtherWork\上海金慧\EPM产品\WebApp\CommonWebResource\bin\CommonWebResource.dll
+D:\Files\Code\OtherWork\上海金慧\EPM产品\WebApp\CommonWebResource\bin\CommonWebResource.pdb
+D:\Files\Code\OtherWork\上海金慧\EPM产品\WebApp\CommonWebResource\obj\Debug\CommonWebResource.dll
+D:\Files\Code\OtherWork\上海金慧\EPM产品\WebApp\CommonWebResource\obj\Debug\CommonWebResource.pdb

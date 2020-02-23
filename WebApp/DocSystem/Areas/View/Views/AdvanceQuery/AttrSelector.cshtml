@@ -1,0 +1,372 @@
+﻿@{
+    ViewBag.Title = "AttrSelector";
+}
+
+<div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" iconcls="icon-ok" onclick="returnClose();" plain="true">确定</a>
+                <a class="mini-button" iconcls="icon-cancel" onclick="closeWindow();" plain="true"> 取消</a>
+            </td>
+            <td style="white-space: nowrap;"></td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit">
+    <div id="mainLayout" class="mini-layout" style="width: 100%; height: 100%;">
+        <div title="east" region="east" showclosebutton="false" showheader="false" showspliticon="false" width="490px" >
+            <div class="mini-fit">
+                <div id="dataGrid" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID" multiselect="true" borderstyle="border:0;"
+                     allowcelledit="true" allowcellselect="true" editnextonenterkey="true" editnextrowcell="true" oncellbeginedit="oncellbeginedit"
+                     oncellcommitedit="oncellcommitedit"
+                     ondrawcell="ondrawcell" showpager="false">
+                    <div property="columns">
+                        <div type="checkcolumn">
+                        </div>
+                        <div field="Remove" width="50" headeralign="center" align="center">
+                            移除
+                        </div>
+                        <div field="Type" width="70" headeralign="center" allowsort="false" align="center">
+                            属性类型
+                        </div>
+                        <div field="AttrName" width="80" headeralign="center" allowsort="false" align="center">
+                            属性名称
+                        </div>
+                        <div type="comboboxcolumn" field="Method" width="70" headeralign="center" allowsort="false" align="center">
+                            运算符<input property="editor" class="mini-combobox" style="width:100%;" data="QueryMethod" valuefield="value" textfield="text" />
+                        </div>
+                        <div field="Value" width="100" headeralign="center" allowsort="false" align="center">
+                            值<input property="editor" class="mini-textbox" style="width:100%;" />
+                        </div>
+                        <div field="Group" width="80" headeralign="center" allowsort="false" align="center">
+                            分组<input property="editor" class="mini-textbox" style="width:100%;" />
+                        </div>
+                        <div field="MethodText" visible="false"></div>
+                        <div field="ValueText" visible="false"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div title="center" region="center" >
+            <div id="adToolBar" class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+                <table width="100%" border="0" cellpadding="0" cellspacing="2">
+                    <tr style="height:31px">
+                        <td width="30%">您需要查询</td>
+                        <td colspan="3" >
+                            <div name="QueryType" class="mini-radiobuttonlist" repeatitems="4" repeatlayout="table" repeatdirection="horizontal"
+                                textfield="text" valuefield="value" data="QueryType" onvaluechanged="onQueryTypeValueChanged">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr style="height:31px">
+                        <td>您需要查询<span style="color: blue" id="queryTypeSpan"></span>中的</td>
+                        <td colspan="3" >
+                            <div name="QueryNode" class="mini-radiobuttonlist" repeatitems="4" repeatlayout="table" repeatdirection="horizontal"
+                                textfield="text" valuefield="value" onvaluechanged="onQueryNodeValueChanged" onload="onQueryNodeLoad">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="mini-fit" style="padding-top: 5px;">
+                <div id="mainTab" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;" borderstyle="border:0px">
+                    <div title="编目属性">
+                        <div id="subLayout" class="mini-layout" style="width: 100%; height: 100%;">
+                            <div title="west" region="west" showheader="false" width="200" expanded="true" showspliticon="false" style="border-top: 0px; border-bottom: 0px;">
+                                <ul id="dataTree" class="mini-tree" style="width: 100%; height: 100%;" showtreeicon="true" textfield="Name" idfield="ID"
+                                    enablehottrack="false" parentfield="ParentID" resultastree="false" expandonload="true" onnodeselect="onNodeSelect"></ul>
+                            </div>
+                            <div title="center" region="center" style="border-top: 0px; border-bottom: 0px; border-right: 0px;">
+                                <div class="mini-fit">
+                                    <div id="nodeAttrGrid" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID" multiselect="true"
+                                         borderstyle="border:0px;" showpager="false">
+                                        <div property="columns">
+                                            <div type="indexcolumn">
+                                            </div>
+                                            <div field="AttrName" width="*" headeralign="center" allowsort="true">
+                                                属性名称
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div title="@ViewBag.FileConfigName 属性" visible="false">
+                        <div class="mini-fit">
+                            <div id="fileAttrGrid" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID" multiselect="true" showpager="false"
+                                    borderstyle="border:0px;" onload="onFileGridLoad">
+                                <div property="columns">
+                                    <div type="indexcolumn">
+                                    </div>
+                                    <div field="FileConfigName" width="120" headeralign="center" allowsort="true" align="center">
+                                        属性类型
+                                    </div>
+                                    <div field="FileAttrName" width="*" headeralign="center" allowsort="true">
+                                        属性名称
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="display:none;">
+    <input class="mini-textbox" id="textboxEditor" />
+    <input class="mini-datepicker" id="datepickerEditor" />
+    <input class="mini-combobox" id="booleanEditor" valuefield="value" textfield="text" />
+</div>
+<script type="text/javascript">
+    var QueryType = [{ text: "编目", value: "Node" }, { text: "文件", value: "File" }];
+    var QueryMethod = [{ value: "LK", text: "包含" }, { value: "EQ", text: "等于" }
+    , { value: "GT", text: "大于" }, { value: "LT", text: "小于" }, { value: "FR", text: "大于等于" }
+    , { value: "TO", text: "小于等于" }, { value: "UE", text: "不等于" }
+    ];
+</script>
+<script type="text/javascript">
+
+    addGridButton("nodeAttrGrid", "AttrName", {
+        onButtonClick: function (row) {
+            var dataGrid = mini.get("dataGrid");
+            var data = dataGrid.getData();
+            //if (dataGrid.findRow(function (attrRow) {
+            //     if (attrRow.AttrID == row.ID) { return true; }
+            //})) {
+            //    return;
+            //}
+            var node = mini.get("dataTree").getSelectedNode();
+            var newRow = {
+                Type: node.Name, TypeValue: row.NodeID, AttrType: "Node", Method: "LK",MethodText:"包含",
+                AttrID: row.ID, AttrName: row.AttrName,
+                AttrField: row.AttrField, DataType: row.DataType,
+                InputType: row.InputType, IsEnum: row.IsEnum,
+                EnumKey: row.EnumKey, Group: "Group"
+            };
+            dataGrid.addRow(newRow);
+        }
+    });
+
+    addGridButton("fileAttrGrid", "FileAttrName", {
+        onButtonClick: function (row) {
+            var dataGrid = mini.get("dataGrid");
+            var data = dataGrid.getData();
+            //if (dataGrid.findRow(function (attrRow) {
+            //     if (attrRow.AttrID == row.ID) { return true; }
+            //})) {
+            //    return;
+            //}
+            var newRow = {
+                Type: row.FileConfigName, TypeValue: row.FileID, AttrType: "File", Method: "LK",MethodText:"包含",
+                AttrID: row.ID, AttrName: row.FileAttrName,
+                AttrField: row.FileAttrField, DataType: row.DataType,
+                InputType: row.InputType, IsEnum: row.IsEnum,
+                EnumKey: row.EnumKey, Group: "Group"
+            };
+            dataGrid.addRow(newRow);
+        }
+    });
+
+    addGridButton("dataGrid", "Remove", {
+        linkText: "移除",
+        onButtonClick: function (row) {
+            var dataGrid = mini.get("dataGrid");
+            dataGrid.removeRow(row);
+        }
+    });
+
+    var spaceID = getQueryString("SpaceID");
+    var fromPage = getQueryString("FromPage");
+
+    var defaultData = {
+        QueryType: getQueryString("QueryType"), QueryTypeName: "",
+        QueryNode: getQueryString("ConfigID"), QueryNodeName: "",
+        CanBorrow: "", CanDownload: "",
+        List: [],
+    };
+
+    function pageLoad() {
+        if (!defaultData.QueryType) {
+            defaultData.QueryType = "File";
+        }
+        mini.getbyName("QueryType").setValue(defaultData.QueryType);
+        mini.getbyName("QueryType").doValueChanged();
+        if (fromPage=="1")
+            $("#adToolBar").hide();
+    }
+
+    function setData(data) {
+        $.extend(defaultData, data);
+        if (data.QueryType) {
+            defaultData.QueryNode = data.QueryNode;
+            mini.getbyName("QueryType").setValue(data.QueryType);
+            mini.getbyName("QueryType").doValueChanged();
+        }
+        if (data.List && data.List.length > 0)
+            mini.get("dataGrid").setData(data.List);
+    }
+
+    function onQueryTypeValueChanged(e) {
+        mini.get("#nodeAttrGrid").clearRows();
+        mini.get("#dataGrid").clearRows();
+        var typeEle = mini.getbyName("QueryType");
+        var value = typeEle.getValue();
+        var text = typeEle.getSelected().text;
+        $("#queryTypeSpan").html(text);
+        var nodeInfo = mini.getbyName("QueryNode");
+        nodeInfo.setUrl("GetQueryNodeInfo?QueryType=" +value  + "&SpaceID=" + spaceID);
+        var mainTab = mini.get("mainTab");
+        var tab = mainTab.getTab(1);
+        if (value == "File")
+            mainTab.updateTab(tab, { visible: true });
+        else
+            mainTab.updateTab(tab, { visible: false });
+    }
+
+    function onQueryNodeLoad(e) {
+        if (defaultData.QueryNode && $.inArray(defaultData.QueryNode, e.data.map(function (item) { return item.value; })) >= 0) {
+            e.sender.setValue(defaultData.QueryNode);
+            e.sender.doValueChanged();
+        }
+        else {
+            if (fromPage == "1") {
+                //从文件缩略图界面点击高级查询时，无configid
+                var tree = mini.get("dataTree");
+                tree.setUrl("GetNodeTree?SpaceID=" + spaceID + "&QueryType=" + defaultData.QueryType);
+                var grid = mini.get("fileAttrGrid");
+                grid.setUrl("GetFileAttrList?SpaceID=" + spaceID);
+                grid.load();
+            }
+            else {
+                //默认选中第一个编目或文件
+                if (e.data && e.data.length > 0) {
+                    e.sender.setValue(e.data[0].value);
+                    e.sender.doValueChanged();
+                }
+            }
+        }
+    }
+
+    function onQueryNodeValueChanged(e) {
+        mini.get("#nodeAttrGrid").clearRows();
+        mini.get("#dataGrid").clearRows();
+        var typeEle = mini.getbyName("QueryType");
+        var nodeInfo = mini.getbyName("QueryNode");
+        var value = nodeInfo.getValue();
+        var text = nodeInfo.getSelected().text;
+        var tree = mini.get("dataTree");
+        tree.setUrl("GetNodeTree?SpaceID=" + spaceID + "&ConfigID=" + value + "&QueryType=" + typeEle.getValue());
+        
+        var mainTab = mini.get("mainTab");
+        var tab = mainTab.getTab(1);
+        if (typeEle.getValue() == "File") {
+            mainTab.updateTab(tab, { title: text + " 属性" });
+            var grid = mini.get("fileAttrGrid");
+            grid.setUrl("GetFileAttrList?SpaceID=" + spaceID + "&ConfigID=" + value);
+            grid.load();
+        }
+    }
+
+    function onFileGridLoad(e) {
+        var dataGrid = mini.get("dataGrid");
+        if (defaultData.List.length == 0) {
+            dataGrid.clearRows();
+            $.each(e.data, function (index, row) {
+                var newRow = {
+                    Type: row.FileConfigName, TypeValue: row.FileID, AttrType: "File", Method: "LK", MethodText: "包含",
+                    AttrID: row.ID, AttrName: row.FileAttrName,
+                    AttrField: row.FileAttrField, DataType: row.DataType,
+                    InputType: row.InputType, IsEnum: row.IsEnum,
+                    EnumKey: row.EnumKey, Group: "Group"
+                };
+                dataGrid.addRow(newRow);
+            });
+        }
+    }
+    
+    function returnClose() {
+        var dataGrid = mini.get("dataGrid");
+        dataGrid.commitEdit();
+        var list = dataGrid.getData();
+        var typeEle = mini.getbyName("QueryType");
+        var nodeInfo = mini.getbyName("QueryNode");
+        if (fromPage != "1" && !nodeInfo.getValue()) {
+            msgUI("请选择您要查询的内容");
+            return;
+        }
+        defaultData.QueryType = typeEle.getValue();
+        defaultData.QueryTypeName = typeEle.getSelected().text;
+        defaultData.List = list;
+        if (nodeInfo.getValue())
+        {
+            var sel = nodeInfo.getSelected();
+            defaultData.QueryNode = nodeInfo.getValue();
+            defaultData.QueryNodeName = sel.text;
+            defaultData.CanBorrow = sel.CanBorrow;
+            defaultData.CanDownload = sel.CanDownload;
+        }
+
+        closeWindow(defaultData);
+    }
+
+    function onNodeSelect(e) {
+        var node = e.selected;
+        if (node) {
+            var nodeAttrGrid = mini.get("nodeAttrGrid");
+            nodeAttrGrid.setUrl("GetNodeAttrList?SpaceID=" + spaceID + "&ConfigID=" + node.NodeID);
+            nodeAttrGrid.load();
+        }
+    }
+
+    function ondrawcell(e) {
+        if (e.field == "Value") {
+            var record = e.record;
+            e.cellHtml = !mini.isNull(record.text) ? record.text : record.value;
+        }
+    }
+
+    function oncellbeginedit(e) {
+        if (e.field == "Value") {
+            var editor = getEditor(e.record);
+            e.editor = editor;
+            e.column.editor = editor;
+        }
+    }
+
+    function oncellcommitedit(e) {
+        var record = e.record;
+        if (e.field == "Value") {
+            var format = e.record.format;
+            if (format) {
+                e.value = mini.formatDate(e.value, format);
+            }
+            if (e.editor.getText) {
+                record.text = e.editor.getText();
+            } else {
+                record.text = e.value;
+            }
+        }
+        if(e.editor.getText)
+            record[e.field + "Text"] = e.editor.getText();
+    }
+
+    function getEditor(record) {
+        if (record.InputType == "Combobox") {
+            var editor = mini.get("booleanEditor");
+            editor.setUrl("/DocSystem/Common/GetEnum?EnumKey=" + record.EnumKey);
+            return editor;
+        }
+        if (record.InputType == "DatePicker") {
+            var editor = mini.get("datepickerEditor");
+            return editor;
+        }
+        else {
+            var editor = mini.get("textboxEditor");
+            return editor;
+        }
+    }
+
+</script>

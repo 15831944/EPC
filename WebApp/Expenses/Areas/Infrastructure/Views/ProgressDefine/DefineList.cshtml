@@ -1,0 +1,210 @@
+﻿@{
+    ViewBag.Title = "DefineList";
+}
+<div id="mainLayout" class="mini-layout" style="width: 100%; height: 100%; border:0px;">
+    <div title="节点定义" region="east" showsplit="false" width="600" showspliticon="false" showheader="false" style="border-bottom: 0px; border-top: 0px;">
+        <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        <a class="mini-button" iconcls="icon-add" onclick="addDetail();" plain="true"> 增加</a>
+                        <a class="mini-button" iconcls="icon-remove" onclick="removeDetail();" plain="true">删除</a>
+                        <a class="mini-button" iconcls="icon-save" onclick="saveDetail();" plain="true">保存</a>
+                    </td>
+                    <td style="white-space: nowrap; text-align:right; color:red;font-weight:bolder;">可拖动节点进行节点排序</td>
+                </tr>
+            </table>
+        </div>
+        <div class="mini-fit">
+            <div id="progressGrid" url="" class="mini-treegrid" style="width: 100%; height: 100%;" idfield="ID" multiselect="true"
+                 allowcelledit="true" allowcellselect="true" showsummaryrow="true" ondrawsummarycell="onDrawSummaryCell" allowcellwrap="true"
+                 editnextonenterkey="true" editnextrowcell="true" allowdrag="true" allowdrop="true" allowleafdropin="true" ongivefeedback="onGiveFeedback" ondrop="onNodeDrop"
+                 showpager="false">
+                <div property="columns">
+                    <div type="checkcolumn">
+                    </div>
+                    <div type="indexcolumn">
+                    </div>
+                    <div field="EvidenceDefine" width="60" headeralign="center" allowsort="false">
+                        凭证定义
+                    </div>
+                    <div field="Name" width="100" headeralign="center" allowsort="false">
+                        名称<input property="editor" class="mini-textbox" style="width:100%;" />
+                    </div>
+                    <div field="Code" width="100" headeralign="center" allowsort="false">
+                        编号<input property="editor" class="mini-textbox" style="width:100%;" />
+                    </div>
+                    <div field="Scale" width="60" summarytype="sum" headeralign="center" allowsort="false" align="right">
+                        百分比%<input property="editor" class="mini-textbox" style="width:100%;" />
+                    </div>
+                    <div field="TotalScale" width="70" headeralign="center" allowsort="false" align="right">
+                        累计百分比%
+                    </div>
+                    <div field="IsIncomeNode" type="checkboxcolumn" truevalue="true" falsevalue="false" width="60" headeralign="center" align="center">收入节点</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div title="center" region="center" style="border-bottom: 0px; border-top: 0px;">
+        <div class="mini-toolbar" style="padding: 2px; ">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        <a class="mini-button" iconcls="icon-add" onclick="add({ url: 'DefineEdit',width:700,height:300 });" plain="true">增加</a>
+                        <a class="mini-button" iconcls="icon-edit" onclick="edit({ url: 'DefineEdit', width: 700, height: 300 });" plain="true">编辑</a>
+                        <a class="mini-button" iconcls="icon-remove" onclick="del()" plain="true">删除</a>
+                    </td>
+                    <td style="white-space: nowrap;">
+                        <input class="mini-buttonedit searchbox" id="key" emptytext="请输入名称或编号" style="width: 200px;" onenter="quickSearch('Name,Code');"
+                               onbuttonclick="quickSearch('Name,Code');" />
+                        <a class="mini-button" onclick="showWindow('queryWindow')" iconcls="icon-find" plain="true">详细查询</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="mini-fit">
+            <div id="dataGrid" url="GetList" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID" multiselect="true" sortorder="asc" sortfield="sortindex"
+                 onselectionchanged="onSelectionChanged" allowcellwrap="true">
+                <div property="columns">
+                    <div type="checkcolumn">
+                    </div>
+                    <div field="Name" width="150" headeralign="center" allowsort="true">
+                        名称
+                    </div>
+                    <div field="Code" width="150" headeralign="center" allowsort="true">
+                        编号
+                    </div>
+                    <div field="ModifyUser" headeralign="center" width="100" allowsort="true" align="center">
+                        最后修改人
+                    </div>
+                    <div field="ModifyDate" width="100" headeralign="center" dateformat="yyyy-MM-dd" allowsort="true" align="center">
+                        最后修改日期
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //addGridEnum("dataGrid", "FieldName", "EnumKey");
+    addGridLink("dataGrid", "FieldName", "URL?ID={ID}", { funcType: "view", height: 600, width: 800 });
+    addGridButton("progressGrid", "EvidenceDefine", {
+        linkText: "凭证定义", onButtonClick: function (row) {
+            var url = "EvidenceDefine?ProgressNodeID=" + row.ID;
+            openWindow(url, {
+                refresh: false, title: "凭证定义", width: 400, height: 400,
+                onDestroy: function () { }
+            });
+        }
+    });
+
+
+    function onDrawSummaryCell(e) {
+        var result = e.result;
+        e.cellStyle = "text-align:right; color:Brown";
+    }
+
+    function onSelectionChanged(e) {
+        var detailGrid = mini.get("progressGrid");
+        if (e.selected) {
+            detailGrid.setUrl("GetDetailList?DefineID=" + e.selected.ID);
+            detailGrid.load();
+        }
+        else {
+            detailGrid.clearRows();
+        }
+    }
+
+    function addDetail() {
+        var dataGrid = mini.get("dataGrid");
+        var row = dataGrid.getSelected();
+        if (!row) {
+            msgUI("请选择一条节点定义记录");
+        }
+        addExecuteParam("DefineID", row.ID);
+        execute("AddProgressNode", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                var detailGrid = mini.get("progressGrid");
+                detailGrid.addNode(data);
+            }, validateForm: false
+        });
+
+    }
+
+    function removeDetail() {
+        var dataGrid = mini.get("dataGrid");
+        var row = dataGrid.getSelected();
+        if (!row) {
+            msgUI("请选择一条节点定义记录");
+        }
+        var detailGrid = mini.get("progressGrid");
+        var rows = detailGrid.getSelecteds();
+        if (rows.length == 0) {
+            msgUI("请选择一个进度确认节点"); return;
+        }
+        var ids = "";
+        for (var i = 0; i < rows.length; i++) {
+            if (i == rows.length - 1) {
+                ids += rows[i].ID;
+            }
+            else {
+                ids += rows[i].ID + ",";
+            }
+        }
+        msgUI("您确定需要删除节点模板吗？", 2, function (result) {
+            if (result != "ok") return;
+            addExecuteParam("ListIDs", ids);
+            addExecuteParam("DefineID", row.ID);
+            execute("DelProgressNode", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    detailGrid.reload();
+                }, validateForm: false
+            });
+        });
+    }
+
+    function saveDetail() {
+        var dataGrid = mini.get("dataGrid");
+        var row = dataGrid.getSelected();
+        if (!row) {
+            msgUI("请选择一条节点定义记录");
+        }
+        var detailGrid = mini.get("progressGrid");
+        detailGrid.commitEdit();
+        detailGrid.accept();
+        var data = detailGrid.getData();
+        addExecuteParam("ListData", mini.encode(data));
+        addExecuteParam("DefineID", row.ID);
+        execute("SaveProgressNode", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                detailGrid.reload();
+            }, validateForm: false
+        });
+    }
+
+    function onNodeDrop(e) {
+        var tree = mini.get("progressGrid");
+        addExecuteParam("sourceID", e.dragNode.ID);
+        addExecuteParam("targetID", e.dropNode.ID);
+        addExecuteParam("dragAction", e.dragAction);
+        execute("MoveNode", {
+            showLoading: false, refresh: false, onComplete: function (data) {
+                tree.updateNode(e.dragNode, data);
+                tree.acceptRecord(e.dragNode);
+            }, validateForm: false
+        });
+    }
+
+    function onGiveFeedback(e) {
+        var tree = e.sender;
+        var node = e.node;              //被拖拽的节点
+        var targetNode = e.targetNode;  //目标投放节点
+        var effect = e.effect;          //投放方式：add|before|after
+        if (effect == "add") {
+            e.effect = "no";
+        }
+    }
+
+
+</script>

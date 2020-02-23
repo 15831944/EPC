@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "SpaceConfigList";
+}
+<div class="mini-toolbar gw-grid-toolbar">
+    <table>
+        <tr>
+            <td>
+                <a class="mini-button" id="btnAdd" iconcls="icon-add" onclick="add({width: '60%', height: '500px' });">
+                    添加</a>
+                <a class="mini-button" id="btnModify" iconcls="icon-edit" onclick="edit({width: '60%', height: '500px' });">
+                    修改</a>
+                <a class="mini-button" id="btnDelete" iconcls="icon-remove" onclick="del();">删除</a>
+                <a class="mini-button" iconcls="icon-copy" onclick="DoCopy();">复制</a>
+                @*<a id="btnExportDef" class="mini-button" iconcls="icon-download" onclick="exportSql();">导出Sql</a>*@
+            </td>
+            <td class="gw-toolbar-right">
+                <input id="key" class="mini-buttonedit gw-searchbox" emptytext="请输入编号或名称" onenter="quickSearch('SpaceKey,Name');"
+                    onbuttonclick="quickSearch('SpaceKey,Name');" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit">
+    <div id="dataGrid" class="mini-datagrid" style="width: 100%; height: 100%;" url="GetList" multiselect="true">
+        <div property="columns">
+            <div type="checkcolumn">
+            </div>
+            <div field="publish" width="60" headeralign="center" align="center">
+                应用</div>
+            <div field="edit" width="60" allowsort="true">
+                编辑</div>
+            <div field="Name" width="*" headeralign="center" allowsort="true" align="left">
+                名称</div>
+            <div field="SpaceKey" width="250" headeralign="center" allowsort="true" align="center">
+                编号</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    addGridLink('dataGrid', 'Name', '/DocSystem/Config/SpaceConfig/Edit?ID={ID}', { title: "编辑", width: "60%", height: "500px" });
+    addGridButton("dataGrid", "publish", { linkText: '应用', onButtonClick: function (row) {
+        var dataGrid = mini.get("mygrid");
+        addExecuteParam("ID", row.ID);
+        execute("publish", { validateForm: false, showLoading: true, refresh: false, onComplete: function (data) {
+            msgUI("应用成功");
+        }
+
+        })
+    }
+
+    });
+    addGridLink("dataGrid", "edit", "/DocSystem/Config/SpaceConfig/ConfigTab?ID={ID}", { title: '档案空间配置', linkText: '编辑', width: "90%", height: "90%" });
+
+
+    function DoCopy() {
+        var row = mini.get("dataGrid").getSelected();
+        if (row.length <= 0) {
+            msgUI("请选择一条记录。");
+            return;
+        }
+        addExecuteParam("ID", row.ID);
+        execute("DoCopy", {
+            actionTitle: "复制", onComplete: function () {
+                msgUI("复制完成，请及时修改信息，并点击【应用】生成实例库。");
+                mini.get("dataGrid").reload();
+            }
+        });
+    }
+
+    function exportSql() {
+        var rows = mini.get("dataGrid").getSelecteds();
+        if (rows.length <= 0) {
+            msgUI("请选择一条记录。");
+            return;
+        }
+        var ids = getValues(rows, "ID");
+        var url = "/Project/ProjectConfig/ProjectMode/ExportSql?IDs=" + ids;
+        window.open(url);
+    }
+</script>

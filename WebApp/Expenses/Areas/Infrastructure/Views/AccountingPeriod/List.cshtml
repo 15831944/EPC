@@ -1,0 +1,193 @@
+﻿@{
+    ViewBag.Title = "List";
+}
+
+<div id="mainLayout" class="mini-layout" style="width: 100%; height: 100%;">
+    <div title="west" region="west" width="300" expanded="true" showspliticon="false" showheader="false">
+        <ul id="dataTree" class="mini-tree" url="GetTreeList" style="width: 100%; height: 100%;" showtreeicon="true" textfield="Name" idfield="ID"
+            contextmenu="#treeMenu" onnodeselect="onNodeSelected"
+            enablehottrack="false" parentfield="ParentID" resultastree="false" expandonload="0"></ul>
+    </div>
+    <div title="center" region="center" style="border-bottom:0px;">
+        <div class="mini-fit" style="padding-top: 5px;">
+            <div id="mainTab" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;">
+                <div title="会计月份">
+                    <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="width: 100%;">
+                                    <a class="mini-button" iconcls="icon-edit" onclick="setStartDate()" plain="true">设置开始日期</a>
+                                </td>
+                                <td style="white-space: nowrap;"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="mini-fit">
+                        <div id="monthGrid" url="" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID" multiselect="true"
+                             borderstyle="border-right:0px;border-left:0px;" showpager="false">
+                            <div property="columns">
+                                <div type="indexcolumn">
+                                </div>
+                                <div field="Year" width="90" headeralign="center" allowsort="true" align="false">
+                                    年度
+                                </div>
+                                <div field="Month" width="80" headeralign="center" allowsort="true" align="false">
+                                    月份
+                                </div>
+                                <div field="StartDate" width="100" headeralign="center" dateformat="yyyy-MM-dd" allowsort="false"
+                                     align="center">
+                                    开始日期
+                                </div>
+                                <div field="EndDate" width="100" headeralign="center" dateformat="yyyy-MM-dd" allowsort="false"
+                                     align="center">
+                                    结束日期
+                                </div>
+                                <div field="Remark" headeralign="center" width="*" allowsort="false" align="center">
+                                    备注
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div title="会计季度">
+                    <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="width: 100%;">
+                                    <a class="mini-button" iconcls="icon-edit" onclick="" plain="true">设置开始日期</a>
+                                </td>
+                                <td style="white-space: nowrap;"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="mini-fit">
+                        <div id="quarterGrid" url="" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID" multiselect="true" showpager="false"
+                             borderstyle="border-right:0px;border-left:0px;">
+                            <div property="columns">
+                                <div type="indexcolumn">
+                                </div>
+                                <div field="Year" width="90" headeralign="center" allowsort="false" align="center">
+                                    年度
+                                </div>
+                                <div field="Quarter" width="80" headeralign="center" allowsort="false" align="center">
+                                    季度
+                                </div>
+                                <div field="StartDate" width="100" headeralign="center" dateformat="yyyy-MM-dd" allowsort="false"
+                                     align="center">
+                                    开始日期
+                                </div>
+                                <div field="EndDate" width="100" headeralign="center" dateformat="yyyy-MM-dd" allowsort="false"
+                                     align="center">
+                                    结束日期
+                                </div>
+                                <div field="Remark" headeralign="center" width="*" allowsort="false" align="center">
+                                    备注
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ul id="treeMenu" class="mini-contextmenu" onbeforeopen="onBeforeOpen">
+    <li name="add" iconcls="icon-add" onclick="addYear">新增会计期间</li>
+    <li name="remove" iconcls="icon-remove" onclick="removeYear">删除会计期间</li>
+</ul>
+<script type="text/javascript">
+    function onBeforeOpen(e) {
+        var menu = e.sender;
+        var tree = mini.get("dataTree");
+        var node = tree.getSelectedNode();
+        if (!node) {
+            e.cancel = true;
+            //阻止浏览器默认右键菜单
+            e.htmlEvent.preventDefault();
+            return;
+        }
+        var addtem = mini.getbyName("add", menu);
+        var removeItem = mini.getbyName("remove", menu);
+        addtem.hide();
+        removeItem.hide();
+        if (node.ID == "Root") {
+            addtem.show();
+        }
+        else if (node.ID == "Child") {
+            removeItem.show();
+        }
+    }
+
+
+    function setStartDate() {
+        var dataTree = mini.get("dataTree");
+        var node = dataTree.getSelectedNode();
+        if (!node) {
+            msgUI("请先选择一个年份后，再进行会计期间的调整");
+            return;
+        }
+        openWindow("PeriodChange?Year=" + node.Name, {
+            refresh: false, title: "变更会计期间", width: 350, height: 320,
+            onDestroy: function (data) {
+                if (!data || data == "close") return;
+                var date = mini.formatDate(data, "yyyy-MM-dd");
+                msgUI("您确定要将会计期间的每月开始日期设置为【" + date + "】号吗？", 2, function (result) {
+                    if (result != "ok") return;
+                    addExecuteParam("Year", node.Name);
+                    addExecuteParam("Day", date);
+                    execute("ChangePeriod", {
+                        showLoading: true, refresh: false, onComplete: function (data) {
+                            mini.get("monthGrid").reload();
+                            mini.get("quarterGrid").reload();
+                        }, validateForm: false
+                    });
+                });
+            }
+        });
+    }
+
+    function onNodeSelected(e) {
+        if (e.node && e.node != mini.get('dataTree').getRootNode().children[0]) {
+            mini.get("monthGrid").setUrl("GetMonthList?Year=" + e.node.Name);
+            mini.get("monthGrid").reload();
+            mini.get("quarterGrid").setUrl("GetQuarterList?Year=" + e.node.Name);
+            mini.get("quarterGrid").reload();
+        }
+        else {
+            mini.get("monthGrid").clearRows();
+            mini.get("quarterGrid").clearRows();
+        }
+    }
+
+    function addYear() {
+        var url = "Edit";
+        openWindow(url, {
+            refresh: false, title: "新增会计期间", width: 300, height: 150,
+            onDestroy: function (data) {
+                if (!data || data == "close") return;
+                mini.get("dataTree").reload();
+            }
+        });
+    }
+
+    function removeYear() {
+        var tree = mini.get("dataTree");
+        var node = tree.getSelectedNode();
+        if (!node) {
+            msgUI("请选择一个节点"); return;
+        }
+        if (node.ID == "Root") {
+            msgUI("根节点不允许删除"); return;
+        }
+        var year = node.Name;
+        msgUI("您确定要删除【" + year + "】年的会计期间吗？", 2, function (result) {
+            addExecuteParam("Year", year);
+            execute("RemovePeriod", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    tree.removeNode(node);
+                }, validateForm: false
+            });
+        });
+    }
+</script>

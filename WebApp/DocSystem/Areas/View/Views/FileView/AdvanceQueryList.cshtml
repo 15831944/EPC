@@ -1,0 +1,281 @@
+﻿@{
+    ViewBag.Title = "AdvanceQueryList";
+}
+<link rel="stylesheet" href="/PortalLTE/Scripts/bootstrap/css/bootstrap.min.css">
+<link href="/DocSystem/Scripts/MyPortal.css" rel="stylesheet" />
+<link href="/DocSystem/Scripts/EsFullTextSearchContent.css" rel="stylesheet" />
+<script src="/DocSystem/Scripts/AdvanceSearch.js"></script>
+<script src="/DocSystem/Scripts/DocFunc.js"></script>@*在线浏览 借阅 下载 方法调用*@
+<div style="overflow: hidden; background-color: transparent; height: 100%">
+    <div class="row content">
+        
+    </div>
+    <div class='result' id="divTotal" style="padding-left: 3%;">为您找到相关结果 0 个</div>
+    <div class="mini-fit" id="gridArea" style="margin: 0 15px; width: 98%">
+        <div id="dataGrid" url="GetAdvanceQueryList" class="mini-datagrid" style="width: 100%; height: 100%;" autoLoad="false"
+            idfield="id" multiselect="true" showvgridlines="false" showcolumns="false" autoload="false" onbeforeload="onbeforeload">
+            <div property="columns">
+
+                <div field="Content" width="*" headeralign="center" allowsort="false" renderer="onContentRenderer">
+                </div>
+            </div>
+        </div>
+    </div>
+    @*  <div class="mini-fit-area" >
+    </div>*@
+</div>
+
+<script type="text/javascript">
+    //Grid相关
+    //$("body").css("background-color", " transparent");
+    //var MaxCount = "0";
+    //function onGridLoad(e) {
+    //    var _total = e.result["MaxCount"];
+    //    if (_total != undefined) {
+    //        MaxCount = _total;
+    //        $("#divTotal").text("为您找到相关结果 " + MaxCount + " 个，当前页面最多显示1000个");
+    //    }
+    //}
+    function onContentRenderer(e) {
+        var rec = e.record;
+        var rowIndex = e.rowIndex;
+        var content = "<div class='body'>\
+    <div class='title1 title-{filetype}' style='width:100%' onclick='viewFileAttr()'><span style='color:#AD2F28'>{icon}</span>{title}</div>\
+    <div class='buttom'>\
+        <div class='fileScret'>\
+            <!--<div class='file'>归档人：<span>{FileCreateUser}</span></div>-->\
+            {SecretLevel}\
+        </div>\
+        {FullPath}\
+        <div class='browse'><span onclick='browse()'>在线浏览</span></div>\
+        {borrow}\
+        {down}\
+    </div>\
+</div>";
+        content = content.replace("{title}", rec.Name);
+        var filepath = "";
+        if(rec.FullNodeName)
+            filepath = rec.FullNodeName.replace(/\$\.\$/g,' > ');
+        content = content.replace("{FullPath}", "<div class='ability'><span onclick='opentree()'>" + filepath + "</span></div><div class='line'>|</div>");
+        content = content.replace("{SecretLevel}", "");
+        //文件图标
+        var filetype = 'txt';
+        if (rec.FileType !== null && rec.FileType !== '' && rec.FileType != undefined && rec.FileType.toLowerCase() != 'document') {
+            filetype = rec.FileType.toLowerCase();
+        }
+        if (e.record.StorageType.toLowerCase() == "physical") {
+            content = content.replace("{borrow}", "<div class='borrow'><span onclick='Borrow()'>借阅</span></div>");
+            content = content.replace("{down}", "");
+            content = content.replace("{icon}", "【实物】");
+            filetype = "txt1";
+        }
+        else if (e.record.StorageType.toLowerCase() == "electronic") {
+            content = content.replace("{down}", "<div class='down'><span onclick='Down()'>下载</span></div>");
+            content = content.replace("{borrow}", "");
+            content = content.replace("{icon}", "【电子】");
+        }
+        content = content.replace("{filetype}", filetype);
+        return $(content)[0].outerHTML;
+    }
+
+    //客户端分页
+    // 分页填充细节处理
+    function fillData(pageIndex, pageSize, dataResult, grid) {
+        var data = dataResult.data, totalCount = dataResult.total;
+        var arr = [];
+        var start = pageIndex * pageSize, end = start + pageSize;
+        for (var i = start, l = end; i < l; i++) {
+            var record = data[i];
+            if (!record) continue;
+            arr.push(record);
+        }
+        grid.setTotalCount(totalCount);
+        grid.setPageIndex(pageIndex);
+        grid.setPageSize(pageSize);
+        grid.setData(arr);
+    }
+    // 监听分页前事件，阻止后自行设置当前数据和分页信息
+    function onbeforeload(e) {
+        e.cancel = true;
+        var pageIndex = e.data.pageIndex, pageSize = e.data.pageSize;
+        fillData(pageIndex, pageSize, GridData, e.sender);
+    }
+
+    //点击标题查看文件属性
+    function viewFileAttr() {
+        var grid = mini.get("dataGrid");
+        var row = grid.getSelected();
+        var url = "/DocSystem/View/FileView/Edit?ID=" + row.ID + "&SpaceID=" + row.SpaceID + "&ConfigID=" + row.ConfigID + "&Functype=view";
+        openWindow(url, { addQueryString: false, title: '文件属性', width: "80%", height: "80%", funcType: 'view' });
+        history("viewfile");
+    }
+
+    //添加历史记录
+    function history(e) {
+        var grid = mini.get("dataGrid");
+        var row = grid.getSelected();
+        var filename = row.title.replace(/<\/?.+?>/g, '');
+        //取文件节点的名称
+        var pathAry = mini.decode(row.FullPathJson);
+        var fileItem = $.grep(pathAry, function (item, index) {
+            return item.type == "file";
+        });
+        if (fileItem.length > 0) filename = fileItem[0].name;
+
+        addHistory(filename, row.FileID, row.NodeID, row.SpaceID, e)
+    }
+
+    //点击功能选项
+    function opentree() {
+        var grid = mini.get("dataGrid");
+        var row = grid.getSelected();
+        if (!row) { mini.alert("请选中一条记录"); return; }
+        var url = "/DocSystem/View/NodeView/Tree?ID=" + row.NodeID + "&SpaceID=" + row.SpaceID;
+        openWindow(url, { addQueryString: false, title: '图档树形图', width: "90%", height: "90%", funcType: 'view' });
+        history("open");
+    }
+
+    //点击浏览选项
+    function browse() {
+        var grid = mini.get("dataGrid");
+        var row = grid.getSelected();
+        Browse(row.ID, row.SpaceID);//此处的ID为FileID
+        history("view");
+
+    }
+    //点击借阅选项
+    function Borrow() {
+        var grid = mini.get("dataGrid");
+        var row = grid.getSelected();
+        var spaceID = row.SpaceID;
+        var rows = [];
+        rows.push({ ID: row.ID });//ID为FileID
+        BorrowFile(rows, spaceID);
+        refreshCarCount(function () {
+            history("borrowfile");
+        });
+    }
+    //点击下载选项
+    function Down() {
+        var grid = mini.get("dataGrid");
+        var row = grid.getSelected();
+        var spaceID = row.SpaceID;
+        var rows = [];
+        rows.push({ ID: row.ID });//ID为FileID
+        DownloadFiles(rows, spaceID);
+        refreshCarCount(function () {
+            history("download");
+        });
+    }
+    //借阅下载车
+    function openDonwnLoadBorrowCar() {
+        var url = "/DocSystem/Car/Car/Car";
+        openWindow(url, {
+            refresh: false, title: "借阅申请信息", width: "80%", height: "80%",
+            onDestroy: function (data) {
+                refreshCarCount();
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    var divStr = '';
+    function renderCarInfo() {
+        //添加购物车图标
+        divStr = '<div class="col-md-0 col-sm-0 col-xs-0 col shopcar">' +
+              ' <div class="img">' +
+                  ' <div onclick="openDonwnLoadBorrowCar()">' +
+                      ' <img src="/DocSystem/Scripts/Images/cart.png" alt="cart" style="height: 100%" />' +
+                   '</div>' +
+                   '<div class="divright">@ViewBag.CarCount' +
+               ' </div>' +
+           ' </div>' +
+       ' </div>';
+        $('#close').replaceWith(divStr);
+        $('.divright').css
+    ({ 'font-size': '12px', 'width': '15px', 'height': '15px', 'line-height': '16px', 'left': '66%', 'top': '-7px' });
+    }
+
+    function refreshCarCount(callback) {
+        execute("/DocSystem/View/MyPortal/GetCarCount", {
+            validateForm: false, showLoading: true, async: false, refresh: false, onComplete: function (data) {
+                $(".divright").text(data.carCount);
+                if (callback && typeof (callback) == "function")
+                    callback();
+            }
+        });
+    }
+
+</script>
+<script type="text/javascript">
+    //高级检索方法
+
+    var GridData = null;
+    function queryAdvance(queryList) {
+        if (!queryList)
+            queryList = CreateQueryListByAdvance();
+        if (queryList.length == 0)
+        {
+            msgUI("请完整填写搜索条件");
+            return;
+        }
+        var grid = mini.get("dataGrid");
+        if (grid) {
+            addExecuteParam("QueryItems", mini.encode(queryList));
+            addExecuteParam("SpaceID", mini.get('cblSpace').getValue());
+            execute("GetAdvanceQueryList", {
+                validateForm: false, showLoading: true, async: true, refresh: false,addQueryString:false, onComplete: function (data) {
+                    GridData = data;
+                    if (GridData.total < 1000)
+                        $("#divTotal").text("已为您搜索到 " + GridData.total + " 条数据");
+                    else
+                        $("#divTotal").text("已为你搜索到1000+条数据，以下展示前1000条");
+                    fillData(0, grid.getPageSize(), GridData, grid);
+                }
+            });
+            //grid.load({ QueryItems: mini.encode(queryList), SpaceID: mini.get('cblSpace').getValue()});
+        }
+    }
+    //根据URL参数，创建查询条件列表QueryList
+    function CreateQueryListByURL() {
+        var queryListParamStr = decodeURIComponent(getQueryString("List"));
+        //var List = Media,IN,AND,文本,音频,;Name,LK,AND,图纸
+        //{查询字段编号},{查询匹配逻辑},{AND/OR},{查询值(多选值以逗号分隔)}{,;条件之间以",;"分隔}
+        var paramAry = queryListParamStr.split(',;');
+        var queryList = [];
+        for (var i = 0; i < paramAry.length - 1; i++) {
+            var paramItemStr = paramAry[i];
+            var _value = '';
+            for (var j = 3; j < paramItemStr.split(',').length; j++) {
+                _value += paramItemStr.split(',')[j] + ',';
+            }
+            _value = _value.substring(0, _value.lastIndexOf(','));
+            var queryItem = {
+                ItemName: paramItemStr.split(',')[0],//查询字段编号
+                Method: paramItemStr.split(',')[1],//查询匹配逻辑
+                Logic: paramItemStr.split(',')[2],//AND/OR
+                Value: decodeURIComponent(_value)//查询值
+            };
+            if (!queryItem.ItemName || !queryItem.Method || !queryItem.Logic || !queryItem.Value)
+                continue;
+            queryList.push(queryItem);
+        }
+        return queryList;
+    }
+</script>
+
+<script type="text/javascript">
+    
+    function pageLoad() {
+        var queryList = CreateQueryListByURL();
+        var Sid = getQueryString("spaceID");//查询条件复选框的spaceID
+        DrawBar(Sid, queryList);
+        $('.content').hide();
+        $('.indexqv').show().removeClass("indexqv");
+
+        renderCarInfo();//将页面中的关闭图标替换成购物车图标
+        //$('#divQueryAdvance').show();
+        queryAdvance(queryList);
+    }
+</script>
+

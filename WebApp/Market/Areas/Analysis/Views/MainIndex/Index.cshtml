@@ -1,0 +1,375 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+@Styles.Render("~/Scripts/MainIndex/css/style.css")
+<script src="/CommonWebResource/CoreLib/HighCharts/highcharts.js" type="text/javascript"></script>
+<script src="/CommonWebResource/CoreLib/HighCharts/highcharts-3d.js" type="text/javascript"></script>
+<script src="/Market/Scripts/MainIndex/js/jquery.min.js" type="text/javascript"></script>
+<script src="/Market/Scripts/MainIndex/js/jquery.nicescroll.js" type="text/javascript"></script>
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>
+            经营
+            <small>经营首页</small>
+        </h1>
+    </section>
+    <section class="content">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="info-box">
+                    <div class="info-box-title">收款</div>
+                    @{
+                        var recepitBlock = ViewBag.RecepitBlock as Market.Areas.Analysis.Controllers.ViewBlock;
+                        <div class="info-box-content">
+                            @if (recepitBlock.Sub > 0)
+                            {
+                                <div class="info-box-percent" title="@recepitBlock.SubAreaTip"><img src="/Market/Scripts/MainIndex/img/icon-up.png" width="12" height="20">@Math.Abs(recepitBlock.Sub)%</div>
+                            }
+                            else
+                            {
+                                <div class="info-box-percent" title="@recepitBlock.SubAreaTip"><img src="/Market/Scripts/MainIndex/img/icon-down.png" width="12" height="20">@Math.Abs(recepitBlock.Sub)%</div>
+                            }
+                            <span class="info-box-number  text-blue">
+                                <img src="/Market/Scripts/MainIndex/img/icon.png" width="33" height="28" alt="money">
+                                @if (String.IsNullOrEmpty(recepitBlock.MainUrl))
+                                {
+                                    @recepitBlock.Main<small>万元</small>
+                                }
+                                else
+                                {
+                                    <a href="javascript:void(0)" onclick="openWindow('@recepitBlock.MainUrl',{width:'90%',height:'90%'})">@recepitBlock.Main</a><small>万元</small>
+                                }
+                            </span>
+                            <span class="info-box-text">今年已收款</span>
+                            <span class="progress-description">
+                                完成率：@recepitBlock.progressMain %
+                                <small>年度目标：@recepitBlock.SubRight 万元</small>
+                            </span>
+                            <div class="progress">
+                                <div class="progress-bar-blue " style="width: @recepitBlock.progressMain%"></div>
+                                <div class="progress-line" title="当前日期：@DateTime.Now.ToShortDateString()" style="left: @recepitBlock.progressSub%">
+                                    <div class="progress-linetime" title="当前日期：@DateTime.Now.ToShortDateString()"></div>
+                                    @if (recepitBlock.progressSub <= 20)
+                                    {
+                                        <div class="progress-linetext" title="当前日期：@DateTime.Now.ToShortDateString()" style=" margin-left:80px">时间：@recepitBlock.progressSub %</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="progress-linetext" title="当前日期：@DateTime.Now.ToShortDateString()" style=" margin-left:-80px">时间：@recepitBlock.progressSub %</div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-box-content info-box-paddingtop">
+                            @{
+                                var subList = recepitBlock.SubViewBlockList.OrderBy(d => d.SortIndex).ToList();
+                                foreach (var subItem in subList)
+                                {
+                                    <div class="col-md-4 info-box-bg2 border-right">
+                                        <span class="info-box-number2">
+                                            @if (String.IsNullOrEmpty(subItem.LinkUrl))
+                                            {
+                                                @subItem.MainValue<small>@subItem.Unit</small>
+                                            }
+                                            else
+                                            {
+                                                <a href="javascript:void(0)" onclick="openWindow('@subItem.LinkUrl',{width:'90%',height:'90%'})">@subItem.MainValue</a><small>@subItem.Unit</small>
+                                            }
+                                        </span>
+                                        <span class="info-box-text2">@subItem.Title</span>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-box">
+                    <div class="info-box-title">合同</div>
+                    @{
+                        var contractBlock = ViewBag.ContractBlock as Market.Areas.Analysis.Controllers.ViewBlock;
+
+                        <div class="info-box-content">
+                            @if (contractBlock.Sub > 0)
+                            {
+                                <div class="info-box-percent" title="@contractBlock.SubAreaTip"><img src="/Market/Scripts/MainIndex/img/icon-up.png" width="12" height="20">@Math.Abs(contractBlock.Sub)%</div>
+                            }
+                            else
+                            {
+                                <div class="info-box-percent" title="@contractBlock.SubAreaTip"><img src="/Market/Scripts/MainIndex/img/icon-down.png" width="12" height="20">@Math.Abs(contractBlock.Sub)%</div>
+                            }
+                            <span class="info-box-number  text-blue">
+                                <img src="/Market/Scripts/MainIndex/img/icon.png" width="33" height="28" alt="money">
+                                @if (String.IsNullOrEmpty(contractBlock.MainUrl))
+                                {
+                                    @contractBlock.Main<small>万元</small>
+                                }
+                                else
+                                {
+                                    <a href="javascript:void(0)" onclick="openWindow('@contractBlock.MainUrl',{width:'90%',height:'90%'})">@contractBlock.Main</a><small>万元</small>
+                                }
+                            </span>
+                            <span class="info-box-text">今年已签订</span>
+                            <span class="progress-description">
+                                完成率：@contractBlock.progressMain %
+                                <small>年度目标：@contractBlock.SubRight 万元</small>
+                            </span>
+                            <div class="progress">
+                                <div class="progress-bar-blue " style="width: @contractBlock.progressMain%"></div>
+                                <div class="progress-line" title="当前日期：@DateTime.Now.ToShortDateString()" style="left: @contractBlock.progressSub%">
+                                    <div class="progress-linetime" title="当前日期：@DateTime.Now.ToShortDateString()"></div>
+                                    @if (recepitBlock.progressSub <= 20)
+                                    {
+                                        <div class="progress-linetext" title="当前日期：@DateTime.Now.ToShortDateString()" style=" margin-left:80px">时间：@contractBlock.progressSub %</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="progress-linetext" title="当前日期：@DateTime.Now.ToShortDateString()" style=" margin-left:-80px">时间：@contractBlock.progressSub %</div>
+                                    }
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="info-box-content info-box-paddingtop">
+                            @{
+                                subList = contractBlock.SubViewBlockList.OrderBy(d => d.SortIndex).ToList();
+                                foreach (var subItem in subList)
+                                {
+                                    <div class="col-md-4 info-box-bg2 border-right">
+                                        <span class="info-box-number2">
+                                            @if (String.IsNullOrEmpty(subItem.LinkUrl))
+                                            {
+                                                @subItem.MainValue<small>@subItem.Unit</small>
+                                            }
+                                            else
+                                            {
+                                                <a href="javascript:void(0)" onclick="openWindow('@subItem.LinkUrl',{width:'90%',height:'90%'})">@subItem.MainValue</a><small>@subItem.Unit</small>
+                                            }
+                                        </span>
+                                        <span class="info-box-text2">@subItem.Title</span>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-box">
+                    <div class="info-box-title">生产项目</div>
+                    @{
+                        var projectBlock = ViewBag.ProjectBlock as Market.Areas.Analysis.Controllers.ViewBlock;
+
+                        <div class="info-box-content">
+                            @if (projectBlock.Sub > 0)
+                            {
+                                <div class="info-box-percent" title="@projectBlock.SubAreaTip"><img src="/Market/Scripts/MainIndex/img/icon-up.png" width="12" height="20">@Math.Abs(projectBlock.Sub)%</div>
+                            }
+                            else
+                            {
+                                <div class="info-box-percent" title="@projectBlock.SubAreaTip"><img src="/Market/Scripts/MainIndex/img/icon-down.png" width="12" height="20">@Math.Abs(projectBlock.Sub)%</div>
+                            }
+                            <span class="info-box-number  text-blue">
+                                <img src="/Market/Scripts/MainIndex/img/icon.png" width="33" height="28" alt="money">
+                                @if (String.IsNullOrEmpty(projectBlock.MainUrl))
+                                {
+                                    @projectBlock.Main<small>个</small>
+                                }
+                                else
+                                {
+                                    <a href="javascript:void(0)" onclick="openWindow('@projectBlock.MainUrl',{width:'90%',height:'90%'})">@projectBlock.Main</a><small>个</small>
+                                }
+                            </span>
+                            <span class="info-box-text">今年已立项</span>
+                            <span class="progress-description">
+                                签约率：@projectBlock.progressMain %
+                                <small>项目总数：@projectBlock.SubRight 个</small>
+                            </span>
+                            <div class="progress">
+                                <div class="progress-bar-blue " style="width: @projectBlock.progressMain%"></div>
+                            </div>
+                        </div>
+
+                        <div class="info-box-content info-box-paddingtop">
+                            @{
+                                subList = projectBlock.SubViewBlockList.OrderBy(d => d.SortIndex).ToList();
+                                var baseWidth = 100m / subList.Count;
+                                foreach (var subItem in subList)
+                                {
+                                    <div class="col-md-4 info-box-bg2 border-right" style="width:@baseWidth%">
+                                        <span class="info-box-number2">
+                                            @if (String.IsNullOrEmpty(subItem.LinkUrl))
+                                            {
+                                                @subItem.MainValue<small>@subItem.Unit</small>
+                                            }
+                                            else
+                                            {
+                                                <a href="javascript:void(0)" onclick="openWindow('@subItem.LinkUrl',{width:'90%',height:'90%'})">@subItem.MainValue</a><small>@subItem.Unit</small>
+                                            }
+                                        </span>
+                                        <span class="info-box-text2">@subItem.Title</span>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="info-bata">
+                    <div class="info-bata-content">
+                        @{
+                            var list = ViewBag.SubViewList as List<Market.Areas.Analysis.Controllers.SubViewBlock>;
+                            var width = 100m / list.Count;
+                            foreach (var item in list)
+                            {
+                                if (String.IsNullOrEmpty(item.LinkUrl))
+                                {
+                                    <div class="border-right" style="width:@width%">
+                                        <span class="info-bata-number  text-blue">
+                                            <img src="/Market/Scripts/MainIndex/img/icon.png" width="33" alt="money">
+                                            @item.MainValue
+                                            <small>
+                                                @item.Unit
+                                            </small>
+                                        </span>
+                                        <span class="info-bata-text">@item.Title</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="border-right" style="width:@width%">
+                                        <span class="info-bata-number  text-blue">
+                                            <img src="/Market/Scripts/MainIndex/img/icon.png" width="33" alt="money">
+                                            <a href="javascript:void(0)" onclick="openWindow('@item.LinkUrl', { width: '90%', height: '90%' })">@item.MainValue</a>
+                                            <small>
+                                                @item.Unit
+                                            </small>
+                                        </span>
+                                        <span class="info-bata-text">@item.Title</span>
+                                    </div>
+                                }
+                            }
+                        }
+                        <div style="clear:both"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="scroll-title"><img src="/Market/Scripts/MainIndex/img/tab.png" width="18">统计分析</div>
+                            @*<div class="scroll-btleft"><img src="/Market/Scripts/MainIndex/img/bt-left.png" width="25" height="110"></div>
+                                <div class="scroll-btright"><img src="/Market/Scripts/MainIndex/img/bt-right.png" width="25" height="110"></div>*@
+                            <div class="row scroll-w" id="meunToolBar">
+                                <div class="col-sm-3  col-xs-6">
+                                    <div class="description-block border-right description-active " url="/Market/Analysis/ContractAnalysis/ContractAnalysisView" id="0">
+                                        <span class=" description-percentage">
+                                            <img src="/Market/Scripts/MainIndex/img/icon-g.png" width="48" height="48">
+                                        </span>
+                                        <span class="description-text">经营情况分析</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <div class="col-sm-3 col-xs-6">
+                                    <div class="description-block border-right " url="/Market/Analysis/DeptAnalysis/DeptIndicatorInfo" id="DeptIndicatorInfo">
+                                        <span class=" description-percentage">
+                                            <img src="/Market/Scripts/MainIndex/img/icon-q.png" width="48" height="48">
+                                        </span>
+                                        <span class="description-text">各部门目标完成情况</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-xs-6">
+                                    <div class="description-block border-right" url="/MvcConfig/UI/List/PageView?TmplCode=ProjectAnalysis" id="ProjectAnalysisList">
+                                        <span class="description-percentage"><img src="/Market/Scripts/MainIndex/img/icon-zl.png" width="48" height="48"></span>
+                                        <span class="description-text">项目统计表</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-xs-6">
+                                    <div class="description-block border-right" url="/Market/Basic/CustomerDistribute/List" id="CustomerDistribute">
+                                        <span class="description-percentage"><img src="/Market/Scripts/MainIndex/img/icon-z.png" width="48" height="48"></span>
+                                        <span class="description-text">区域分布图</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-xs-6">
+                                    <div class="description-block border-right" url="/Market/Analysis/CustomerChart/CustomerAnalysis" id="CustomerAnalysis">
+                                        <span class="description-percentage"><img src="/Market/Scripts/MainIndex/img/icon-z.png" width="48" height="48"></span>
+                                        <span class="description-text">重点客户</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-xs-6">
+                                    <div class="description-block border-right" url="/Market/Analysis/ContractAnalysis/ContractAnalysisChart" id="ContractAnalysisChart">
+                                        <span class="description-percentage"><img src="/Market/Scripts/MainIndex/img/icon-h.png" width="48" height="48"></span>
+                                        <span class="description-text">重点合同</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="mainTab" class="mini-tabs" activeindex="0" style="width: 100%; height: 700px" showheader="false" borderstyle="border:0px">
+                        <div title="tabName" url="/Market/Analysis/ContractAnalysis/ContractAnalysisView">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</div>
+<script type="text/javascript">
+
+    $(".scroll-btleft img").on("mouseover", function () {
+        $(this).attr("src", "/Market/Scripts/MainIndex/img/bt-left-hover.png");
+    });
+
+    $(".scroll-btleft img").on("mouseout", function () {
+        $(this).attr("src", "/Market/Scripts/MainIndex/img/bt-left.png");
+    });
+
+    $(".scroll-btright img").on("mouseout", function () {
+        $(this).attr("src", "/Market/Scripts/MainIndex/img/bt-right.png");
+    });
+
+    $(".scroll-btright img").on("mouseover", function () {
+        $(this).attr("src", "/Market/Scripts/MainIndex/img/bt-right-hover.png");
+    });
+
+    var moveLeft = 0;
+    $(".scroll-btleft img").on("click", function () {
+        if (moveLeft >= 0) return;
+        moveLeft += 160;
+        $("#meunToolBar").animate({ left: moveLeft + 'px' }, 500);
+    });
+
+    $(".scroll-btright img").on("click", function () {
+        //if (moveLeft - 160 <= 0) return;
+        moveLeft = moveLeft - 160;
+        $("#meunToolBar").animate({ left: moveLeft + 'px' }, 500);
+    });
+
+    var currentID = "";
+    $(".description-block").on("click", function (e) {
+        if (currentID == $(this).attr("id")) return;
+        var url = $(this).attr("url");
+        currentID = $(this).attr("id");
+        $(".description-active").removeClass("description-active");
+        $(this).addClass("description-active");
+        if (url) {
+            var tabs = mini.get("mainTab");
+            var tab = tabs.getActiveTab();
+            tabs.loadTab(url, tab);
+        }
+    });
+
+</script>
+<style type="text/css">
+    .mini-tabs-scrollCt {
+        display: none;
+    }
+</style>

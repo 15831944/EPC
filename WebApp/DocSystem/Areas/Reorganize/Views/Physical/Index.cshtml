@@ -1,0 +1,355 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<link href="@Url.Content("~/Scripts/Reorganize/index.css")" rel="stylesheet" type="text/css" />
+
+<div class='mini-toolbar gw-grid-toolbar' style='padding: 0px 0px 0px 0px; height: auto'>
+    <table style="width: 100%;">
+        <tr>
+            <td>
+                <input class="mini-checkbox" id="cbCheckAll" text="全选" onvaluechanged="checkAll" visible="false" />
+                <a class="mini-button" iconcls="icon-edit" onclick="multiReognize()" plain="true" visible="false">批量整编</a>
+                <input id="cbl" class="mini-combobox" style="width: 190px;margin-left: 15px;" textField="Name" valueField="SpaceID"
+                    value=""  allowInput="true" showNullItem="false" onvaluechanged="search()" />
+                <span class="separator"></span>
+                <a class="mini-menubutton" onclick="javascrip:void()" id="btnAdd" visible="true" iconcls="icon-add" plain="true" menu="#popupMenu">签收登记</a>
+                <a class="mini-button" onclick="javascript:indexEdit()" iconcls="icon-edit">签收单编辑</a>
+                <a href="javascript:Deleted()" class="mini-button" id="remove" iconcls="icon-remove">签收单删除</a>
+                @*<span class="separator"></span>*@
+              @*  <span class="separator" style="border: 0;">
+                    <div id="cbl" class="mini-checkboxlist" multiselect="false" repeatlayout="table"
+                        textfield="Name" valuefield="SpaceID" value="" onload="onLoad" onvaluechanged="search()"
+                        data="SpaceData" repeatdirection="vertical">
+                    </div>
+                </span>*@
+            </td>
+            <td>
+                <input id='key' style="float: right; width: 160px;" class='mini-buttonedit gw-searchbox' emptytext='请输入名称或编号' onenter="quickSearch('Name,Code');" onbuttonclick="quickSearch('Name,Code');" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    <ul id="popupMenu" class="mini-contextmenu">
+        @foreach (var item in ViewBag.SpaceList as List<Dictionary<string, string>>)
+        {
+            <li text="@item["Name"]"  id="@item["SpaceID"]&TmplCode=@item["PhysicalMainFormCode"]" onclick="SignReg(this)" ></li>
+        }
+    </ul>
+</div>
+<div id="indexTab1" style="height: 95%; overflow: hidden" class="mini-fit">
+    <div class="mini-fit">
+        <div class="mini-dataGrid" id="dataGrid" url="GetPhysicalMainFormList" multiselect="true" sortfield="CreateDate" sortorder="desc"
+            style="width: 100%; height: 100%" borderstyle="border:0px;border-top:1px solid #D2D2D2" showcolumns="false" ondrawcell="onDrawCell">
+            <div property="columns">
+                <div type="checkcolumn" width="30"></div>
+                <div name="Content" width="*" renderer="onContentRenderer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<form id="queryForm" method="post"></form>
+
+<script type="text/javascript">
+    //Html.GetEnum("DocConst.PhysicalReorganizeState");
+    @Html.GetEnum(typeof(DocSystem.Logic.PhysicalReorganizeState));
+    var SpaceList = @Html.Raw(ViewBag.SpaceStr);
+
+    var State=getQueryString("State");
+</script>
+<script type="text/javascript">
+
+    //签收登记单编辑
+    function indexEdit(){
+        var grid=mini.get("dataGrid");
+        var select=grid.getSelecteds();
+        if(select.length>1||select.length<=0)
+            msgUI("请选择一条记录",1,function(){return;});
+        else{
+            var url = "/MvcConfig/UI/Form/PageView?TmplCode=" + grid.getSelected().TmplCode + "&ID=" + grid.getSelected().ID;
+            openWindow(url, { width: "80%", height: "80%" });
+        }
+    }
+    //页面加载完毕后执行
+    function pageLoad() {
+        $("body").css("background-color", "");
+        $("body").css("overflow-y", "hidden");
+        $(".mini-tabs-body").css("overflow","hidden");
+        search();//初始化根据整编状态进行过滤
+        if(State=="Finish")
+        {
+            $('.gw-grid-toolbar').find("a").remove();
+            $(".separator").remove();
+        }
+            //$.each($('.gw-grid-toolbar'),function(e){var eles = $(this).find("a");
+            //    $.each(eles, function (i, item) {
+            //        item.remove();
+            //    });
+        //});
+        //cbl赋值
+        var SpaceData=[];
+        var AllSpace="";
+        $.each(SpaceList,function(i,item){
+            AllSpace+=item.SpaceID+"|";
+            SpaceData.push({SpaceID:item.SpaceID,Name:item.Name});
+        });
+        SpaceData.unshift({SpaceID:AllSpace,Name:"全部"});
+        mini.get("cbl").setData(SpaceData);
+        mini.get("cbl").setValue(AllSpace);
+
+    }
+    function checkAll() {
+        var isSelected = mini.get("cbCheckAll").getValue();
+        if (isSelected=="true")
+            mini.get("dataGrid").selectAll();
+        else
+            mini.get("dataGrid").deselectAll();
+    }
+
+    function search(normalSettings) {
+        normalSettings=$.extend(normalSettings,{gridId:"dataGrid"});
+        var settings = $.extend(true, {}, normalParamSettings, normalSettings);
+        var form;
+        if ($("#" + settings.queryWindowId).find("form").length > 0) {
+
+            var _formId = $("#" + settings.queryWindowId).find("form").attr("id");
+            form = new mini.Form("#" + _formId);
+        }
+        else {
+            form = new mini.Form("#queryForm");
+        }
+        var grid = mini.get("#" + settings.gridId);
+        var quickSearchData = {};
+        var keyCo = mini.get(settings.queryBoxId);
+        if (keyCo && settings.searchFields) {
+            var keys = settings.searchFields.split(',');
+            for (i = 0, len = keys.length; i < len; i++) {
+                quickSearchData["$IL$" + keys[i]] = keyCo.getValue();
+            }
+        }
+        var data = {};
+        form.validate();
+        if (form.isValid() == false) return;
+        data = form.getData();
+
+        var spaceStr = [];
+        var obj = mini.get("cbl");
+        var spaceIDs=obj.getValue();
+
+        spaceStr.push(spaceIDs.split('|'));
+        if (spaceStr.length > 0)
+            data["$IN$SpaceID"] = spaceStr.join(',');
+        if(State!=""&&State!="undefined")
+            data["$IN$State"] = State;
+
+        if (grid != undefined)
+            grid.load({ queryFormData: mini.encode(data), quickQueryFormData: mini.encode(quickSearchData) ,});
+
+        if ($("#" + settings.queryWindowId).find("form").length > 0) {
+            if (settings.queryWindowId)
+                hideWindow(settings.queryWindowId);
+        }
+    }
+
+    function quickSearch(searchFields, normalSettings) {
+        normalSettings=$.extend(normalSettings,{gridId:"dataGrid",queryBoxId:queryBoxId});
+        var settings = $.extend(true, {}, normalParamSettings, normalSettings);
+
+        var grid = mini.get("#" + settings.gridId);
+
+        var data = {};
+        var keyCo = mini.get(settings.queryBoxId);
+        if (keyCo == undefined) {
+            msgUI("当前快速查询文本框" + settings.queryBoxId + "不存在，请重新检查！", 1);
+            return;
+        }
+        var keys = searchFields.split(',');
+        for (i = 0, len = keys.length; i < len; i++) {
+            data["$IL$" + keys[i]] = keyCo.getValue();
+        }
+        var formData = {};
+        var form = new mini.Form("#queryForm");
+        form.validate();
+        if (form.isValid() == false) return;
+        formData = form.getData();
+        var spaceStr = [];
+        var obj = mini.get("cbl");
+        spaceStr.push(obj.getValue().split("|"));
+        if (spaceStr.length > 0)
+            formData["$IN$SpaceID"] = spaceStr.join(',');
+        
+        if(State!=""&&State!="undefined")
+            formData["$IN$State"] =  State;
+        if (grid != undefined)
+            grid.load({ quickQueryFormData: mini.encode(data), queryFormData: mini.encode(formData) });
+    }
+</script>
+<script type="text/javascript">
+    function multiReognize() {
+        alert("功能完善中！");
+    }
+    function onDrawCell(e) {
+        //e.rowCls = "mini-grid-row-no";
+    }
+    function onContentRenderer(e) {
+        var ul="";
+        if(State!="Finish")
+            ul="<Ul class='list-button {PublishClass}'><li class='dqx icon01' onclick='Reorganize()'></li></Ul>"
+        else
+            ul="<Ul class='list-button {PublishClass}'><li class='dqx icon03' onclick='Reorganize()'></li></Ul>"
+        var rec = e.record;
+        var rowIndex = e.rowIndex;
+        var content = "<div class='left_main_listread'>\
+                <div style='width:60%;float:left;'>\
+                <h1><a style='cursor: pointer;' onclick='javascript:ReorganizeLook()'><b class='red'>[{SpaceName}]</b><strong>{Name} </strong></a></h1>\
+                <h2>{SendInfo}</h2></div>\
+                <span style='right: 5%;'>\
+                {ReorganizeState}\
+                {ReorganizeUserIcon}\
+                <div class='repeat-label'>{ReorganizeDate}</div>\
+                </span>\
+                {UL}\
+                </div>";
+        content=content.replace("{UL}",ul);
+        content = content.replace("{Name}", rec.Name);
+        var spaceName="";
+        var spaces = $.grep(SpaceList,function(item,index) {
+            return item.SpaceID==rec.SpaceID;
+        });
+        if(spaces.length>0) spaceName = spaces[0].Name;
+        content =content.replace("{SpaceName}",spaceName);
+        var sendStr = "签收单编号：<strong>"+rec.Code+"</strong>&nbsp;&nbsp; 送归档人：<strong>"+rec.SendUserName+"</strong> &nbsp;&nbsp; 送归档时间：<strong>" + mini.formatDate(rec.SendDate, "yyyy-MM-dd") + "</strong>";
+        var stateStr = "";
+        
+        //整编时间
+        var ReorganizeDate=mini.formatDate(rec.ReorganizeDate,"yyyy-MM-dd");
+        stateStr=" <div style='margin-left:17%'><span><div><strong>{0}</strong></div><div>整编人：<strong>"+rec.ReorganizeUserName+"</strong></div><div>整编时间：<strong>"+mini.formatDate(rec.ReorganizeDate,"yyyy-MM-dd")+"</strong></div></span></div>";
+        if(rec.State=="@DocSystem.Logic.PhysicalReorganizeState.Create"){
+            ReorganizeDate=mini.formatDate(rec.ReceiveDate, "yyyy-MM-dd");
+            stateStr=" <div class='edit-label edit-labelCreate' style='margin-left:17%'><i><img src='/DocSystem/Scripts/Reorganize/Images/edit12-3.png' width='12' height='12' alt='整编状态' /></i>已签收</div>";
+        }
+        else if(rec.State=="@DocSystem.Logic.PhysicalReorganizeState.Execute"){
+            stateStr = "<div class='edit-label' style='margin-left:17%'><i><img src='/DocSystem/Scripts/Reorganize/Images/edit12-0.png' width='12' height='12' alt='整编状态' /></i>整编中</div>";
+        }
+        else if(rec.State=="@DocSystem.Logic.PhysicalReorganizeState.Finish"){
+            stateStr = "<div class='edit-label edit-labelFinish' style='margin-left:17%'><i><img src='/DocSystem/Scripts/Reorganize/Images/edit12-5.png' width='12' height='12' alt='整编状态' /></i>整编完成</div>";
+        }
+        else if(rec.State=="@DocSystem.Logic.PhysicalReorganizeState.Wait"){
+            stateStr = "<div class='edit-label edit-labelWiat' style='margin-left:17%'><i><img src='/DocSystem/Scripts/Reorganize/Images/edit12-2.png' width='12' height='12' alt='整编状态' /></i>待整编</div>";
+        }
+    var ReorganizeUserIcon=""; //整编人图片
+    if(rec.State=="@DocSystem.Logic.PhysicalReorganizeState.Create")
+    {
+        reorganizeUserIcon = "<div class='repeat-label'><i><img src='/DocSystem/Scripts/Reorganize/Images/user12.png' width='12' height='12' alt='签收人' /></i>" + rec.ReceiveUserName + "</div>";
+
+    }
+    else
+    {
+        reorganizeUserIcon = "<div class='repeat-label'><i><img src='/DocSystem/Scripts/Reorganize/Images/user12.png' width='12' height='12' alt='整编人' /></i>" + rec.ReorganizeUserName + "</div>";
+    }
+
+    content = content.replace("{ReorganizeState}", stateStr);
+    content = content.replace("{SendInfo}", sendStr);
+    content = content.replace("{ReorganizeUserIcon}", reorganizeUserIcon);
+    content=content.replace("{ReorganizeDate}",ReorganizeDate);
+    return $(content)[0].outerHTML;
+}
+</script>
+
+<script type="text/javascript">
+    //签收登记
+    function SignReg(e){
+        var SpaceTmpl=e.id;
+        var url="/MvcConfig/UI/Form/PageView?SpaceID="+SpaceTmpl+"&State=Create";
+        openWindow(url,{title:"签收登记",width:"70%",height:"70%"});
+    }
+    //整编
+    function Reorganize(){
+        var grid=mini.get("dataGrid");
+        var rows=grid.getSelecteds();
+        var spaceid=rows[0].SpaceID;
+        var PhysicalReorganizeID=rows[0].ID;
+        addExecuteParam("IDs", PhysicalReorganizeID);
+        addExecuteParam("SpaceID", spaceid);
+        execute("CheckExecuteReorganize", {
+            showLoading: false, refresh: false, onComplete: function (data) {
+                if(State!="Finish")
+                {
+                    addExecuteParam("IDs", PhysicalReorganizeID);
+                    addExecuteParam("SpaceID", spaceid);
+                    if(data.PhysicalType=="File")
+                        execute("ExecuteReorganize", {
+                            showLoading: false, refresh: false, onComplete: function (data) {
+                                openWindow("PhysicalReorganize?TmplCode="+rows[0].TmplCode+"&SpaceID=" + spaceid+"&PhysicalReorganizeID="+rows[0].ID+"&SendUser="+rows[0].SendUser+"&SendUserName="+rows[0].SendUserName+"&reciptName="+rows[0].Name,{title:"实物按件整编",
+                                    onDestroy:function(){
+                                        grid.load();  //当按件整编窗口关闭后刷新页面
+                                        search();
+                                        WaitReorganize(PhysicalReorganizeID);//窗口关闭释放编辑权
+                                    }});
+                            }});
+                    else
+                    {
+                        execute("ExecuteReorganize", {
+                            showLoading: false, refresh: false, onComplete: function (data) {
+                                openWindow("PhysicalVolumnReorganize?TmplCode="+rows[0].TmplCode+"&SpaceID=" + spaceid+"&PhysicalReorganizeID="+rows[0].ID+"&SendUser="+rows[0].SendUser+"&SendUserName="+rows[0].SendUserName+"&reciptName="+rows[0].Name,{title:"实物按卷整编",
+                                    onDestroy:function(){
+                                        grid.load();  //当按卷整编窗口关闭后刷新页面
+                                        search();
+                                        WaitReorganize(PhysicalReorganizeID);//窗口关闭释放编辑权
+                                    }});
+                            }
+                        });
+                    }
+                }else
+                    ReorganizeLook(data.PhysicalType);
+            }, validateForm: false
+        });
+        
+    }
+    //
+    function WaitReorganize(PhysicalReorganizeID){
+        addExecuteParam("IDs", PhysicalReorganizeID);
+        execute("SaveTemporary", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+            }, validateForm: false
+        });
+    }
+    //返回表单ID值
+    //整编查看
+    function ReorganizeLook(PhysicalType){
+        var grid=mini.get("dataGrid");
+        var rows=grid.getSelecteds();
+        if(PhysicalType=="File")
+            openWindow("PhysicalReorganize?TmplCode="+rows[0].TmplCode+"&SpaceID=" + rows[0].SpaceID+"&PhysicalReorganizeID="+rows[0].ID+"&SendUser="+rows[0].SendUser+"&SendUserName="+rows[0].SendUserName+"&reciptName="+rows[0].Name+"&FuncType=view",{title:"按件整编查看"});
+        else
+            openWindow("PhysicalVolumnReorganize?TmplCode="+rows[0].TmplCode+"&SpaceID=" + rows[0].SpaceID+"&PhysicalReorganizeID="+rows[0].ID+"&SendUser="+rows[0].SendUser+"&SendUserName="+rows[0].SendUserName+"&reciptName="+rows[0].Name+"&FuncType=view",{title:"按卷整编查看"});
+    }
+    //删除
+    function Deleted(){
+        var grid=mini.get("dataGrid");
+        var rows=grid.getSelecteds();
+        var PhysicalReorganizeID="";
+        if(rows.length<=0){
+            msgUI("请选择一条记录");
+            return;
+        }else{
+            msgUI("确认删除吗？",2,function(result){
+                if(result!="ok"){
+                    return ;
+                }
+                for(var i=0;i<rows.length;i++)
+                {
+                    PhysicalReorganizeID+=rows[i].ID+",";
+                }
+                addExecuteParam("IDs",PhysicalReorganizeID);
+                execute("Deleted", {
+                    showLoading: false, refresh: false, onComplete: function (data) {
+                        msgUI("删除成功");
+                        grid.reload();
+                    }, validateForm: false
+                });
+            });
+        }
+        
+    }
+</script>

@@ -1,0 +1,220 @@
+﻿@{
+    ViewBag.Title = "Tree";
+}
+<div id="treelayout" class="mini-layout" style="width: 100%; height: 100%;" splitsize="3">
+    <div title="" showheader="false" region="west" width="300" expanded="true" showspliticon="false"
+         style="border-top: 0; border-bottom: 0;">
+        <div class="mini-toolbar" style="padding: 0px; border-top: 0; border-left: 0; border-right: 0;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="white-space: nowrap;"></td>
+                    <td style="width: 100%;">
+                        <input id="Name" onenter="treesearch('mytree','Name','DisplayName')" class="mini-textbox" emptytext="请输入编目名称"
+                               style="width: 200px;" />
+                    </td>
+                    <td style="white-space: nowrap;">
+                        <a class="mini-button" onclick="treesearch('mytree','Name','DisplayName')" iconcls="icon-find"
+                           plain="true">查询</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="mini-fit" style="padding-top: 2px;">
+            <ul id="mytree" url="gettreelist" class="mini-tree" style="width: 100%; height: 100%;" showtreeicon="true"
+                textfield="DisplayName" idfield="ID" enablehottrack="false" parentfield="ParentID" resultastree="false"
+                expandonload="4" onnodeselect="onNodeSelect" contextmenu="#treeMenu" ondrawnode="onDrawNode"
+                allowdrag="true" allowdrop="true" ondrop="onNodeTreeDrop" ongivefeedback="onGiveFeedback"
+                ondragstart="onTreeDragStart"></ul>
+        </div>
+    </div>
+    <div title="center" region="center" style="border-top: 0; border-bottom: 0; border-right: 0;">
+        <div class="mini-fit" style="padding-top: 2px;">
+            <div id="mainTab" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;" borderstyle="border:0;">
+            </div>
+        </div>
+    </div>
+</div>
+<ul id="treeMenu" class="mini-contextmenu" onbeforeopen="onBeforeOpen"></ul>
+<script type="text/javascript">
+
+    var SpaceID = getQueryString("SpaceID");
+    var ID = getQueryString("ID");
+
+    function pageLoad() {
+        var tree = mini.get("mytree");
+        tree.selectNode(tree.getNode(ID));
+    }
+
+    function onTreeDragStart(e) {
+        dispText = e.node.Name;
+        e.dragText = dispText;
+    }
+
+    function onNodeTreeDrop(e) {
+        var tree = e.sender;
+        var node = e.dragNode;
+        var target = e.dropNode;
+        var parentNode = tree.getParentNode(node);
+        var action = e.dragAction;
+
+        var executeAction = "MoveUp";
+        if (action == "before")
+            executeAction = "MoveDown";
+        addExecuteParam("SpaceID", SpaceID);
+        addExecuteParam("ID", node.ID);
+        addExecuteParam("TargetNodeID", target.ID);
+        execute(executeAction, {
+            showLoading: true, refresh: false
+        });
+    }
+
+    function onNodeSelect(e) {
+        var node = e.node;
+        var tab = mini.get("mainTab");
+        addExecuteParam("SpaceID", SpaceID);
+        addExecuteParam("ConfigID", node.ConfigID);
+        addExecuteParam("ID", node.ID);
+        execute("getnodeconfigtabs", {
+            showLoading: false, refresh: false, onComplete: function (data) {
+                tab.load(data);
+            }
+        });
+    }
+
+    function onGiveFeedback(e) {
+        var tree = e.sender;
+        var fromTree = e.fromTree;
+        var node = e.node;              //被拖拽的节点
+        var targetNode = e.targetNode;  //目标投放节点
+        var effect = e.effect;          //投放方式：add|before|after
+        var p1 = tree.getParentNode(node);
+        var p2 = tree.getParentNode(targetNode);
+        if (p1 != p2 || effect == "add") {
+            e.effect = "no";
+        }
+    }
+
+    function onBeforeOpen(e) {
+        var menu = e.sender;
+        var tree = mini.get("mytree");
+        var node = tree.getSelectedNode();
+        if (!node) {
+            e.cancel = true;
+            return;
+        }
+        var url = "gettreecontextmenu?SpaceID=" + SpaceID + "&ConfigID=" + node.ConfigID;
+        menu.load(url);
+    }
+
+    function addNode(e) {
+        var menuItem = e.sender;
+        var configID = menuItem.name;
+        var tree = mini.get("mytree");
+        var node = tree.getSelectedNode(); if (!node) { mini.alert("请选中一个节点"); return; }
+        var url = "Edit?SpaceID=" + SpaceID + "&ConfigID=" + configID + "&ParentID=" + node.ID;
+        openWindow(url, {
+            title: menuItem.text, width: 800, height: 500, funcType: 'edit', addQueryString: false, onDestroy: function (data) {
+                if (data == "close") return;
+                mini.get("mytree").reload();
+            }
+        });
+    }
+
+    function deleteNode(e) {
+        var tree = mini.get("mytree");
+        var node = tree.getSelectedNode(); if (!node) { mini.alert("请选中一个节点"); return; }
+        msgUI("确认需要删除该节点吗？", 2, function (result) {
+            if (result != "ok") return;
+            addExecuteParam("ListIDs", node.ID);
+            execute("Delete", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    tree.removeNode(node);
+                    var tab = mini.get("mainTab");
+                    tab.removeAll();
+                }
+            });
+        });
+    }
+
+    function forbidden(e) {
+        var tree = mini.get("mytree");
+        var node = tree.getSelectedNode();
+        mini.confirm("确定要禁用选中的目录吗？", "", function (action) {
+            if (action != "ok") return; var nodes = new Array(); nodes.add(node);
+            addExecuteParam("ID", node.ID);
+            execute("forbidden", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    tree.updateNode(node, { State: "Normal" });
+                }
+            });
+        });
+    }
+
+    function publish(e) {
+        var tree = mini.get("mytree");
+        var node = tree.getSelectedNode();
+        mini.confirm("发布选中编目将同时发布子编目及文件内容，是否继续？", "", function (action) {
+            if (action != "ok") return; var nodes = new Array(); nodes.add(node);
+            addExecuteParam("ID", node.ID);
+            execute("publish", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    tree.updateNode(node, { State: "Published" });
+                }
+            });
+        });
+    }
+
+    function updateTree(rec) {
+        var tree = mini.get("mytree");
+        var node = tree.getSelectedNode();
+        if (node) {
+            var newNode = { DisplayName: rec.Name };
+            tree.updateNode(node, newNode);
+        }
+    }
+
+    function onDrawNode(e) {
+        var node = e.node;
+        var auth = node.State;
+        if (auth == "Published") {
+
+            e.iconCls = "icon-Published";
+        }
+        else {
+            e.iconCls = "icon-Normal";
+
+
+        }
+    }
+
+    function treesearch(treeName, keyName, fieldName) {
+        if (!treeName) treeName = "mytree";
+        var tree = mini.get(treeName);
+        if (!keyName) keyName = "key";
+        if (!fieldName) fieldName = "Name";
+        var key = mini.get(keyName).getValue();
+        if (key == "") {
+            tree.clearFilter();
+        } else {
+            key = key.toLowerCase();
+            var array = [];
+            var nodes = tree.findNodes(function (node) {
+                var text = node[fieldName] ? node[fieldName].toLowerCase() : "";
+                if (text.indexOf(key) != -1) {
+                    array.push(node.ID);
+                    return true;
+                }
+            })
+            for (var i = 0; i < nodes.length; i++) {
+                tree.cascadeChild(nodes[i], function (node) {
+                    array.push(node.ID);
+                });
+            }
+
+            tree.filter(function (node) {
+                if (array.indexOf(node.ID) > -1)
+                    return true;
+            });
+        }
+    }
+</script>

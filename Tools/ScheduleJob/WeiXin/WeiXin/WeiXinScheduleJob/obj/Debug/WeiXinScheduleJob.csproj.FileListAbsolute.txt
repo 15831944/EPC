@@ -1,0 +1,8 @@
+D:\project\5.4.5\Tools\ScheduleJob\WeiXin\WeiXin\WeiXinScheduleJob\bin\Debug\WeiXinScheduleJob.dll.config
+D:\project\5.4.5\Tools\ScheduleJob\WeiXin\WeiXin\WeiXinScheduleJob\bin\Debug\WeiXinScheduleJob.dll
+D:\project\5.4.5\Tools\ScheduleJob\WeiXin\WeiXin\WeiXinScheduleJob\bin\Debug\WeiXinScheduleJob.pdb
+D:\project\5.4.5\Tools\ScheduleJob\WeiXin\WeiXin\WeiXinScheduleJob\bin\Debug\Newtonsoft.Json.dll
+D:\project\5.4.5\Tools\ScheduleJob\WeiXin\WeiXin\WeiXinScheduleJob\bin\Debug\Quartz.dll
+D:\project\5.4.5\Tools\ScheduleJob\WeiXin\WeiXin\WeiXinScheduleJob\obj\Debug\WeiXinScheduleJob.dll
+D:\project\5.4.5\Tools\ScheduleJob\WeiXin\WeiXin\WeiXinScheduleJob\obj\Debug\WeiXinScheduleJob.pdb
+D:\project\5.4.5\Tools\ScheduleJob\WeiXin\WeiXin\WeiXinScheduleJob\obj\Debug\WeiXinScheduleJob.csprojResolveAssemblyReference.cache

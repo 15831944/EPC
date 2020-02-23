@@ -1,0 +1,726 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+
+<script src="/PortalLTE/Scripts/jQuery/jQuery-2.2.0.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<link rel="stylesheet" href="/PortalLTE/Scripts/bootstrap/css/bootstrap.min.css">
+<script src="/Project/Scripts/EngineeringSpace/js/jquery.nicescroll.js" type="text/javascript"></script>
+<script src="/PortalLTE/Scripts/bootstrap/js/bootstrap.min.js"></script>
+<script src="~/Scripts/AdvanceSearch.js"></script>
+<link href="/DocSystem/Scripts/MyPortal.css" rel="stylesheet" />
+<div class="container-fluid fullheight">
+    <div class="row content">
+        <div class="col-md-7 col-sm-7 col-xs-7 col">
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <select id="selSpace">
+                        <option value="">全部</option>
+                        @{
+
+                            var spaceTable = ViewBag.SpaceTable as System.Data.DataTable;
+                            if (spaceTable.Rows.Count > 0)
+                            {
+                                foreach (System.Data.DataRow row in spaceTable.Rows)
+                                {
+                                    <option value="@row["ID"]">@row["Name"]</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+                <input type="text" id="txtQueryValue"
+                       class="form-control" style="z-index:0" ;
+                       aria-label="..."
+                       placeholder="请输入关键词" />
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-3 col-xs-3 col">
+            <button type="button" class="btn search" onclick="searchFile()">搜索文档</button>
+            <button type="button" class="btn top-search" onclick="topSearch()" style="">高级搜索</button>
+        </div>
+
+        <div class="col-md-2 col-sm-2 col-xs-2 col shopcar">
+            <div class="img">
+                <div onclick="openDonwnLoadBorrowCar()">
+                    <img src="~/Scripts/Images/cart.png" alt="cart" />
+                </div>
+
+                @{
+                    int CarCount = Convert.ToInt32(ViewBag.CarCount);
+                    //int CarCount = Convert.ToInt32("100");//测试
+
+                    if (CarCount > 99)
+                    { <div class="divright">···</div>}
+                    else
+                    {<div class="divright">@CarCount </div>}
+
+
+                }
+
+
+            </div>
+        </div>
+    </div>
+    <!--=============档案空间列表子项点击弹出页面开始============================-->
+    <div id="Index-popup">
+        <section id="todoList">
+            <div class="todoListtop">
+                <div class="url-active">
+                    <span class="t1">
+                        <a>
+                            <img src="/DocSystem/Scripts/Images/back.png" width="24" height="24" alt="" />
+                            <!--设计档案<small>(532)</small>-->
+                        </a>
+                    </span>
+                </div>
+                @*<div class="search-advanced">
+                        <img src="/DocSystem/Scripts/Images/advanced-search.png" width="18" height="18" alt="" />高级搜索
+                    </div>*@
+                @*<div class="search-input">*@
+                <input id='key' style="float: right;margin-right:2%" class='mini-buttonedit gw-searchbox' style='width: 15em;' emptytext='请输入名称或编号'
+                       onenter="quickSearch('Name,Code');" onbuttonclick="quickSearch('Name,Code');" />
+                @* <span>
+                        <img src="/DocSystem/Scripts/Images/search.png" width="18" height="18" alt="" />
+
+                    </span>*@
+                @*</div>*@
+
+            </div>
+            <div id="treewrap" style="width: 100%; height: calc(100% - 45px); overflow: hidden; outline: none;" tabindex="0">
+            </div>
+        </section>
+
+    </div>
+    <!--=============档案空间列表子项点击弹出页面结束============================-->
+    <div class="container-fluid calcheight">
+        <div class="disflex fullheight">
+            <div class="left-block">
+                @{
+                    foreach (System.Data.DataRow row in spaceTable.Rows)
+                    {
+                        var count = 0;
+                        foreach (System.Data.DataTable table in ViewBag.spaceNameCount)
+                        {
+                            foreach (System.Data.DataRow spaceRow in table.Rows)
+                            {
+                                if (row["ID"].Equals(spaceRow["SpaceID"]))
+                                {
+                                    count = Convert.ToInt32(spaceRow["spaceCount"]);
+                                }
+                            }
+                        }
+                        <div class="archives-block" id="@row["Id"]">
+                            <div class="title">@row["Name"]<span>(@count)></span></div>
+                            <span id="spaceId" style="display: none">@row["Id"]</span>
+                            <div class="archiver-content">
+                                @{ //档案空间下的子项
+                                    int childCount = 0;
+                                    foreach (System.Data.DataRow nodeRow in ViewBag.nodeConfigTable.Rows)
+                                    {
+                                        foreach (System.Data.DataTable table in ViewBag.childCount)
+                                        {
+                                            foreach (System.Data.DataRow childRow in table.Rows)
+                                            {
+                                                if (row["ID"].Equals(childRow["SpaceID"]))
+                                                {
+                                                    if (nodeRow["ID"].Equals(childRow["ConfigID"]))
+                                                    {
+                                                        childCount = Convert.ToInt32(childRow["childCount"]);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        if (row["Id"].Equals(nodeRow["spaceID"]))
+                                        {
+
+                                            <span class='archiver-item' id=@nodeRow["ID"]>@nodeRow["Name"] (@childCount)</span>
+                                            childCount = 0;
+                                        }
+                                    }
+                                }
+                            </div>
+                        </div>
+                                    }
+                }
+
+            </div>
+            <div class="right-block disflex">
+                <div class="history-browser">
+                    <div class="top-info disflex">
+                        <div class="icon disflex center" style="font-size: 20px">
+                            <div class="img-content">
+                                <img src="/PortalLTE/Main/UserImage" style="width:100%;height:100%" alt="111" />
+                            </div>
+                        </div>
+                        <div style="color: #32548F; font-size: 25px; height: 48px; margin-left: 15px; margin-top: 14px;">
+                            欢迎使用图文档案<br />
+                            <span style="font-size: 12px; padding-left: 8px; color: #7B7D81">Welcome to use pattern document</span>
+                        </div>
+
+                    </div>
+
+                    <div class="bottom-content">
+                        <div class="center-title">
+                            最近使用
+                        </div>
+                        <div class="bottom-content-list">
+                            <div class="list-content">
+                                @{
+                                    int time = 0;
+                                    System.Data.DataRowCollection Rows = ViewBag.userSearchHistory.Rows;
+                                    if (Rows.Count <= 0)
+                                    {
+                                        <div style="width: 100%; text-align: center; display: inline-table; font-size: 13px; color: #999999;">
+                                            <img style="margin-top: 20%; width: 100px; margin-bottom: 5px;" src="/DocSystem/Scripts/Images/NoFile.png" /><br />
+                                            暂无内容
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        foreach (System.Data.DataRow Row in Rows)
+                                        {
+                                            <div class="list-item">
+                                                <div class="right-file">
+                                                    @{
+                                                        if (string.IsNullOrEmpty(Row["FileID"].ToString()))
+                                                        {
+                                                            <img src='/DocSystem/Scripts/Images/node.png' style='width: 20px; height: 20px; margin-right: 10px;' alt='文件名称' />
+                                                        }
+                                                        else
+                                                        {<img src='/DocSystem/Scripts/Images/nodeFile.png' style='width: 20px; height: 20px; margin-right: 10px;' alt='文件名称' />}
+                                                    }
+
+                                                    @Row["Name"]
+                                                </div>
+                                                @{
+                                                    TimeSpan ts = DateTime.Now - DateTime.Parse(Row["CreateDate"].ToString().ToString());
+                                                    if (Math.Round(ts.TotalMinutes) > 60)
+                                                    {
+                                                        if (Math.Round(ts.TotalMinutes) >= 1440)
+                                                        {
+                                                            time = (Convert.ToInt32(Math.Round(ts.TotalMinutes / 1400)));
+                                                            <div class="left-date">@time 天前</div>
+                                                        }
+                                                        else
+                                                        {
+                                                            time = (Convert.ToInt32(Math.Round(ts.TotalMinutes / 60)));
+                                                            <div class="left-date">@time 小时前</div>}
+
+                                                    }
+                                                    else
+                                                    {
+                                                        time = (Convert.ToInt32(Math.Round(ts.TotalMinutes)));
+                                                        <div class="left-date">@time 分钟前</div>
+                                                    }
+                                                }
+                                                <div class="NodeID" style="display:none" id=@Row["NodeID"]></div>
+                                                <div class="SpaceID" style="display:none" id=@Row["SpaceID"]></div>
+                                            </div>
+                                                        }
+                                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="download-car">
+                    <div class="change-tab disflex">
+                        <div class="tab-borrow" id="borrow" value="" style="cursor: pointer">我的借阅</div>
+                        <div class="tab-down" id="down" value="" style="margin-left: 20px; cursor: pointer">我的下载</div>
+                        <div class="tab-browse" id="browse" value="" style="margin-left: 20px; cursor: pointer">我的浏览</div>
+                    </div>
+
+                    <div class="download-list">
+                    </div>
+
+                    <div class="historyDown">
+                        <img src="~/Scripts/Images/time.png" />查看历史下载
+                    </div>
+                    <div class="historyBorrow">
+                        <img src="~/Scripts/Images/time.png" />查看历史借阅
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var BorrowReturnState = [{ "value": "Borrow", "text": "已借出" }, { "value": "Return", "text": "已归还" }];
+    @Html.GetEnum("Project.Phase");
+    @Html.GetEnum("DocConst.KeepYear");
+    @Html.GetEnum("DocConst.SecretLevel");
+    $('body').css("background-color", "transparent");
+    //输入框回车
+    $(function () {
+        $('#txtQueryValue').bind('keypress', function (e) {
+            if (e.keyCode == "13") {
+                searchFile();
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+
+    //添加scroll
+    $(".left-block").niceScroll({ cursorborder: "none" });
+    $(".bottom-content-list").niceScroll({ cursorborder: "none" });
+    $(".download-list").niceScroll({ cursorborder: "none" });
+    var Type;
+    //var dataAlias;
+    //搜索文档
+    function searchFile() {
+        var spaceID = $('#selSpace').find("option:selected").val();
+        var queryValue = $('#txtQueryValue').val();
+        window.location.href = '/EsFulltextSearch/Search/QueryList?SpaceID=' + spaceID + '&QueryValue=' + queryValue;
+    }
+
+    //页面点击高级搜索时隐藏和显示
+    function topSearch() {
+        if ($(".indexqv").length == 0) {
+            DrawBar();//绘制高级搜索框
+            //为高级搜索里的输入条件添加默认值
+            mini.get('cblSpace').setValue(Data_SpaceCheckBoxEnum[0].id);
+            mini.get('cblSpace').doValueChanged();
+
+            $('#close').click(function () {
+                $('.indexqv').hide();
+            })
+        }
+        $('.indexqv').show();
+    }
+    //高级搜索
+
+    function queryAdvance() {
+        //查询条件拼接成字符串，通过url传递
+        var queryList = CreateQueryListByAdvance();
+        if (queryList.length == 0) {
+            msgUI("请完整填写搜索条件");
+            return;
+        }
+        var queryListStr = '';
+        for (var i = 0; i < queryList.length; i++) {
+            queryListStr += queryList[i].ItemName + ',' + queryList[i].Method + ',' + queryList[i].Logic + ',' + queryList[i].Value + ',;';
+        }
+
+        var url = '/DocSystem/View/FileView/AdvanceQueryList?spaceID=' + mini.get("cblSpace").getValue() + '&List=' + encodeURIComponent(queryListStr);
+
+        if (parent && parent.goUrlByFrame)
+            parent.goUrlByFrame(url, "高级检索");
+        else
+            window.location.href = url;
+
+    }
+
+    function showCurTab(e, dom) {
+        dom = $(e) || dom;
+        dom.addClass("active");
+        dom.siblings("li").removeClass("active");
+        var index = dom.index();
+        var choTab = $("#custab-content").find("li:eq(" + index + ")");
+        choTab.addClass("active");
+        choTab.siblings("li").removeClass("active");
+    }
+
+
+
+
+
+    //下载借阅显示列表调用的方法
+    function DownBorrow(e) {
+        var i = 0;
+        $.ajax({
+            type: "post",
+            url: "/DocSystem/View/MyPortal/GetGridData",
+            async: true,
+            data: { Type: e },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("获取后台数据出错，请刷新页面后再尝试！");
+            },
+            success: function (data) {
+                var time;
+                $('#allSelectCancel').prop('checked', false);
+                $('.download-list').children('#chebox').children('.check-box').each(function () { $(this).prop('checked', false) });
+                $(".download-list").empty();
+                if (data.length <= 0) {
+                    $(".download-list").append("<span><img src='/DocSystem/Scripts/Images/NoFile.png'  alt='无文件' /><br>暂无内容</span>")
+                }
+                $.each(data, function () {
+                    if (data[i].min > 60) {
+                        if (data[i].min >= 1440) {
+                            time = Math.round(data[i].min / 1400) + '天前';
+                        }
+                        else { time = Math.round(data[i].min / 60) + '小时前'; }
+
+                    }
+                    else {
+                        time = Math.round(data[i].min) + '分钟前';
+                    }
+
+
+
+                    //dataAlias = data;
+                    if (Type == 'Download') {
+                        $(".download-list").append("<div id='chebox' style='cursor:default;' class=' check disflex'> <div class='down-file' type='padding-top:6px><div class='file-name1'><div style='float:left'><img src='/DocSystem/Scripts/Images/nodeFile.png' style='height:32px;width:32px' alt='文件名称' /></div><div style='height:16px;overflow:hidden;text-overflow:ellipsis;padding-left:5px;margin-top: -3px;'>" +
+                            data[i].Name + "</div><div  style='float:left;color:#A5A5A5;margin-left:7px;margin-top:3px;'>剩余" +
+                       data[i].RemainDay + "天</div></div><div id='Attachments' style='display:none'>" + data[i].Attachments + "</div></div></div> ");
+                    } else if (data[i].RemainDay == 'view') {
+                        $(".download-list").append("<div id='chebox' style='cursor:default;' class=' check disflex'><div class='down-file' style='float:left;height: 20px;width: 70%;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;'>" +
+                      data[i].Name + "</div><div class='dateDiff' style='color:#33548d;float:right; width:30%;text-align: right;' >" + time + "</div></div><div class='file-name1' style='float:left'></div> ");
+                    } else {
+
+                        $(".download-list").append("<div id='chebox' style='cursor:default;' class=' check disflex'> <div class='down-file' type='padding-top:6px'><div class='file-name1'><div style='float:left'><img src='/DocSystem/Scripts/Images/nodeFile.png' style='height:32px;width:32px' alt='文件名称' /></div><div style='height:16px;overflow:hidden;text-overflow:ellipsis;padding-left:5px;'>" +
+                             data[i].Name + "</div><div style='float:left;color:#A5A5A5;margin-left:7px;margin-top:3px;'>剩余" +
+                        data[i].RemainDay + "天</div></div></div> ");
+                    }
+                    i++;
+                });
+                execute("GetCarCount", {
+                    validateForm: false, showLoading: false, async: false, refresh: false, onComplete: function (data) {
+                        $(".divright").text(data.carCount);
+                    }
+                });
+            }
+        });
+
+    }
+
+
+
+
+
+
+    //默认页面选中显示列表为下载车内容
+    $(function () {
+        $("#borrow").css({ "font-weight": "bold", "font-size": "16px", "color": " black" });
+        $(".historyDown").css({ "display": "none" });
+        $(".historyBorrow").css({ "display": "initial" });
+        DownBorrow('borrow');
+    });
+    //借阅下载车
+    function openDonwnLoadBorrowCar() {
+        var url = "/DocSystem/Car/Car/Car";
+        //弹出页面
+        PopupPageAnimate();
+        //弹出标题
+        var title = "我的借阅下载车";
+        AddRecentUseHistBrrowDownTitle(title);
+        //弹出页面嵌入内容
+        AddIframePage(url);
+        //openWindow(url, {
+        //    refresh: false, title: "借阅申请信息", width: "80%", height: "80%",
+        //    onDestroy: function (data) {
+        //        if (Type == 'Download') { DownBorrow('down'); } else if (Type == 'Borrow') { DownBorrow('borrow'); }
+        //        execute("GetCarCount", {
+        //            validateForm: false, showLoading: true, async: false, refresh: false, onComplete: function (data) {
+        //                $(".divright").text(data.carCount);
+        //            }
+        //        });
+        //    }
+        //});
+    }
+
+    //点击我的阅览
+    var PopupPageTitle = $("#borrow").text();
+    $("#borrow").click(function () {
+        $("#down").css({ "font-weight": "initial", "font-size": "14px", "color": " #858789" });
+        $("#borrow").css({ "font-weight": "bold", "font-size": "16px", "color": " black" });
+        $("#browse").css({ "font-weight": "initial", "font-size": "14px", "color": " #858789" });
+        $(".reDay").css({ "display": "initial" });
+        Type = "Borrow";
+        DownBorrow('borrow');
+        $(".historyDown").css({ "display": "none" });
+        $(".historyBorrow").css({ "display": "initial" });
+        PopupPageTitle = $("#borrow").text();
+    }
+    );
+    //点击我的下载
+    $("#down").click(function () {
+        $("#down").css({ "font-weight": "bold", "font-size": "16px", "color": "black" });
+        $("#borrow").css({ "font-weight": "initial", "font-size": "14px", "color": " #858789" });
+        $("#browse").css({ "font-weight": "initial", "font-size": "14px", "color": " #858789" });
+        $(".reDay").css({ "display": "initial" });
+        Type = "Download";
+        DownBorrow('down');
+        $(".historyDown").css({ "display": "initial" });
+        $(".historyBorrow").css({ "display": "none" });
+        PopupPageTitle = $("#down").text();
+    }
+    );
+    //点击我的浏览
+    $("#browse").click(function () {
+        $("#down").css({ "font-weight": "initial", "font-size": "14px", "color": " #858789" });
+        $("#borrow").css({ "font-weight": "initial", "font-size": "14px", "color": " #858789" });
+        $("#browse").css({ "font-weight": "bold", "font-size": "16px", "color": " black" });
+        $(".reDay").css({ "display": "none" });
+        Type = "rowse";
+        DownBorrow('browse');
+        $(".historyDown").css({ "display": "none" });
+        $(".historyBorrow").css({ "display": "none" });
+    }
+   );
+    $(document).on('click', '.down-file', function () {
+        if (Type == "Download") {
+            var fileIds = "";
+            var attach = "";
+            attach = $("#Attachments").text();
+            for (var j = 0; j < attach.split(',').length; j++) {
+                if (attach.split(',')[j].split('_')[0])
+                    fileIds += attach.split(',')[j].split('_')[0] + ",";
+            }
+            fileIds = fileIds.substring(0, fileIds.length - 1);
+            if (fileIds == "" || fileIds == null || fileIds == "undefined") {
+                mini.alert("该文件没有任何附件，无法下载"); return;
+            }
+            DownloadFile(fileIds);
+        }
+
+    })
+    //点击全选按钮的事件
+    $(document).on('click', 'input#allSelectCancel', function () {
+        if ($(this).prop('checked')) {
+            $(this).parent('div').siblings('div').find(':checkbox').each(function () { $(this).prop('checked', true) });
+        }
+        else
+            $(this).parent('div').siblings('div').find(':checkbox').each(function () { $(this).prop('checked', false) });
+    })
+</script>
+<script type="text/javascript">
+    //档案空间列表子项点击事件
+    $(document).on('click', '.archiver-item', function (e) {
+        var configID = $(this).prop('id');
+        var spaceID = $(this).parent(".archiver-content").parent(".archives-block").prop('id');
+        //追加空间定义标题
+        AddSpaceTitle(this);
+        //追加项目名称
+        AddObjectName($(this));
+        //为空间定义列表子项，点击弹出页面加载数据
+        RefreshDataGrid(spaceID, configID);
+        //空间定义列表子项，弹出页面添加动画效果
+        PopupPageAnimate();
+        $("#key").show();//搜索框显示
+        //添加链接按钮
+        //addButton(this);
+    });
+    //最近使用
+    $(".list-item").click(function () {
+        var url = "/DocSystem/View/NodeView/Tree?ID=" + $(this).children(".NodeID").prop("id") + "&SpaceID=" + $(this).children(".SpaceID").prop("id");
+        //弹出页面的显示和隐藏动画效果
+        PopupPageAnimate();
+        //添加弹出页面导航标题
+
+        var title = $(".center-title").text() + ">" + $(this).children(".right-file").text().trim();
+        AddRecentUseHistBrrowDownTitle(title);
+        //添加页面嵌套内容
+        AddIframePage(url);
+        //openWindow(url, {
+        //    addQueryString: false, title: '图档树形图', width: "90%", height: "90%", funcType: 'view', onDestroy: function () {
+        //        execute("GetCarCount", {
+        //            validateForm: false, showLoading: false, async: false, refresh: false, onComplete: function (data) {
+        //                $(".divright").text(data.carCount);
+        //            }
+        //        });
+        //    }
+        //});
+    });
+    //查看历史借阅
+    $(".historyBorrow").click(function openMyBorrow() {
+        var url = "/DocSystem/ApplyInfo/MyBorrow/MyBorrow?ShowHistory=1";
+        //弹出页面
+        PopupPageAnimate();
+        //弹出页面添加标题
+        var title = PopupPageTitle + ">" + $(".historyBorrow").text();
+        AddRecentUseHistBrrowDownTitle(title);
+        //弹出页面嵌入内容
+        AddIframePage(url);
+
+        //openWindow(url, {
+        //    refresh: false, width: "80%", height: "80%"
+        //}
+        //        );
+    });
+    //查看历史下载
+    $(".historyDown").click(function openMyDownLoad() {
+        var url = "/DocSystem/ApplyInfo/MyDownload/MyDownload?ShowHistory=1";
+        //弹出页面
+        PopupPageAnimate();
+        //弹出页面添加标题
+        var title = PopupPageTitle + ">" + $(".historyDown").text();
+        AddRecentUseHistBrrowDownTitle(title);
+        //弹出页面嵌入内容
+        AddIframePage(url);
+    });
+    //追加空间定义标题
+    function AddSpaceTitle(e) {
+        var title = $(e).parent().parent().children('div.title').html().replace(/(\D*)(<.*)/, "$1");
+        var num = $(e).parent().parent().children('div.title').html().replace(/(\D*)(\d*)(\).*)/, "$2");
+        $('.t1>a').children("img").nextAll().remove();
+        $('.t1>a').append("<span>" + title + "</span>" + "<small>(" + num + ")</small>");
+    }
+    //追加空间子项名称
+    function AddObjectName(e) {
+        var title = e.html().replace(/(\D*)(\(.*)/, "$1");
+        var num = e.html().replace(/(\D.*)(\()(\d*)(\))/, "$3");
+        $('.t1').nextAll().html("");
+        $('.t1').after("<span>&gt;</span><span id='Subitem'><a class='now' style='color: black; cursor: initial; text-decoration: none;' > " + title + "<small>(" + num + ")</small>" + "</a></span>");
+    }
+    //追加树形图标题
+    function AddTreeTitle(row) {
+
+        var title = $("#Subitem").children('a').text();
+        $("#Subitem").children('a').remove();
+        $("#Subitem").append("<a class='now' onclick='SubitemClick()'> " + title + "</a>")
+        $('.url-active').children("span:eq(2)").nextAll().html("");
+        $('.url-active').children("span:eq(2)").after("<span>&gt;</span><span><span class='now' style='cursor:initial'> " + row.Name + "</span>");
+    }
+    //为最近使用、查看历史借阅、查看历史下载添加的标题
+    function AddRecentUseHistBrrowDownTitle(title) {
+        $('.t1').nextAll().remove();
+        $('.t1>a').children("img").nextAll().remove();
+        $('.t1>a').append("<span>" + title.split(">")[0] + "</span>");
+        if (title.split(">").length > 1)
+            $(".t1").after("<span>&gt;</span><span id='Subitem'><a class='now' style='color: black; cursor: initial; text-decoration: none;' > " + title.split(">")[1] + "</a></span>");
+
+    }
+    //为空间定义列表子项，点击弹出页面加载数据
+    function RefreshDataGrid(spaceID, configID) {
+        var url = "GetDataGridHtml?SpaceID=" + spaceID + "&ConfigID=" + configID + "&ShowAdvanceQuery=true&QueryType=Node";
+        addExecuteParam("SpaceID", spaceID);
+        addExecuteParam("ConfigID", configID);
+        execute("GetDataGridHtml", {
+            validateForm: false, showLoading: true, async: false, refresh: false, onComplete: function (data) {
+                $("#treewrap").html("").append(data.GridHtml);
+                AddLink(spaceID, configID);
+                AddTreeLink(spaceID, configID);
+                mini.parse();
+                $("#key").val();//清空查询内容
+                $("#key").attr("emptytext", "请输入" + data.QuickQuery.text.replace(/,/g, '或'));
+                $("#key").attr("onenter", "quickSearch('" + data.QuickQuery.field + "');");
+                $("#key").attr("onbuttonclick", $("#key").attr("onenter"));
+                var grid = mini.get('dataGrid');
+                grid.hideColumn(grid.getColumn(0));
+                grid.load();
+            }
+        });
+    }
+    //弹出页面的显示和隐藏动画效果
+    function PopupPageAnimate() {
+        $('iframe').remove();
+        $("#treewrap").show();
+        $("#key").hide();//搜索框显示
+        $('#Index-popup').stop().animate({ "left": "0%" }, 500);//弹出页面的显示
+        $('span.t1').click(function () {
+            $('#Index-popup').stop().animate({ "left": -$('#Index-popup').width() - 60 }, 500);//弹出页面的显示和隐藏动画效果
+            //$("#key").show();//搜索框显示
+        });
+    }
+
+    function calPopupLeft() {
+        var width = $('#Index-popup').width();
+        var minwidth = parseInt($('#Index-popup').css("min-width").replace("px", ""));
+        var maxvalue = Math.max.call(null, width, minwidth);
+        if ($('#Index-popup').css("left") != "0px")
+            $('#Index-popup').css("left", -maxvalue - 60);
+    }
+    calPopupLeft();
+    window.onresize = calPopupLeft;
+
+    //弹出页面表中名称添加链接
+    function AddLink(spaceID, nodeConfigID) {
+        //addGridLink('dataGrid', 'Name', '/DocSystem/View/NodeView/Edit?ID={ID}&SpaceID=' + spaceID + '&ConfigID=' + nodeConfigID, {
+        //    addQueryString: false, title: "查看", funcType: 'view', width: "70%", height: "70%"
+        //});
+        addGridButton('dataGrid', 'Name', {
+            onButtonClick: function () {
+                var strUrl = '/DocSystem/View/NodeView/Edit?ID={ID}&SpaceID=' + spaceID + '&ConfigID=' + nodeConfigID;
+                openObject(strUrl);
+            }
+        });
+    }
+    //dataGrid树形图添加点击事件
+    function AddTreeLink(spaceID, nodeConfigID) {
+        addGridButton('dataGrid', 'img', {
+            linkText: "<img src='/DocSystem/Scripts/Images/open-tree.png' width='14' height='14' alt='' />打开树",
+            onButtonClick: function () {
+                $("#key").hide();//搜索框隐藏 $("#BorrowCar").css("display", "none");
+                opentree();
+            }
+        });
+        addGridButton('dataGrid', 'Borrow', {
+            linkText: "借阅",
+            onButtonClick: function (row) {
+                BorrowNode([{ ID: row.ID }], spaceID);
+            }
+        });
+        //卷册借阅状态添加查看按钮
+        addGridButton('dataGrid', 'BorrowDetail', {
+            linkText: "查看",
+            onButtonClick: function (row) {
+                var url = "/MvcConfig/UI/List/PageView?TmplCode=BorrowDetailView&RelateID=" + row.ID;
+                openWindow(url, { title: '查看', funcType: 'view', width: '70%', height: '70%' })
+            }
+        });
+        //添加借阅状态枚举
+        addGridEnum("dataGrid", "BorrowState", "BorrowReturnState");
+
+        addGridEnum("dataGrid", "PhaseName", "Phase");
+        addGridEnum("dataGrid", "KeepYear", "KeepYear");
+        addGridEnum("dataGrid", "SecretLevel", "SecretLevel");
+
+    }
+    //弹出页面表中名称点击事件
+    function openObject(url) {
+        var grid = mini.get("dataGrid");
+        var row = grid.getSelected();
+        openWindow(url, { title: '查看', funcType: 'view', width: '70%', height: '70%' });
+        addHistory(row.Name, typeof (row.FileID) == "undefined" ? "" : row.FileID, row.ID, row.SpaceID, "open");
+    }
+    //打开树形图
+    function opentree() {
+        var grid = mini.get("dataGrid");
+        var row = grid.getSelected();
+        AddTreeTitle(row);
+        if (!row) { mini.alert("请选中一条记录"); return; }
+        var url = "/DocSystem/View/NodeView/Tree?ConfigID=" + row.ConfigID + "&ID=" + row.ID + "&SpaceID=" + row.SpaceID;
+        AddIframePage(url);
+        addHistory(row.Name, typeof (row.FileID) == "undefined" ? "" : row.FileID, row.ID, row.SpaceID, "open");
+    }
+    //弹出页面嵌套iframe，添加内容
+    function AddIframePage(url) {
+        if (url.indexOf("ShowCar") < 0)
+            url += (url.indexOf("?") >= 0 ? "&" : "?") + "ShowCar=false";
+        $("#treewrap").hide();
+        $("#treewrap").after("<iframe src=" + url + " style='width:100%;height:calc(100% - 43px)'></iframe>");
+    }
+    //弹出页面导航栏点击事件相关控件的显示和隐藏
+    function SubitemClick() {
+        $("#Subitem").children('a').css({ "color": "black", "color": "black", "cursor": "initial", "text-decoration": "none" });
+        $("#treewrap").show();
+        $("#key").show();//搜索框显示
+        $("#treewrap").nextAll().remove();
+        $('.url-active').children("span:eq(2)").nextAll().html("");
+    }
+    //刷新图文档案首页购物车数量
+    function RefreshPicDocCar() {
+        execute("/DocSystem/View/MyPortal/GetCarCount", {
+            validateForm: false, showLoading: false, async: false, refresh: false, onComplete: function (data) {
+                $(".divright").text(data.carCount);
+            }
+        });
+    }
+
+    //借阅状态显示红绿状态
+    function onDrawCell(e) {
+        var field = e.field;
+        if (field == "BorrowState") {
+            console.log(field + " " + e.value);
+            if (e.value == "Borrow") {
+                e.cellHtml = "<span class='icon-Red' title='借出'></span>"
+            } else {
+                e.cellHtml = "<span class='icon-Green' title='未借出'></span>"
+            }
+        }
+    }
+</script>

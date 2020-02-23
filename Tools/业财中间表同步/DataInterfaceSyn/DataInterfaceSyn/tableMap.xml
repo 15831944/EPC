@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+  <XmlTableMap
+    source="select son.*,parent.Code as ParentCode,
+            stuff((select '.'+code from  S_A_Org  
+            where son.FullID like S_A_Org.FullID + '%' 
+            for xml path('')),1,1,'') as FullCode
+            from S_A_Org son left join S_A_Org parent on parent.ID = son.ParentID"
+            sourceConn="Base" target="S_A_Org" waitSecond="100"/>
+  <XmlTableMap source="S_A_User" sourceConn="Base" target="S_A_User" waitSecond="100">
+    <fieldMaps>
+      <SpecialFieldMap source="DeptID" target="Dept" />
+      <SpecialFieldMap source="DeptName" target="UDeptName" />
+    </fieldMaps>
+  </XmlTableMap>
+  <XmlTableMap 
+    source="select S_EP_RevenueInfo_Detail.ID, case when org.Code = '' or org.Code is null then 'noData'
+                       else org.Code end OrgCode, case when org.Name = '' or org.Name is null then 'noData'
+                       else org.Name end OrgName,  '无数据源字段' Number,'无数据源字段' Type,'无数据源字段' AccountType,
+            '无数据源字段' CustomerCode,'无数据源字段' CustomerName,'无数据源字段' SalesUserCode,
+            '无数据源字段' SalesUserName,'无数据源字段' SalesDeptCode,'无数据源字段' SalesDeptName,
+            UnitCode ProjectCode,UnitName ProjectName,FactEndDate BussinessDate,FactEndDate ExpiredDate,FactEndDate RecDate,ModifyDate
+            from  S_EP_RevenueInfo_Detail
+            inner join S_EP_RevenueInfo on S_EP_RevenueInfo_Detail.S_EP_RevenueInfoID = S_EP_RevenueInfo.ID
+            left join EPM_Base..S_A_Org org on org.ID = S_EP_RevenueInfo_Detail.ChargerDept" 
+            sourceConn="Market" target="S_EP_Income"  waitSecond="10"/>
+  <XmlTableMap 
+    source="select detail.ID ,detail.ID IncomeID,S_EP_CBSNode.Name
+            ,S_EP_CBSNode.Code,1 Quantity,detail.IncomeValue Price,'无数据源字段' Unit
+            ,'无数据源字段' TaxCode,isnull(detail.TaxRate,0) TaxRate,isnull(TaxValue,0) TaxValue,isnull(ClearIncomeValue,0) ClearValue
+            ,isnull(detail.IncomeValue,0) TotalValue   
+            from S_EP_RevenueInfo_Detail detail inner join S_EP_CBSNode
+            on detail.CBSNodeID = S_EP_CBSNode.ID" sourceConn="Market" target="S_EP_Income_Detail" waitSecond="10"/>
+  <XmlTableMap 
+    source="select apply.ID, case when org.Code = '' or org.Code is null then 'noData'
+                       else org.Code end OrgCode, case when org.Name = '' or org.Name is null then 'noData'
+                       else org.Name end OrgName,  apply.SerialNumber,'无数据源字段' Type
+            ,'无数据源字段' RelateUnitType,'无数据源字段' RelateUnit
+            ,'无数据源字段' RelateUnitName,ApplyUser UserCode
+            ,ApplyUserName UserName,ApplyDept UserDept
+            ,ApplyDeptName UserDeptName,ApplyDate BussinessDate
+            ,ApplyDate ExpiredDate,ApplyDate RecDate
+            , case when S_EP_CBSNode.BusinessType = '' or S_EP_CBSNode.BusinessType is null then 'noData'
+                       else S_EP_CBSNode.BusinessType end BusinessType,case when S_EP_CostUnit.Code = '' or S_EP_CostUnit.Code is null then 'noData'
+                       else S_EP_CostUnit.Code end ProjectCode
+            ,case when ProjectInfoName = '' or ProjectInfoName is null then 'noData'
+                       else ProjectInfoName end  ProjectName,ModifyDate
+            FROM S_EP_ReimbursementApply apply left join S_EP_CostUnit on S_EP_CostUnit.ID = apply.ProjectInfo
+            left join S_EP_CBSNode on S_EP_CBSNode.ID = S_EP_CostUnit.CBSNodeID
+            left join EPM_Base..S_A_Org org on org.ID = S_EP_CBSNode.ChargerDept " 
+    sourceConn="Market" target="S_EP_Reimbursement" waitSecond="10"/>
+  <XmlTableMap source="select ID,S_EP_ReimbursementApplyID ReimbursementID
+                       ,case when CostUnitName = '' or CostUnitName is null then 'noData'
+                       else CostUnitName end Name,case when CostUnit = '' or CostUnit is null then 'noData'
+                       else CostUnit end Code
+                       ,case when ChargerDept = '' or ChargerDept is null then 'noData'
+                       else ChargerDept end DeptCode,case when ChargerDeptName = '' or ChargerDeptName is null then 'noData'
+                       else ChargerDeptName end DeptName
+                       ,case when InvoiceType = '' or InvoiceType is null then 'noData'
+                       else InvoiceType end InvoiceType,'无数据源字段' TaxCode
+                       ,0 TaxRate,0 TaxValue,isnull(ApplyValue,0) ClearValue
+                       ,isnull(ApplyValue,0) ReimburseValue
+                       FROM S_EP_ReimbursementApply_Details" 
+     sourceConn="Market" target="S_EP_Reimbursement_Detail"  waitSecond="10"/>
+  <XmlTableMap 
+    source="select apply.ID,apply.SerialNumber, case when org.Code = '' or org.Code is null then 'noData'
+                       else org.Code end OrgCode, case when org.Name = '' or org.Name is null then 'noData'
+                       else org.Name end OrgName,  '无数据源字段' RelateUnitType,'无数据源字段'  RelateUnitCode
+            ,'无数据源字段' RelateUnitName,'无数据源字段' ReceiptUnitType,'无数据源字段' ReceiptUnitCode
+            ,'无数据源字段' ReceiptUnitName,CreateDate BussinessDate,CreateDate RecData
+            ,ModifyDate FROM T_F_LoanApply apply left join EPM_Base..S_A_Org org on org.ID = apply.OrgID" 
+    sourceConn="OfficeAuto" target="S_EP_UserLoan"  waitSecond="10"/>
+  <XmlTableMap 
+    source="select ID,ID LoanID,'无数据源字段' SettleType,'无数据源字段' SettleTypeName
+            ,'无数据源字段' PaymentPurpose,'无数据源字段' PaymentPurposeName,isnull(LoanValue,0) PaymentValue
+            ,isnull(FactValue,0) PaymentActValue,'无数据源字段' Bank
+            FROM T_F_LoanApply" 
+    sourceConn="OfficeAuto" target="S_EP_UserLoan_Detail"  waitSecond="10"/>
+  <!--<XmlTableMap source="" sourceConn="" target="S_EP_UserRefund" waitSecond="10"/>-->
+  <!--<XmlTableMap source="" sourceConn="" target="S_EP_UserRefund_Detail"/>-->
+  <XmlTableMap source="S_C_ManageContract" sourceConn="Market" target="S_M_Contract" waitSecond="10">
+    <fieldMaps>
+      <SpecialFieldMap source="ContractCurrency" target="Currency" />
+      <SpecialFieldMap source="ContractRMBAmount" target="ContractRMBValue" />
+      <SpecialFieldMap source="Attachment" target="Attachments" />
+    </fieldMaps>
+  </XmlTableMap>
+  <XmlTableMap 
+    source="select ID,Name,Code,'无数据源字段' GroupName,'无数据源字段' GroupCode
+            ,'无数据源字段' ChargerDept,'无数据源字段' ChargerDeptName,'无数据源字段' ChargerUser
+            ,'无数据源字段' ChargerUserName,Name InvoiceName
+            ,
+            case when TaxAccounts = '' or TaxAccounts is null then 'noData'
+            else TaxAccounts end TaxNo
+            ,LinkTelphone ContactTel,Address
+            ,'无数据源字段' TaxCategory,'0.06' DefaultTaxRate,'无数据源字段' DefaultInvoiceType
+            ,ModifyDate FROM S_F_Customer" 
+    sourceConn="Market" target="S_M_Customer" waitSecond="100"/>
+  <XmlTableMap source="SELECT d.ID, case when org.Code = '' or org.Code is null then 'noData'
+                       else org.Code end OrgCode, case when org.Name = '' or org.Name is null then 'noData'
+                       else org.Name end OrgName, SerialNumber,BondType Type
+                       ,'无数据源字段' RelateUnitType,'无数据源字段' RelateUnitName,'无数据源字段' RelateUnitCode,'无数据源字段' ReceiptUnitType
+                       ,'无数据源字段' ReceiptUnitName,'无数据源字段' ReceiptUnitCode, ProjectCode, ProjectName,DepartInfo Dept
+                       ,DepartInfoName DeptName,d.ApplyDate BusinessDate,d.ApplyDate RecDate,ModifyDate
+                       FROM  S_B_Bond d left join EPM_Base..S_A_Org org on org.ID = d.OrgID" sourceConn="Market" target="S_M_Deposit" waitSecond="10"/>
+  <XmlTableMap source="SELECT ID,ID DepositID,'无数据源字段' SettleType,'无数据源字段' SettleName,'无数据源字段' Purpose
+                       ,'无数据源字段' PurposeName,Amount PaymentValue,Amount ActPaymentValue
+                       ,BankName Bank,'无数据源字段' ReceiptUnitBank
+                       FROM S_B_Bond" sourceConn="Market" target="S_M_Deposit_Detail" waitSecond="10"/>
+   <XmlTableMap source="SELECT invoice.ID,case when org.Code = '' or org.Code is null then 'noData'
+                       else org.Code end OrgCode, case when org.Name = '' or org.Name is null then 'noData'
+                       else org.Name end OrgName,SerialNumber,case when S_F_Customer.Code = '' or S_F_Customer.Code is null then 'noData'
+                       else S_F_Customer.Code end CustomerCode
+                       ,case when S_F_Customer.Name = '' or S_F_Customer.Name is null then 'noData'
+                       else S_F_Customer.Name end CustomerName,S_EP_CBSNode.ChargerUser,S_EP_CBSNode.ChargerUserName
+                       ,S_EP_CBSNode.ChargerDept,S_EP_CBSNode.ChargerDeptName,IncomeUnit ProjectInfo
+                       ,IncomeUnitName ProjectInfoName,InvoiceDate,InvoiceDate ExpiredDate
+                       ,invoice.CreateDate RecDate,invoice.ModifyDate
+                       FROM S_C_Invoice invoice left join EPM_Base..S_A_Org org on org.ID = invoice.OrgID
+                       left join S_F_Customer on S_F_Customer.ID = invoice.CustomerID
+                       left join S_EP_IncomeUnit on S_EP_IncomeUnit.ID = invoice.IncomeUnit
+                       left join S_EP_CBSNode on S_EP_CBSNode.ID = S_EP_IncomeUnit.CBSNodeID" sourceConn="Market" target="S_M_Invoice" waitSecond="10"/>
+  <XmlTableMap source="SELECT ID,ID InvoiceID,case when IncomeUnitName = '' or IncomeUnitName is null then 'noData'
+                       else IncomeUnitName end Name,case when IncomeUnitCode = '' or IncomeUnitCode is null then 'noData'
+                       else IncomeUnitCode end Code
+                      ,1 Quantity,Amount UnitPrice,case when TaxName = '' or TaxName is null then 'noData'
+                       else TaxName end TaxName
+                      ,TaxRate,TaxesAmount TaxValue,Amount InvoiceValue,ClearAmount ClearValue
+                      FROM  S_C_Invoice" sourceConn="Market" target="S_M_Invoice_Detail"  waitSecond="10"/> 
+  <XmlTableMap 
+    source="select ID, case when PaymentCode = '' or PaymentCode is null then 'noData'
+                       else PaymentCode end SerialNumber, '单据类型' Type,
+           '往来单位类型' RelateUnitType,Supplier RelateUnitCode,SupplierName RelateUnitName,
+           '收款单位类型' ReceiptUnitType,Supplier ReceiptUnitCode,SupplierName ReceiptUnitName,
+           PaymentDate BusinessDate, CreateDate RecDate
+           from S_SP_Payment" sourceConn="Market" target="S_M_Payment"  waitSecond="10"/>
+  <XmlTableMap 
+    source="select ID, ID PaymentID, 'Name' Name, 'Code' Code, '结算方式编码' SettleType,
+           '结算方式' SettleName,'付款用途编码' Purpose,'付款用途' PurposeName,
+           PaymentValue, PaymentValue ActPaymentValue, BankAccount Bank
+           from S_SP_Payment" sourceConn="Market" target="S_M_Payment_Detail" waitSecond="10"/>
+  <XmlTableMap source="SELECT receipt.ID ,case when org.Code = '' or org.Code is null then 'noData'
+                       else org.Code end OrgCode, case when org.Name = '' or org.Name is null then 'noData'
+                       else org.Name end OrgName ,'无数据源字段' SerialNumber , '无数据源字段' PaymentUnitType
+                       ,PayerUnit PaymentUnit ,PayerUnitName PaymentUnitName ,'无数据源字段' RelateUnitType ,'无数据源字段' RelateUnit
+                       ,'无数据源字段' RelateUnitName ,ArrivedDate ReceiptDate ,'无数据源字段' SalesUser ,'无数据源字段' SalesUserName
+                       ,'无数据源字段' SalesDept ,'无数据源字段' SalesDeptName ,'无数据源字段' ProjectCode ,'无数据源字段' ProjectName ,ModifyDate
+                       FROM S_C_Receipt receipt left join EPM_Base..S_A_Org org on org.ID = receipt.OrgID" sourceConn="Market" target="S_M_Receipt" waitSecond="10"/>
+  <XmlTableMap source="SELECT ID,ID ReceiptID,ReceiptType SettleType,ReceiptType SettleTypeName,'无数据源字段' ReceiptPurpose
+                       ,'无数据源字段' ReceiptPurposeName,Amount ReceivableValue,Amount ReceiptValue,'无数据源字段' BankAccount
+                       FROM S_C_Receipt" sourceConn="Market" target="S_M_Receipt_Detail"  waitSecond="10"/>
+  <XmlTableMap source="SELECT invoice.ID,case when org.Code = '' or org.Code is null then 'noData'
+                       else org.Code end OrgCode, case when org.Name = '' or org.Name is null then 'noData'
+                       else org.Name end OrgName,'无数据源字段' SerialNumber,'' AccountType,case when S_SP_Supplier.Code = '' or S_SP_Supplier.Code is null then 'noData'
+                       else S_SP_Supplier.Code end SupplierCode
+                       ,case when S_SP_Supplier.Name = '' or S_SP_Supplier.Name is null then 'noData'
+                       else S_SP_Supplier.Name end SupplierName,ChargerDept,S_EP_CBSNode.ChargerUserName ChargerName,S_EP_CBSNode.Code ProjectCode,S_EP_CBSNode.Name ProjectName
+                       ,InvoiceDate RecDate,InvoiceDate ExpiredDate,InvoiceDate BussinessDate,invoice.ModifyDate
+                       FROM S_SP_Invoice invoice 
+                       left join S_EP_CostUnit on S_EP_CostUnit.ID = invoice.CostUnit
+                       left join S_EP_CBSNode on S_EP_CBSNode.ID = S_EP_CostUnit.CBSNodeID
+                       left join EPM_Base..S_A_Org org on org.ID = S_EP_CBSNode.ChargerDept
+                       left join S_SP_Supplier on S_SP_Supplier.ID = invoice.Supplier" sourceConn="Market" target="S_M_SPInvoice" waitSecond="10"/>
+  <XmlTableMap source="SELECT invoice.ID,invoice.ID SPInvoiceID,case when S_EP_CBSNode.Name = '' or S_EP_CBSNode.Name is null then 'noData'
+                       else S_EP_CBSNode.Name end Name,case when S_EP_CBSNode.Code = '' or S_EP_CBSNode.Code is null then 'noData'
+                       else S_EP_CBSNode.Code end Code,1 Quantity,Amount UnitPrice
+                       ,'无数据源字段' TaxCode,invoice.TaxRate,TaxValue,isnull(ClearValue,0) ClearValue,Amount TotalPrice
+                       FROM S_SP_Invoice invoice
+                       left join S_EP_CostUnit on S_EP_CostUnit.ID = invoice.CostUnit
+                       left join S_EP_CBSNode on S_EP_CBSNode.ID = S_EP_CostUnit.CBSNodeID" sourceConn="Market" target="S_M_SPInvoice_Detail" waitSecond="10"/>
+  <XmlTableMap source="SELECT ID,Name,Code,'无数据源字段' OrgName,'无数据源字段' OrgCode,'无数据源字段' SupplierType,SupplierLevel,ContactAddress Address
+                       ,'无数据源字段' ChargerDept,'无数据源字段' ChargerDeptName,'无数据源字段' ChargerUser,'无数据源字段' ChargerUserName,'无数据源字段'  CreditCode
+                       ,'无数据源字段' TaxCategory,'无数据源字段' DefaultInvoiceType,0 DefaultTaxRate,ModifyDate
+                       FROM S_SP_Supplier" sourceConn="Market" target="S_M_Supplier"  waitSecond="10"/>
+  <XmlTableMap source="SELECT ID,Name,Code, case when ProjectType = '' or ProjectType is null then 'noData'
+                       else ProjectType end Type,ChargerDept,ChargerDeptName
+                       ,ChargerUser,ChargerUserName,'' BussinessType,Area,CreateDate ModifyDate
+                       FROM S_I_Project" sourceConn="Market" target="S_P_Project"  waitSecond="10"/>
+</Root>

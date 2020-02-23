@@ -1,0 +1,9 @@
+D:\project\Test\BaseFrame\SilverLight\多文件附件上传\BeSl.Controls.File\Bin\Debug\BeSl.Controls.File.dll
+D:\project\Test\BaseFrame\SilverLight\多文件附件上传\BeSl.Controls.File\Bin\Debug\BeSl.Controls.File.pdb
+D:\project\Test\BaseFrame\SilverLight\多文件附件上传\BeSl.Controls.File\Bin\Debug\BeSl.Controls.dll
+D:\project\Test\BaseFrame\SilverLight\多文件附件上传\BeSl.Controls.File\Bin\Debug\FJ.Core.dll
+D:\project\Test\BaseFrame\SilverLight\多文件附件上传\BeSl.Controls.File\Bin\Debug\BeSl.Controls.pdb
+D:\project\Test\BaseFrame\SilverLight\多文件附件上传\BeSl.Controls.File\obj\Debug\BeSl.Controls.File.csprojResolveAssemblyReference.cache
+D:\project\Test\BaseFrame\SilverLight\多文件附件上传\BeSl.Controls.File\obj\Debug\BeSl.Controls.File.g.resources
+D:\project\Test\BaseFrame\SilverLight\多文件附件上传\BeSl.Controls.File\obj\Debug\BeSl.Controls.File.dll
+D:\project\Test\BaseFrame\SilverLight\多文件附件上传\BeSl.Controls.File\obj\Debug\BeSl.Controls.File.pdb

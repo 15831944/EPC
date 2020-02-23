@@ -1,0 +1,139 @@
+﻿@{
+    ViewBag.Title = "MyApply";
+}
+<div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class='mini-button' plain='true' id='btnTrace' iconcls='icon-flowstart' onclick='FlowTrace()'>
+                    流程跟踪</a>
+            </td>
+            <td class="gw-toolbar-right">
+                <input id="key" class="mini-buttonedit gw-searchbox" emptytext="请输入名称" onenter="quickSearch('Name',{gridId:'mygrid'});"
+                    onbuttonclick="quickSearch('Name',{gridId:'mygrid'});" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit" style="height: 100px;">
+    <div id="mygrid" url="GetList" class="mini-datagrid" style="width: 100%; height: 100%;"
+        allowresize="false" idfield="id" multiselect="false" onshowrowdetail="onShowRowDetail">
+        <div property="columns">
+            <div type="checkcolumn">
+            </div>
+            <div type="expandcolumn">
+            </div>
+            <div field="Name" width="200" headeralign="center" allowsort="true">
+                名称</div>
+            <div field="ApplyType" type="comboboxcolumn" headeralign="center" width="100" allowsort="true"
+                align="center">
+                申请类别<input property="editor" textfield="text" valuefield="value" class="mini-combobox"
+                    style="width: 100%;" data="ItemType" /></div>
+            <div field="Purpose" headeralign="center" width="*" allowsort="true" align="center">
+                用途</div>
+            <div field="State" type="comboboxcolumn" headeralign="center" width="100" allowsort="true"
+                align="center">
+                状态<input property="editor" textfield="text" valuefield="value" class="mini-combobox"
+                    style="width: 100%;" data="ItemState" />
+            </div>
+            <div field="ApplyDate" width="100" headeralign="center" dateformat="yyyy-MM-dd" allowsort="true"
+                align="center">
+                申请日期</div>
+            <div field="PassDate" width="100" headeralign="center" dateformat="yyyy-MM-dd" allowsort="true"
+                align="center">
+                通过日期</div>
+        </div>
+    </div>
+</div>
+<div id="detail" style="display: none">
+    <div id="detailgrid" class="mini-datagrid" url="getCarlist" style="width: 100%; height: 300px;"
+        allowresize="false" idfield="ID" multiselect="true" showfooter="false">
+        <div property="columns">
+            <div type="checkcolumn">
+            </div>
+            <div field="FileName" width="*" headeralign="center" renderer="onlinkrender" allowsort="true">
+                文件名称</div>
+@*            <div field="FileCode" width="250" headeralign="center" allowsort="true">
+                文件编号</div>*@
+        </div>
+    </div>
+</div>
+<div id="querywindow" class="mini-window" title="详细查询" style="width: 900px; height: 130px;
+    display: none;" showmodal="false" allowresize="false" allowdrag="true">
+    <div style="padding-left: 11px; padding-bottom: 5px;">
+        <div id="queryform" method="post" style="margin: 0; padding: 0;">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td width="10%" align="center">
+                        名称
+                    </td>
+                    <td width="23%" align="left">
+                        <input name="Name" style="width: 100%" class="mini-textbox" vtype="maxLength:50" />
+                    </td>
+                    <td width="10%" align="center">
+                        申请日期
+                    </td>
+                    <td width="23%" align="left">
+                        <input name="ApplyDateMin" class="mini-datepicker" style="width: 100%" />
+                    </td>
+                    <td width="10%" align="center">
+                        至
+                    </td>
+                    <td width="23%" align="left">
+                        <input name="ApplyDateMax" class="mini-datepicker" style="width: 100%" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div style="text-align: center; padding: 10px;">
+        <a class="mini-button" onclick="search()" iconcls="icon-find" style="margin-right: 20px;">
+            查询</a> <a class="mini-button" onclick="clearQueryForm()" iconcls="icon-undo">清空</a>
+    </div>
+</div>
+<script type="text/javascript">
+@Html.GetEnum(typeof(DocSystem.Logic.ItemType))
+@Html.GetEnum(typeof(DocSystem.Logic.ItemState))
+</script>
+<script type="text/javascript">
+
+    var detailHtml = null;
+    detailHtml = $("#detail")[0];
+
+    function onShowRowDetail(e) {
+        var detailgrid = mini.get("detailgrid");
+        var grid = e.sender;
+        var row = e.record;
+        var td = grid.getRowDetailCellEl(row);
+        td.appendChild(detailHtml);
+        detailHtml.style.display = "block";
+        //detailgrid.url = "getCarlist?applyID=" + row.ID + "&Type=" + row.ApplyType;
+        detailgrid.load({ ApplyID: row.ID, Type: row.ApplyType });
+    }
+
+    function startworkflow() {
+        var grid = mini.get("mygrid");
+        var row = grid.getSelected();
+        if (!row) { mini.alert("请选择一个记录"); return }
+        if (row.State != "New") { mini.alert("已经提交的记录，不能重复提交"); return }
+        var startParam = { DefineKey: row.FlowDefineKey, CreateInstance: false,
+            EntityData: { ID: row.ID }
+        };
+        if (row.ApplyType.toLowerCase() == "borrow")
+            startParam["Action"] = "/DocSystem/Actions/Flow/Borrow/BorrowAction.aspx";
+        else
+            startParam["Action"] = "/DocSystem/Actions/Flow/Download/DownloadAction.aspx";
+        startflow(startParam, null, function (data) { grid.reload(); });
+    }
+
+    //流程跟踪
+    function FlowTrace() {
+        var dataGrid = mini.get("mygrid");
+        var row = dataGrid.getSelected();
+        if (row) {
+            var url = "/MvcConfig/Workflow/Trace/Diagram?ID=" + row.ID + "&FuncType=FlowTrace";
+            openWindow(url, { "width": "1000", "title": "流程跟踪", "mustSelectOneRow": "true" })
+        }
+        else return msgUI("请选择您要进行流程跟踪的记录。");
+    }
+</script>

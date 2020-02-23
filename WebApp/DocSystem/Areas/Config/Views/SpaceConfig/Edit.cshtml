@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "SpaceConfigEdit";
+}
+<div class="mini-toolbar" id="btnDiv" style="width: 100%; position: fixed; top: 0;
+    left: 0; z-index: 100;">
+    <table>
+        <tr>
+            <td>
+                <a class="mini-button" id="btnSave" plain="true" iconcls="icon-save" onclick="save();">
+                    保存
+                </a> <a class="mini-button" id="btnCancel" plain="true" iconcls="icon-cancel" onclick="closeWindow()">
+                    取消
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+<form id="dataForm" method="post" style="top: 30px; position: relative;">
+    <input name="ID" class="mini-hidden" />
+    <input name="SpaceID" class="mini-hidden" />
+    <div class="formDiv">
+        <fieldset>
+            <legend>档案空间编辑</legend>
+            <div>
+                <table>
+                    <tr class="hideRow">
+                        <td width="15%"></td>
+                        <td width="85%"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Space名称
+                        </td>
+                        <td>
+                            <input name="Name" class="mini-textbox" style="width: 90%;" required="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            SpaceKey
+                        </td>
+                        <td>
+                            <input name="SpaceKey" class="mini-textbox" style="width: 90%" required="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Server
+                        </td>
+                        <td>
+                            <input name="Server" style="width: 90%" class="mini-textbox" required="true" vtype="maxLength:50" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            实例库名称
+                        </td>
+                        <td>
+                            <input name="DbName" style="width: 90%" class="mini-textbox" required="true" vtype="maxLength:50" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            用户名
+                        </td>
+                        <td>
+                            <input name="UserName" style="width: 90%" class="mini-textbox" required="true" vtype="maxLength:50" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            登陆密码
+                        </td>
+                        <td>
+                            <input name="Pwd" style="width: 90%" class="mini-textbox" required="true" vtype="maxLength:50" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            备注
+                        </td>
+                        <td>
+                            <input name="Remark" class="mini-textarea" style="width: 90%; height: 100px;" vtype="maxLength:500" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+</form>

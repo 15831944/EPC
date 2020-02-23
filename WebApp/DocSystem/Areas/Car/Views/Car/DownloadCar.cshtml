@@ -1,0 +1,147 @@
+﻿@{
+    ViewBag.Title = "下载车";
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+}
+<div class="mini-toolbar" style="padding: 0px; border-top: 0; border-left: 0; border-right: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" iconcls="icon-add" onclick="submitFlow()" plain="true">提交审批</a>
+                <a class="mini-button" iconcls="icon-remove" onclick="listDelete()" plain="true">移除</a>
+            </td>
+            <td class="gw-toolbar-right">
+                <div name='showInTree' class='mini-checkbox' checked='false' text='显示树' onvaluechanged='onShowTreeChanged'></div>
+                <input id="key" class="mini-buttonedit gw-searchbox" emptytext="文件名称" onenter="quickSearch('Name',{gridId:'dataGrid'});"
+                       onbuttonclick="quickSearch('Name',{gridId:'dataGrid'});" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit" id="fitdiv">
+    <div id="dataGrid" class="mini-datagrid" style="width: 100%; height: 100%;"
+         idfield="ID" multiselect="true" url="GetCarList?Key=Download">
+        <div property="columns">
+            <div type="checkcolumn"></div>
+            <div field="Name" width="*" headeralign="center" allowsort="true">名称</div>
+            <div field="Code" width="200" headeralign="center" allowsort="true">编号</div>
+            <div field="SpaceName" width="150" headeralign="center" allowsort="true">档案门类</div>
+            <div field="DataType" width="90" headeralign="center" allowsort="true" align="center">类型</div>
+            <div field="FlowKey" width="90" headeralign="center" allowsort="true" align="center">流程</div>
+            <div field="CreateDate" width="100" headeralign="center" dateformat="yyyy-MM-dd" allowsort="true" align="center">日期</div>
+            <div field="Remove" width="50" headeralign="center" allowsort="true" align="center">操作</div>
+        </div>
+    </div>
+    <div id="treeGrid" class="mini-treegrid" style="width:100%;height:100%;" showtreeicon="true" multiselect="true"
+         treecolumn="InsName" idfield="UID" parentfield="ParentUID" resultastree="false" expandonload="true">
+        <div property="columns">
+            <div type="checkcolumn"></div>
+            <div name="InsName" field="InsName" width="*" align="left" headeralign="center">名称</div>
+            <div field="Code" width="200" headeralign="center" allowsort="true">编号</div>
+            <div field="SpaceName" width="150" headeralign="center" allowsort="true">档案门类</div>
+            <div field="DataType" width="90" headeralign="center" allowsort="true" align="center">类型</div>
+            <div field="FlowKey" width="90" headeralign="center" allowsort="true" align="center">流程</div>
+            <div field="CreateDate" width="100" headeralign="center" dateformat="yyyy-MM-dd" allowsort="true" align="center">日期</div>
+            <div field="Remove" width="50" headeralign="center" allowsort="true" align="center">操作</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum("DocConst.BorrowDownFlowKey", "BorrowEnum", "Borrow");
+    @Html.GetEnum("DocConst.BorrowDownFlowKey", "DownloadEnum", "Download");
+</script>
+<script type="text/javascript">
+    $("#treeGrid").hide();
+    $("#treeGrid").attr("onbeforeselect", "onTreeBeforeSelect");
+    addGridButton("dataGrid", "Remove", {
+        linkText: '移除', onButtonClick: function (row) {
+            msgUI("你确认删除选中的记录吗？", 2, function (result) {
+                if (result != "ok")
+                    return;
+                addExecuteParam("ListIDs", row.ID);
+                execute("Delete", {
+                    validateForm: false, showLoading: true, refresh: false, onComplete: function (data) {
+                        mini.get("dataGrid").reload();
+                    }
+                });
+            });
+        }
+    });
+
+    function listDelete() {
+        var grid = mini.get("dataGrid");
+        var rows = grid.getSelecteds();
+        var listIDs = "";
+        for (var i = 0; i < rows.length; i++) {
+            listIDs += rows[i].ID + ",";
+        }
+        msgUI("你确认删除选中的记录吗？", 2, function (result) {
+            if (result != "ok")
+                return;
+            addExecuteParam("ListIDs", listIDs);
+            execute("Delete", {
+                validateForm: false, showLoading: true, refresh: false, onComplete: function (data) {
+                    mini.get("dataGrid").reload();
+                }
+            });
+        });
+    }
+
+    function submitFlow() {
+        var grid = mini.get("dataGrid");
+        var rows = grid.getSelecteds();
+        if (rows.length <= 0) {
+            msgUI("请选择记录。");
+            return;
+        }
+        var url = "";
+        var enumKey = "";
+        for (var i = 0; i < rows.length; i++) {
+            if (!enumKey) enumKey = rows[i]["FlowKey"];
+            else if (rows[i]["FlowKey"] != enumKey)
+                return msgUI("请选择相同的流程");
+        }
+        for (var i = 0; i < DownloadEnum.length; i++) {
+            if (enumKey == DownloadEnum[i]["value"]) {
+                url = DownloadEnum[i]["Description"];
+            }
+        }
+        if (!url) return msgUI("流程未定义URL");
+        openWindow(url, {
+            data: { FileInfo: rows }, onDestroy: function (data) {
+                grid.reload();
+            }
+        });
+    }
+
+    function onTreeBeforeSelect(e) {
+        if (e.record["IsSelect"].toLowerCase() == "false")
+            e.cancel = true;
+    }
+
+    function onShowTreeChanged() {
+        var showInTree = mini.getbyName("showInTree");
+        var checked = "false";
+        if (showInTree) {
+            checked = showInTree.getValue();
+            if (checked.toLowerCase() == "true") {
+                mini.get("treeGrid").setUrl("GetDownloadTree");
+
+                $("#dataGrid").hide();
+                $("#treeGrid").show();
+            }
+            else {
+                $("#dataGrid").show();
+                $("#treeGrid").hide();
+            }
+        }
+        SetGridHeight();
+    }
+
+    function SetGridHeight() {
+        $(".mini-fit").each(function () {
+            var layout = mini.get("#" + $(this).attr("id"));
+            if (layout)
+                layout.doLayout();
+        });
+    }
+</script>

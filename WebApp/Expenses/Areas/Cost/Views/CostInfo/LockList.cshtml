@@ -1,0 +1,256 @@
+﻿@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+}
+
+<div class="mini-fit" id="gridArea">
+    <div id="dataGrid" url="GetList" class="mini-datagrid" style="width: 100%; height: 100%;" showpager="false" enablehottrack="false"
+         idfield="ID" multiselect="true" showcolumns="false" sortfield="" sortmode="client">
+        <div property="columns">
+            <div field="State" width="60" headeralign="center" allowsort="false" renderer="onStateRenderer">
+            </div>
+            <div field="Content" width="*" headeralign="center" allowsort="false" renderer="onContentRenderer">
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function onStateRenderer(e) {
+        var rec = e.record;
+        var rowIndex = e.rowIndex;
+        var $table = $("<table width=\"100%\" border=\"0\" cellspacing=\"5\" cellpadding=\"0\"></table");
+
+        var $tr1td = $("<td></td>");
+        if (rec.Closed == "true") {
+            $titleInfo = $('<span class="titleSpan  titleFinish" onclick="">锁定</span>');
+            $tr1td.append($titleInfo);
+        }
+        else {
+            $titleInfo = $('<span class="titleSpan titleNone" onclick="">未锁</span>');
+            $tr1td.append($titleInfo);
+        }
+
+        var $tr1 = $("<tr></tr>").append($tr1td);
+        $table.append($("<tr></tr>").append($tr1));
+        var $html = $("<div></div>").attr("id", "Content" + rec.ID).append($table);
+        $html.addClass("left_main_list")
+        return $html[0].outerHTML;
+    }
+
+    function onContentRenderer(e) {
+        var rec = e.record;
+        var rowIndex = e.rowIndex;
+        var $table = $("<table width=\"100%\" border=\"0\" cellspacing=\"5\" cellpadding=\"0\"></table");
+
+        //第一行
+        var $tr1td = $("<td></td>");
+        if (rec.Closed == "true") {
+            $tr1td.append($("<h3 style='color:#ccc'></h3>").text(rec.Name));
+        }
+        else {
+            $tr1td.append($("<h3 ></h3>").text(rec.Name));
+        }
+        var $tr1 = $("<tr></tr>").append($tr1td);
+        $table.append($("<tr></tr>").append($tr1));
+
+
+        var $tr2td = $("<td></td>");
+        // $tr2td.append($("<h0></h0>").text("收入总计：" + rec.SumIncomeValue + " 元"));
+        $incomeInfo = $('<span>收入总计:<a href="javascript:void();" class="now" onclick="viewRevInfo(\'' + rec.BelongYear + '\',\'' + rec.BelongMonth + '\')">' + formatCurrency(rec.SumIncomeValue) + ' </a>元</span>');
+        $tr2td.append($incomeInfo);
+        $costInfo = $('<span>成本总计:<a href="javascript:void();" class="now" onclick="viewCostLog(\'' + rec.BelongYear + '\',\'' + rec.BelongMonth + '\')">' + formatCurrency(rec.SumCostValue) + ' </a>元</span>');
+        $tr2td.append($costInfo);
+
+        var profit = rec.SumIncomeValue - rec.SumCostValue;
+        $profitInfo = $('<span>利润: ' + formatCurrency(profit) + '</span>');
+        $tr2td.append($profitInfo);
+
+        //$productionInfo = $('<span>产值总计:<a href="javascript:void();" class="now" onclick="viewChangeLog(\'' + rec.ID + '\')">' + formatCurrency(rec.ProductionValue) + ' </a>元</span>');
+        //$tr2td.append($productionInfo);
+
+        var $tr2 = $("<tr></tr>").append($tr2td);
+        $table.append($tr2);
+
+        if (rec.ID) {
+            //第二行
+            var $tr2td = $("<td></td>");
+            $tr2td.append($("<h0></h0>").text("操作人：" + rec.CreateUser));
+            $tr2td.append($("<h0></h0>").text("锁定日期：" + mini.formatDate(rec.CreateDate, "yyyy-MM-dd HH:mm:ss")));
+            var $tr2 = $("<tr></tr>").append($tr2td);
+            $table.append($tr2);
+        }
+
+        //第四行
+        var $tr4td = $("<td></td>");
+        if (!rec.ID) {
+            $addBtn = $('<span class="stateSpan Btn" onclick="Lock();">锁定关账</span>');
+            $delBtn = $('<span class="stateSpan  BtnDisable">撤销锁定</span>');
+            $tr4td.append($delBtn);
+            $tr4td.append($addBtn);
+        }
+        else {
+            $addBtn = $('<span class="stateSpan BtnDisable">锁定关账</span>');
+            $delBtn = $('<span class="stateSpan Revert" onclick="UnLock(\'' + rec.ID + '\')">撤销锁定</span>');
+            $tr4td.append($delBtn);
+            $tr4td.append($addBtn);
+        }
+        var $tr4 = $("<tr></tr>").append($tr4td);
+        $table.append($tr4);
+
+        var $html = $("<div></div>").attr("id", "Content" + rec.ID).append($table);
+        $html.addClass("left_main_list")
+        return $html[0].outerHTML;
+    }
+
+    function Lock() {
+        var dataGrid = mini.get("dataGrid");
+        var row = dataGrid.getSelected();
+        if (row) {
+            msgUI("您确定要关账锁定" + row.BelongYear + "年" + row.BelongMonth + "月的数据吗？", 2, function (result) {
+                if (result != "ok") return;
+                addExecuteParam("BelongYear", row.BelongYear);
+                addExecuteParam("BelongMonth", row.BelongMonth);
+                execute("LockAccount", {
+                    showLoading: true, refresh: false, onComplete: function (data) {
+                        msgUI("锁定成功");
+                        dataGrid.reload();
+                    }, validateForm: false
+                });
+            });
+        }
+    }
+
+    function UnLock() {
+        var dataGrid = mini.get("dataGrid");
+        var row = dataGrid.getSelected();
+        if (row) {
+            msgUI("您确定要关账锁定" + row.BelongYear + "年" + row.BelongMonth + "月的数据吗？", 2, function (result) {
+                if (result != "ok") return;
+                addExecuteParam("BelongYear", row.BelongYear);
+                addExecuteParam("BelongMonth", row.BelongMonth);
+                execute("UnLockAccount", {
+                    showLoading: true, refresh: false, onComplete: function (data) {
+                        msgUI("解锁成功");
+                        dataGrid.reload();
+                    }, validateForm: false
+                });
+            });
+        }
+    }
+
+    function viewRevInfo(year, month) {
+        if (year && month) {
+            var url = "/MvcConfig/UI/List/PageView?TmplCode=TotalIncomeListView&BelongYear=" + year + "&BelongMonth=" + month;
+            openWindow(url, {
+                refresh: false, title: year + "年" + month + "月收入明细", width: "85%", height: "90%",
+                onDestroy: function (data) {
+                }
+            });
+        }
+    }
+
+    function viewCostLog(year, month) {
+        if (year && month) {
+            var url = "/MvcConfig/UI/List/PageView?TmplCode=TotalCostDetail&BelongYear=" + year + "&BelongMonth=" + month;
+            openWindow(url, {
+                refresh: false, title: year + "年" + month + "月成本明细", width: "70%", height: "70%",
+                onDestroy: function (data) {
+                }
+            });
+        }
+    }
+
+
+    function formatCurrency(num) {
+        if (!num || isNaN(parseFloat(num))) num = 0;
+        num = num.toString().replace(/\$|\,/g, '');
+        if (isNaN(num))
+            num = "0";
+        sign = (num == (num = Math.abs(num)));
+        num = Math.floor(num * 100 + 0.50000000001);
+        cents = num % 100;
+        num = Math.floor(num / 100).toString();
+        if (cents < 10)
+            cents = "0" + cents;
+        for (var i = 0; i < Math.floor((num.length - (1 + i)) / 3) ; i++)
+            num = num.substring(0, num.length - (4 * i + 3)) + ',' +
+            num.substring(num.length - (4 * i + 3));
+        return (((sign) ? '' : '-') + num + '.' + cents);
+    }
+
+</script>
+
+@section scripts{
+    <link href="@Url.Content("/Expenses/Scripts/Income/project.css")" r rel="stylesheet" type="text/css" />
+}
+
+<style>
+    .mini-modal {
+        opacity: .9;
+        background: #ccc;
+    }
+
+    .stateSpan {
+        padding: 0px 8px !important;
+        float: right !important;
+        border-radius: 15px;
+        font-size: 12px;
+        background-color: transparent !important;
+        margin-right: 5px !important;
+    }
+
+    .Revert {
+        color: #c63c39;
+        border: 1px solid #c63c39;
+        cursor: pointer;
+    }
+
+    .Adjust {
+        color: #2b88d8;
+        border: 1px solid #2b88d8;
+        cursor: pointer;
+    }
+
+    .BtnDisable {
+        background-color: #FFF;
+        color: #ccc;
+        border: 1px solid #ccc;
+    }
+
+    .Btn {
+        background-color: #FFF;
+        color: #82bf00;
+        border: 1px solid #82bf00;
+        cursor: pointer;
+    }
+
+
+    .titleSpan {
+        border-radius: 21px;
+        font-size: 13px;
+        /* margin-right: 5px !important; */
+        height: 42px;
+        width: 42px;
+        text-align: center;
+        line-height: 42px;
+    }
+
+    .titleFinish {
+        background-color: #82bf00;
+        color: #fff;
+        border: 1px solid #82bf00;
+    }
+
+    .titleUnFinish {
+        background-color: #2b88d8;
+        color: #fff;
+        border: 1px solid #2b88d8;
+    }
+
+    .titleNone {
+        background-color: #ccc;
+        color: #FFF;
+        border: 1px solid #ccc;
+    }
+</style>

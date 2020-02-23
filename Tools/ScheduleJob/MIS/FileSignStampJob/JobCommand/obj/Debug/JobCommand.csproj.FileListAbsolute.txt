@@ -1,0 +1,10 @@
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\AppFile\Resources\borderconfig.xml
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\AppFile\Resources\CAStamp.png
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\AppFile\Resources\FrameDefaultAtt.xml
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\AppFile\Resources\金慧签章.pfx
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\AppFile\JobCommand.exe.config
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\AppFile\JobCommand.exe
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\AppFile\JobCommand.pdb
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\JobCommand\obj\Debug\JobCommand.csprojResolveAssemblyReference.cache
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\JobCommand\obj\Debug\JobCommand.exe
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\JobCommand\obj\Debug\JobCommand.pdb

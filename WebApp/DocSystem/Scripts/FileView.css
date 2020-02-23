@@ -1,0 +1,64 @@
+﻿body, td, th {
+    font-size: 12px;
+    font-family: Microsoft YaHei;
+}
+
+.Item {
+    width: 235px;
+    padding: 5px;
+    border-bottom: 1px #eee solid;
+    border-top: 1px #fff solid;
+    border-left: 1px #fff solid;
+    border-right: 1px #fff solid;
+    float: left;
+    position: relative;
+}
+
+    .Item:hover {
+        border: 1px solid #ccc;
+    }
+
+.item-box {
+    margin: 10px;
+}
+
+.pic {
+    border: 1px #ccc solid;
+    padding: 5px;
+    position: relative;
+}
+
+.summary {
+    font-size: 14px;
+    padding-top: 5px;
+    height: 38px;
+    color: #333;
+    height: 48px;
+    overflow: hidden;
+}
+
+.row {
+    font-size: 12px;
+    padding-top: 5px;
+    height: 40px;
+    color: #999;
+}
+
+.col {
+    text-align: right;
+}
+
+.button {
+    text-align: center;
+    line-height: 18px;
+    padding: 0px;
+    text-decoration: none;
+    vertical-align: middle;
+    border: #a9acb5 1px solid;
+    display: inline-block;
+    cursor: pointer;
+    zoom: 1;
+    outline-style: none;
+    background-color: #eff1f3;
+    color: #369;
+}

@@ -1,0 +1,105 @@
+﻿@{
+    ViewBag.Title = "Edit";
+}
+<div id="formlayout" class="mini-layout" style="width: 100%; height: 100%;">
+    <div region="north" height="32" showspliticon="false" showheader="false" allowresize="false"
+         splitsize="0" style="border: 0;">
+        <div class="mini-toolbar" style="padding: 0px; border-left: 0; border-top: 0; border-right: 0;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        <a class="mini-button" iconcls="icon-save" onclick="save();" plain="true">保存</a>
+                        @{
+                            if (ViewBag.IsMulti == "True")
+                            {
+                                <span class="separator"></span>
+                                <a class="mini-button" iconcls="icon-up" onclick="getByIndexAdd(-1)" plain="true">上一个</a>
+                                <a class="mini-button" iconcls="icon-down" onclick="getByIndexAdd(1)" plain="true">下一个</a>
+                            }
+                            else
+                            {
+                                <a class="mini-button" iconcls="icon-cancel" onclick="closeWindow('cancel')" plain="true">取消</a>
+                            }
+                        }
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div title="center" region="center" style="border: 0;">
+        @Html.Raw(ViewBag.FormHtml)
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.Raw(ViewBag.SelectorScipts)
+ </script>
+<script type="text/javascript">
+    @{
+        var enumList = ViewBag.Enums as List<string>;
+        foreach (var item in enumList)
+        {
+        @Html.GetEnum(item);
+        }
+}
+    var fieldInfo=@Html.Raw(ViewBag.FieldInfo);
+</script>
+<script type="text/javascript">
+    function pageLoad() {
+        var Province = mini.getbyName("Province");
+        var City = mini.getbyName("City");
+        if (Province && City) {
+            Province.on("valuechanged", "ProvinceChanged");
+        }
+    }
+    function ProvinceChanged() {
+        var value = mini.getbyName("Province").getValue();
+        if (value == "" || value == null || value == undefined) {
+            mini.getbyName("City").setValue("");
+        }
+        mini.getbyName("City").setUrl("/Market/Common/GetCityEnum?Province=" + escape(value));
+    }
+
+    var baseSave = save;
+    save = function () {
+        var returnData = getQueryString("ReturnData");
+        if (returnData == "true")
+            baseSave({
+                onComplete: function (data) {
+                    msgUI("保存成功", 1, function () {
+                        closeWindow(data);
+                    });
+                }
+            });
+        else
+            baseSave();
+    }
+
+    function getByIndexAdd(i) {
+        parent.get(i);
+    }
+
+    function onFormSetData(data) {
+        var isNew = (data.ID==undefined||data.ID==""||data.ID==null);
+        setQuantityCtrl(isNew);
+    }
+
+    function setQuantityCtrl(isNew) {
+        var QuantityCtrl = mini.getbyName("Quantity");
+        var StorageNumCtrl = mini.getbyName("StorageNum");
+        if(QuantityCtrl){
+            if(isNew)
+                QuantityCtrl.on("valuechanged","onQuantityChanged");
+            else
+                QuantityCtrl.setEnabled(false);
+        }
+        if(StorageNumCtrl){
+            StorageNumCtrl.setEnabled(false);
+        }
+    }
+
+    function onQuantityChanged() {
+        var Quantity = mini.getbyName("Quantity").getValue();
+        if(!isNaN(Quantity))
+            mini.getbyName("StorageNum").setValue(Quantity);
+    }
+</script>

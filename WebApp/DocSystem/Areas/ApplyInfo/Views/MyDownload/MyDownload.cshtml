@@ -1,0 +1,144 @@
+﻿@{
+    ViewBag.Title = "MyDownload";
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+}
+<div class="mini-fit" style="padding-top: 5px;">
+    <div id="mainTab" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;">
+        <div title="可下载文件">
+            <div class="mini-toolbar" style="padding: 2px; border-bottom: 0;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 100%;">
+                            <a class="mini-button" iconcls="icon-download" onclick="download();" plain="true">下载</a>
+                            <a class="mini-button" iconcls="icon-remove" onclick="setExpire();" plain="true">删除</a>
+                        </td>
+                        <td class="gw-toolbar-right">
+                            <input id="mygridkey" class="mini-buttonedit gw-searchbox" emptytext="请输入文件名称" onenter="quickSearch('Name',{gridId:'dataGrid',queryBoxId:'mygridkey'});"
+                                   onbuttonclick="quickSearch('Name,Code',{gridId:'dataGrid',queryBoxId:'mygridkey'});" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="mini-fit" style="height: 100px;">
+                <div id="dataGrid" url="GetList" class="mini-datagrid" style="width: 100%; height: 100%;"
+                     allowresize="false" idfield="id" multiselect="true">
+                    <div property="columns">
+                        <div type="checkcolumn">
+                        </div>
+                        <div field="Download" width="60" headeralign="center" align="center">
+                            下载
+                        </div>
+                        <div field="Name" width="*" headeralign="center" allowsort="true" align="left">
+                            名称
+                        </div>
+                        <div field="Code" width="250" headeralign="center" allowsort="true">
+                            编号
+                        </div>
+                        <div field="DownloadExpireDate" width="100" headeralign="center" dateformat="yyyy-MM-dd"
+                             allowsort="true" align="center">
+                            下载到期日期
+                        </div>
+                        <div field="RemainDay" width="60" headeralign="center" dateformat="yyyy-MM-dd" allowsort="true"
+                             align="center">
+                            剩余天数
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div title="过期文件">
+            <div class="mini-toolbar" style="padding: 2px; border-bottom: 0;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 100%;"></td>
+                        <td class="gw-toolbar-right">
+                            <input id="expireKey" class="mini-buttonedit gw-searchbox" emptytext="请输入文件名称" onenter="quickSearch('Name', { gridId: 'expireGrid', queryBoxId: 'expireKey' });"
+                                   onbuttonclick="quickSearch('Name,Code', { gridId: 'expireGrid', queryBoxId: 'expireKey' });" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="mini-fit" style="height: 100px;">
+                <div id="expireGrid" url="GetExpireList" class="mini-datagrid" style="width: 100%; height: 100%;"
+                     allowresize="false" idfield="id" multiselect="true">
+                    <div property="columns">
+                        <div type="checkcolumn">
+                        </div>
+                        <div field="reDownload" width="60" headeralign="center" align="center">
+                            重新下载
+                        </div>
+                        <div field="Name" width="*" headeralign="center" allowsort="true" align="left">
+                            文件名称
+                        </div>
+                        <div field="Code" width="250" headeralign="center" allowsort="true">
+                            文件编号
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    if (getQueryString("ShowHistory"))
+        $("#mainTab").attr("activeindex", "1");
+    else
+        $("#mainTab").attr("activeindex", "0");
+
+    addGridButton("expireGrid", "reDownload", {
+        linkText: '重新下载', onButtonClick: function (row) {
+            var grid = mini.get("expireGrid");
+            addExecuteParam("files", row.FileID);
+            addExecuteParam("SpaceID", row.SpaceID);
+            execute("ApplyReDownload", {
+                validateForm: false, showLoading: false, async: false, refresh: false, onComplete: function (data) {
+                    msgUI("已成功加入下载车！");
+                    grid.reload();
+                }
+            });
+
+        }
+    });
+
+    addGridButton("dataGrid", "Download", {
+        linkText: '下载', onButtonClick: function (row) {
+            addExecuteParam("ListData", mini.encode([row]));
+            execute("GetFileAttachments", {
+                validateForm: false, showLoading: true, refresh: false, onComplete: function (data) {
+                    DownloadFile(data.FileIDs);
+                }
+            });
+        }
+    });
+
+    function download() {
+        var grid = mini.get("dataGrid");
+        var rows = grid.getSelecteds();
+        if (rows.length == 0) { mini.alert("请至少选择一条记录"); return; }
+
+        addExecuteParam("ListData", mini.encode(rows));
+        execute("GetFileAttachments", {
+            validateForm: false, showLoading: true, refresh: false, onComplete: function (data) {
+                debugger
+                DownloadFile(data.FileIDs);
+            }
+        });
+    }
+
+    function setExpire() {
+        var grid = mini.get("dataGrid");
+        var rows = grid.getSelecteds();
+        if (rows.length == 0) { mini.alert("请至少选择一条记录"); return; }
+        else {
+            msgUI("是否确认删除所选记录？", 2, function (data) {
+                addExecuteParam("ListData", rows);
+                execute("SetExpire", {
+                    validateForm: false, showLoading: true, refresh: false, onComplete: function (data) {
+                        grid.reload();
+                    }
+                });
+            })
+        }
+    }
+</script>

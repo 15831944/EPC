@@ -1,0 +1,23 @@
+d:\用户目录\我的文档\visual studio 2013\Projects\DataInterfaceSyn\DataInterfaceSyn\bin\Debug\DataInterfaceSyn.exe.config
+d:\用户目录\我的文档\visual studio 2013\Projects\DataInterfaceSyn\DataInterfaceSyn\bin\Debug\DataInterfaceSyn.exe
+d:\用户目录\我的文档\visual studio 2013\Projects\DataInterfaceSyn\DataInterfaceSyn\bin\Debug\DataInterfaceSyn.pdb
+d:\用户目录\我的文档\visual studio 2013\Projects\DataInterfaceSyn\DataInterfaceSyn\obj\Debug\DataInterfaceSyn.csprojResolveAssemblyReference.cache
+d:\用户目录\我的文档\visual studio 2013\Projects\DataInterfaceSyn\DataInterfaceSyn\obj\Debug\DataInterfaceSyn.FrmMain.resources
+d:\用户目录\我的文档\visual studio 2013\Projects\DataInterfaceSyn\DataInterfaceSyn\obj\Debug\DataInterfaceSyn.Properties.Resources.resources
+d:\用户目录\我的文档\visual studio 2013\Projects\DataInterfaceSyn\DataInterfaceSyn\obj\Debug\DataInterfaceSyn.csproj.GenerateResource.Cache
+d:\用户目录\我的文档\visual studio 2013\Projects\DataInterfaceSyn\DataInterfaceSyn\obj\Debug\DataInterfaceSyn.exe
+d:\用户目录\我的文档\visual studio 2013\Projects\DataInterfaceSyn\DataInterfaceSyn\obj\Debug\DataInterfaceSyn.pdb
+d:\用户目录\我的文档\visual studio 2013\Projects\DataInterfaceSyn\DataInterfaceSyn\bin\Debug\Newtonsoft.Json.dll
+D:\用户目录\我的文档\Visual Studio 2013\Projects\DataInterfaceSyn\DataInterfaceSyn\bin\Debug\tableMap.xml
+E:\work\EPM\Tools\业财中间表同步\DataInterfaceSyn\DataInterfaceSyn\bin\Debug\DataInterfaceSyn.exe.config
+E:\work\EPM\Tools\业财中间表同步\DataInterfaceSyn\DataInterfaceSyn\obj\Debug\DataInterfaceSyn.exe
+E:\work\EPM\Tools\业财中间表同步\DataInterfaceSyn\DataInterfaceSyn\obj\Debug\DataInterfaceSyn.pdb
+E:\work\EPM\Tools\业财中间表同步\DataInterfaceSyn\DataInterfaceSyn\bin\Debug\tableMap.xml
+E:\work\EPM\Tools\业财中间表同步\DataInterfaceSyn\DataInterfaceSyn\bin\Debug\DataInterfaceSyn.exe
+E:\work\EPM\Tools\业财中间表同步\DataInterfaceSyn\DataInterfaceSyn\bin\Debug\DataInterfaceSyn.pdb
+E:\work\EPM\Tools\业财中间表同步\DataInterfaceSyn\DataInterfaceSyn\bin\Debug\Newtonsoft.Json.dll
+E:\work\EPM\Tools\业财中间表同步\DataInterfaceSyn\DataInterfaceSyn\obj\Debug\DataInterfaceSyn.FrmMain.resources
+E:\work\EPM\Tools\业财中间表同步\DataInterfaceSyn\DataInterfaceSyn\obj\Debug\DataInterfaceSyn.Properties.Resources.resources
+E:\work\EPM\Tools\业财中间表同步\DataInterfaceSyn\DataInterfaceSyn\obj\Debug\DataInterfaceSyn.csproj.GenerateResource.Cache
+E:\work\EPM\Tools\业财中间表同步\DataInterfaceSyn\DataInterfaceSyn\obj\Debug\DataInterfaceSyn.FrmSourceTableDefaultValue.resources
+E:\work\EPM\Tools\业财中间表同步\DataInterfaceSyn\DataInterfaceSyn\obj\Debug\DataInterfaceSyn.FrmTargetTableColumn.resources

@@ -1,0 +1,30 @@
+﻿<div class="head" style="text-align: left;border-bottom: 1px solid #dbdbdb;">
+    <a onclick="$monitor.goback(this)" id="_task_detail_back" style="float: left; margin-left: 17px; font-weight: normal; font-size: 16px;"; >
+        <span class="icon-back" style="width:50px;">返回</span>
+    </a>
+    <span style="float:right;padding-right: 20px; font-size: 13px;  color: #888; font-weight:100;" >详细内容</span>
+</div>
+<article id="_detail_body" class="main">
+    <div id="scroller">
+        <div class="from-F1" style="padding: 10px 20px 18px 20px;">
+            <div class="from-F1-main">
+                <div class="from-F1-main01">
+                    <span class="from-F1-main01t">
+                        <label style=" font-size: 15px;  line-height: 20px; padding: 10px 0;  overflow: hidden; display: inline-block; color: #999;">{{Key}}</label><br />
+                        <label style=" font-size: 16px;  line-height: 23px;">{{Value}}</label>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+
+<script type="text/javascript">
+    var vmShow = new Vue({
+        el: '#_detail_body',
+        data: {
+            Key: getWXQueryString("Key"),
+            Value: getWXQueryString("Value")
+        }
+    })
+</script>

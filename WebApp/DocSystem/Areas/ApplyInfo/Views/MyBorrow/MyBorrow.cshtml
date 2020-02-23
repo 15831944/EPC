@@ -1,0 +1,156 @@
+﻿@{
+    ViewBag.Title = "MyBorrow";
+}
+<div class="mini-fit" style="padding-top: 5px;">
+    <div id="mainTab" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;">
+        <div title="我借阅的资料">
+            <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 100%;">
+
+                            <a class='mini-button' iconcls='icon-copy' onclick='DocBorrowContinue()' plain='true' id='DocBorrowContinue'>续借</a>
+                        </td>
+                        <td class="gw-toolbar-right">
+                            <input id="mygridkey" class="mini-buttonedit gw-searchbox" emptytext="请输入名称" onenter="quickSearch('Name',{gridId:'mygrid',queryBoxId:'mygridkey'});"
+                                onbuttonclick="quickSearch('Name,Code',{gridId:'mygrid',queryBoxId:'mygridkey'});" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="mini-fit" style="height: 100px;">
+                <div id="mygrid" url="GetList" class="mini-datagrid" style="width: 100%; height: 100%;"
+                    allowresize="false" idfield="id" multiselect="true">
+                    <div property="columns">
+                        <div type="checkcolumn">
+                        </div>
+                        <div field="Name" width="*" headeralign="center" allowsort="true" align="left">
+                            名称
+                        </div>
+                        @*                        <div field="Code" width="250" headeralign="center" allowsort="true">
+                            编号</div>*@
+                        <div field="BorrowExpireDate" width="100" headeralign="center" dateformat="yyyy-MM-dd"
+                            allowsort="true" align="center">
+                            到期归还日期
+                        </div>
+                        <div field="RemainDay" width="60" headeralign="center" dateformat="yyyy-MM-dd" allowsort="true"
+                            align="center">
+                            剩余天数
+                        </div>
+                        @*<div field="BorrowState" headeralign="center" width="80" allowsort="true" align="center">
+                            借阅状态</div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div title="历史借阅信息">
+            <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 100%;">
+                            <a class='mini-button' iconcls='icon-copy' onclick='borrow()' plain='true' id='Borrow'>重新借阅</a>
+                        </td>
+
+
+                        <td class="gw-toolbar-right">
+                            <input id="expireKey" class="mini-buttonedit gw-searchbox" emptytext="请输入文件名称" onenter="quickSearch('Name',{gridId:'expiregrid',queryBoxId:'expireKey'});"
+                                onbuttonclick="quickSearch('Name,Code',{gridId:'expiregrid',queryBoxId:'expireKey'});" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="mini-fit" style="height: 100px;">
+                <div id="expiregrid" url="getexpirelist" class="mini-datagrid" style="width: 100%; height: 100%;"
+                    allowresize="false" idfield="id" multiselect="true">
+                    <div property="columns">
+                        <div type="checkcolumn">
+                        </div>
+                        @*<div field="reborrow" width="60" headeralign="center" align="center">
+                            重新借阅</div>*@
+                        <div field="Name" width="*" headeralign="center" allowsort="true" align="left">
+                            文件名称
+                        </div>
+                        <div field="LendDate" width="100" headeralign="center" dateformat="yyyy-MM-dd"
+                            allowsort="true" align="center">
+                            借阅日期
+                        </div>
+                        <div field="ReturnDate" width="100" headeralign="center" dateformat="yyyy-MM-dd"
+                            allowsort="true" align="center">
+                            归还日期
+                        </div>
+                        <div field="ReturnUser" width="100" headeralign="center" allowsort="true" align="center">
+                            归还人
+                        </div>
+                        @*                        <div field="Code" width="250" headeralign="center" allowsort="true">
+                            文件编号</div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    //续借 DocBorrowContinue
+    function DocBorrowContinue() {
+        var grid = mini.get("mygrid");
+        var rows = grid.getSelecteds();
+        var IDs = "";
+        if (rows.length <= 0) { msgUI("请选择一条记录"); return;}
+        for (var i = 0; i < rows.length; i++) {
+            IDs += rows[i].ID + ',';
+        }
+        addExecuteParam("IDs", IDs);
+        execute("DocBorrowContinueDays", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                grid.reload();
+                msgUI("续借成功");
+            }, validateForm: false
+        });
+    }
+    //重新借阅
+    function borrow() {
+        var grid = mini.get("expiregrid");
+        var rows = grid.getSelecteds();
+        var spaceID = rows[0].SpaceID;
+        if (rows.length <= 0) { msgUI("请选择需要借阅的文件记录"); return; }
+        addExecuteParam("rows", mini.encode(rows));
+        execute("Borrow", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                grid.reload();
+                msgUI("成功加入购物车");
+            }, validateForm: false
+        });
+    }
+
+
+    //        addGridSettings({ Title: "Title", Width: 700, Height: 500, SortField: "RemainDay", SortDir: "ASC" });
+    //        addGridLinkSettings({ LinkUrl: "/DocSystem/Pages/Basic/View/File/Edit.aspx", Field: "Name",
+    //            LinkData: { ID: "FileID", SpaceID: "SpaceID", ConfigID: "ConfigID" }, LinkType: "Link", LinkAction: "View",
+    //            Title: "文件查看"
+    //        });
+
+    //        addGridSettings({ GridID: "expiregrid", LoadMethod: "getexpirelist" });
+    //        addGridLinkSettings({ GridID: "expiregrid", Field: "reborrow", LinkType: "Function" });
+    if (getQueryString("ShowHistory"))
+        $("#mainTab").attr("activeindex", "1")
+    else
+        $("#mainTab").attr("activeindex", "0")
+    mini.parse();
+    var grid = mini.get("mygrid");
+    grid.on("drawcell", function (e) {
+        var record = e.record, column = e.column, field = e.field, value = e.value;
+        var RemainDay = record.RemainDay;
+        if (field == "BorrowState") {
+            if (e.value == "Return") {
+                e.cellHtml = "<span class='icon-Green' title='归还'></span>"
+            }
+            if (e.value == "Borrow" || e.value == "Finish") {
+                e.cellHtml = "<span class='icon-Yellow' title='正常'></span>"
+            }
+            if (e.value == "Borrow" && RemainDay <= 0) {
+                e.cellHtml = "<span class='icon-Red' title='逾期未归还'></span>"
+            }
+        }
+    });
+
+</script>

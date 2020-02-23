@@ -1,0 +1,243 @@
+﻿@*<script src="/PortalLTE/Scripts/jQuery/jQuery-2.2.0.min.js"></script>*@
+<link rel="stylesheet" href="/PortalLTE/Scripts/bootstrap/css/bootstrap.min.css">
+<link href="/DocSystem/Scripts/MyPortal.css" rel="stylesheet" />
+<link href="/DocSystem/Scripts/EsFullTextSearchContent.css" rel="stylesheet" />
+<script src="/DocSystem/Scripts/DocFunc.js"></script>@*在线浏览 借阅 下载 方法调用*@
+<div style="overflow: hidden; background-color: transparent; height: 100%">
+    <div class="row content">
+        <div class="col-md-7 col-sm-7 col-xs-7 col">
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <select id="selSpace">
+                        <option value="">全部</option>
+                        @{
+                            var spaceTable = ViewBag.SpaceTable as System.Data.DataTable;
+                            if (spaceTable.Rows.Count > 0)
+                            {
+                                foreach (System.Data.DataRow row in spaceTable.Rows)
+                                {
+                                    var spaceid = row["ID"].ToString();
+                                    if (ViewBag.SpaceID == spaceid)
+                                    {<option value="@spaceid" selected = "selected">@row["Name"]</option>}
+                                    else
+                                    {<option value="@spaceid">@row["Name"]</option>}
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+                <input type="text" id="txtQueryValue"
+                    class="form-control"
+                    aria-label="..."
+                    placeholder="请输入关键词" value="@ViewBag.QueryValue" keydown="searchFile()"/>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-3 col-xs-3 col">
+            <button type="button" class="btn search" onclick="searchFile()">搜索文档</button>
+            @*<button type="button" class="btn top-search" onclick="topSearch()">高级搜索</button>*@
+        </div>
+
+        <div class="col-md-2 col-sm-2 col-xs-2 col shopcar">
+            <div class="img">
+                <div onclick="openDonwnLoadBorrowCar()">
+                    <img src="/DocSystem/Scripts/Images/cart.png" alt="cart"  />
+                </div>
+                <div class="divright">
+                    @ViewBag.CarCount
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="result-area"><div class='result' id="divTotal">为您找到相关结果 0 个</div></div>
+	<div class="mini-fit-area">
+    <div class="mini-fit" id="gridArea">
+        <div id="dataGrid" url="GetList" class="mini-datagrid" style="width: 100%; height: 100%;" onload="onGridLoad"
+            idfield="id" multiselect="true" showvgridlines="false" showcolumns="false" autoload="false">
+            <div property="columns">
+                @*<div type="indexcolumn">
+                </div>*@
+                <div field="Content" width="*" headeralign="center" allowsort="false" renderer="onContentRenderer">
+                </div>
+            </div>
+        </div>
+    </div>
+	</div>
+</div>
+
+<script type="text/javascript">
+    if (!String.prototype.endsWith) {
+        String.prototype.endsWith = function (search, this_len) {
+            if (this_len === undefined || this_len > this.length) {
+                this_len = this.length;
+            }
+            return this.substring(this_len - search.length, this_len) === search;
+        };
+    }
+</script>
+<script type="text/javascript">
+    $("body").css("background-color", " transparent");
+    function onGridLoad(e) {
+        var total = e.result.total;
+        if (total == 10000)
+            total = "超过" + total;
+        $("#divTotal").text("为您找到相关结果 " + total + " 个");
+    }
+    function onContentRenderer(e) {
+        var rec = e.record;
+        var rowIndex = e.rowIndex;
+        var content = "<div class='body'>\
+    <div class='title1 title-{filetype}' onclick='viewFileAttr()'>{title}</div>\
+    {propertyStr}\
+    <div class='contains'>\
+        <span class='date'>{FileCreateDate}</span><span class='drop'>•</span> {content}\
+    </div>\
+    <div class='buttom'>\
+        <div class='fileScret'>\
+            <!--<div class='file'>归档人：<span>{FileCreateUser}</span></div>-->\
+            {SecretLevel}\
+        </div>\
+        <div class='ability'><span onclick='opentree()'>{FullPath}</span></div>\
+        <div class='line'>|</div>\
+        <div class='browse'><span onclick='browse()'>在线浏览</span></div>\
+        <div class='borrow'><span onclick='Borrow()'>借阅</span></div>\
+        <div class='down'><span onclick='Down()'>下载</span></div>\
+    </div>\
+</div>";
+        //fileId[]=[{rec.ID},{rec.ID}]
+        content = content.replace("{title}", rec.title);
+        content = content.replace("{content}", rec.content);
+        content = content.replace("{propertyStr}", rec.propertyStr && "<div class='property'>属性：" + rec.propertyStr + "</div>");
+        //content = content.replace("{FileCreateUser}", rec.FileCreateUser);
+        content = content.replace("{SecretLevel}", rec.SecretLevel && "<div class='secret'>密级：<span>" + rec.SecretLevel + "</span></div>");
+        content = content.replace("{FileCreateDate}", mini.formatDate(rec.FileCreateDate, 'yyyy-MM-dd'));
+        //处理目录
+        var pathAry = mini.decode(rec.FullPathJson);
+        var textAry = [];
+        for (var i = 0; i < pathAry.length; i++) {
+            if (pathAry[i] != null)
+                textAry.push(pathAry[i]["name"]);
+        }
+        content = content.replace("{FullPath}", textAry.join(' > '));
+        
+        //文件图标
+        var filetype = "txt";
+        if (rec.title)
+        {
+            var title = rec.title.toLowerCase();
+            if (title.endsWith(".doc") || title.endsWith(".docx"))
+                filetype = "word";
+            else if (title.endsWith(".xls") || title.endsWith(".xlsx"))
+                filetype = "excel";
+            else if (title.endsWith(".pdf") || title.endsWith(".pdf"))
+                filetype = "pdf";
+        }
+        content = content.replace("{filetype}", filetype);
+            
+        return $(content)[0].outerHTML;
+    }
+    function viewFileAttr()
+    {
+        var grid = mini.get("dataGrid");
+        var row = grid.getSelected();
+        var url = "/DocSystem/View/FileView/Edit?ID=" + row.FileID + "&SpaceID=" + row.SpaceID + "&ConfigID=" + row.ConfigID + "&Functype=view";
+        openWindow(url, { addQueryString: false, title: '文件属性', width: "80%", height: "80%", funcType: 'view' });
+        history("viewfile");
+    }
+
+    //添加历史记录
+    function history(e) {
+        var grid = mini.get("dataGrid");
+        var row = grid.getSelected();
+        var filename = row.title.replace(/<\/?.+?>/g, '');
+        //取文件节点的名称
+        var pathAry = mini.decode(row.FullPathJson);
+        var fileItem = $.grep(pathAry, function (item, index) {
+            return item.type == "file";
+        });
+        if (fileItem.length > 0) filename = fileItem[0].name;
+
+        addHistory(filename,row.FileID, row.NodeID, row.SpaceID,e)
+    }
+
+    //点击功能选项
+    function opentree() {
+        var grid = mini.get("dataGrid");
+        var row = grid.getSelected();
+        if (!row) { mini.alert("请选中一条记录"); return; }
+        var url = "/DocSystem/View/NodeView/Tree?ID=" + row.NodeID + "&SpaceID=" + row.SpaceID;
+        openWindow(url, { addQueryString: false, title: '图档树形图', width: "90%", height: "90%", funcType: 'view' });
+        history("open");
+    }
+    //点击浏览选项
+
+    function browse() {
+        var grid = mini.get("dataGrid");
+        var row = grid.getSelected();
+        Browse(row.FileID, row.SpaceID);
+        history("view");
+        
+    }
+    //点击借阅选项
+    function Borrow() {
+        var grid = mini.get("dataGrid");
+        var row = grid.getSelected();
+        var spaceID = row.SpaceID;
+        var rows = [];
+        rows.push({ ID: row.FileID });
+        BorrowFile(rows, spaceID);
+        execute("GetCarCount", {
+            validateForm: false, showLoading: true, async: false, refresh: false, onComplete: function (data) {
+                $(".divright").text(data.carCount);
+                history("borrowfile");
+            }
+        });
+    }
+    //点击下载选项
+    function Down() {
+        var grid = mini.get("dataGrid");
+        var row = grid.getSelected();
+        var spaceID = row.SpaceID;
+        var rows = [];
+        rows.push({ ID: row.FileID });
+        DownloadFiles(rows, spaceID);
+        execute("GetCarCount", {
+            validateForm: false, showLoading: true, async: false, refresh: false, onComplete: function (data) {
+                $(".divright").text(data.carCount);
+                history("download");
+            }
+        });
+    }
+    //借阅下载车
+    function openDonwnLoadBorrowCar() {
+        var url = "/DocSystem/Car/Car/Car";
+        openWindow(url, {
+            refresh: false, title: "借阅申请信息", width: "80%", height: "80%",
+            onDestroy: function (data) {
+                execute("GetCarCount", {
+                    validateForm: false, showLoading: true, async: false, refresh: false, onComplete: function (data) {
+                        $(".divright").text(data.carCount);
+                    }
+                });
+            }
+        });
+    }
+    $(function () {
+        searchFile();
+        $('#txtQueryValue').bind('keypress', function (e) {
+            if (e.keyCode == "13") {
+                searchFile();
+            }
+        });
+    });
+
+    function searchFile() {
+        var grid = mini.get("#dataGrid");
+        var data = {};
+        data["$IL$QueryText"] = $("#txtQueryValue").val();
+        data["$EQ$SpaceID"] = $('#selSpace').find("option:selected").val();
+        if (grid != undefined)
+            grid.load({ quickQueryFormData: mini.encode(data) });
+    }
+
+</script>

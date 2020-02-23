@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "List";
+}
+
+<div id="mainLayout" class="mini-layout" style="width: 100%; height: 100%;">
+    <div title="south" region="south" showsplit="false" showheader="true" height="80" showspliticon="true">
+        <div class="mini-fit">
+            <div id="detailGrid" url="" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID" multiselect="true">
+                <div property="columns">
+                    <div type="checkcolumn">
+                    </div>
+                    <div field="Name" width="*" headeralign="center" allowsort="true">
+                        成本单元名称
+                    </div>
+                    <div field="Code" width="120" headeralign="center" allowsort="true" align="center">
+                        成本单元编号
+                    </div>
+                    <div field="TotalCostValue" width="120" headeralign="center" allowsort="true"
+                         align="center">
+                        已发生成本（元）
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div title="center" region="center">
+        <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        <a class="mini-button" iconcls="icon-add" onclick="ReturnValue" plain="true">选择</a>
+                        <a class="mini-button" iconcls="icon-cancel" onclick="closeWindow();" plain="true">取消</a>
+                    </td>
+                    <td style="white-space: nowrap;"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="mini-fit">
+            <div id="dataGrid" url="GetCBSInfoList" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID" multiselect="false"
+                 onselectionchanged="onSelectionChanged">
+                <div property="columns">
+                    <div type="checkcolumn">
+                    </div>
+                    <div field="Name" width="300" headeralign="center" allowsort="true">
+                        项目名称
+                    </div>
+                    <div field="Code" width="120" headeralign="center" allowsort="true">
+                        项目编号
+                    </div>
+                    <div field="ChargerUserName" width="100" headeralign="center" allowsort="true" align="center">
+                        负责人
+                    </div>
+                    <div field="ChargerDeptName" headeralign="center" width="120" allowsort="true" align="center">
+                        责任部门
+                    </div>
+                    <div field="CreateDate=" 150" headeralign="center" dateformat="yyyy-MM-dd" allowsort="true"
+                         align="center">
+                        立项日期
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function ReturnValue() {
+
+    }
+
+    function onSelectionChanged(e) {
+
+    }
+</script>

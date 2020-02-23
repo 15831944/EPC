@@ -1,0 +1,136 @@
+﻿<script src="../../Scripts/jQuery-2.2.0.min.js" type="text/javascript"></script>
+<script src="../../Scripts/base.js" type="text/javascript"></script>
+<script src="../../Scripts/vue.js" type="text/javascript"></script>
+<script src="../../Scripts/layer.js" type="text/javascript"></script>
+<script src="../../Scripts/date.min.js" type="text/javascript"></script>
+<link href="../../Scripts/css/date.min.css" rel="stylesheet" type="text/css" />
+<link href="../../Scripts/css/mobile.css" rel="stylesheet" />
+<link href="../../Scripts/css/qrcode-audit.css" rel="stylesheet" />
+<ul class="page-views page-move main" style="top: 0px;">
+    <li class="page md-show">
+        <div id="_show_head" class="head" style="text-align: left;border-bottom: 1px solid #dbdbdb;">
+            <div class="qr-head-left">
+                <img src="../../Scripts/css/images/dwg.png" v-if="Type=='dwg'" />
+                <span v-if="Type=='dwg'">图纸信息</span>
+            </div>
+            <div class="qr-head-right">
+                <span v-if="Type=='dwg'">DWG</span>
+            </div>
+        </div>
+        <article id="_show_body" class="main">
+            <div id="scroller">
+                <div class="from-F1" style="padding: 25px 20px 25px 20px;">
+                    <div class="from-F1-main">
+                        <div class="from-F1-main01">
+                            <span class="from-F1-main01t">
+                                <label class="qr-title">{{Title}}</label>
+                                <label class="qr-subtitle">[{{SubTitle}}]</label>
+                            </span>
+                        </div>
+                        <div class="from-F1-main02" style="height:20px">
+                            <ul>
+                                <li style="float: left;" v-for="dic in SubFormDic">
+                                    <label v-if="!dic.IsLink" style="margin-right:10px;">{{dic.FieldValue}}</label>
+                                    <label class="qr-subitems" v-if="dic.IsLink&&dic.IsCurrent" :onclick="dic.Onclick" style="background-color: #f5ff00; font-size: 18px;">{{dic.FieldValue}}</label>
+                                    <label class="qr-subitems" v-if="dic.IsLink&&!dic.IsCurrent" :onclick="dic.Onclick" style="font-size: 15px;">{{dic.FieldValue}}</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="from-F2" id="_detail_FormDic_section">
+                    <ul id="_detail_formDic">
+                        <li class="qr-items-li" v-for="dic in FormDic" :onclick="dic.Onclick">
+                            <label class="qr-items-li-left"><img :src="dic.ImageSrc" />{{dic.FieldName}}</label>
+                            <label class="qr-items-li-right">{{dic.FieldValue}}</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+    </li>
+</ul>
+
+<script type="text/javascript">
+    var key = getWXQueryString("k");
+</script>
+<script type="text/javascript">
+    var head = new Vue({
+        el: '#_show_head',
+        data: {
+            Type: "",
+            AuditStep: ""
+        }
+    })
+    var vm = new Vue({
+        el: '#_show_body',
+        data: {
+            ID: "",
+            Title: "",
+            SubTitle: "",
+            FormDic: [],
+            SubFormDic: [],
+            word_items: []
+        }
+    })
+    loadDetail();
+    function loadDetail() {
+        $.ajax({
+            url: "Get?id=" + key.replace(/\+/g, "%2b"),
+            cache: false,
+            type: "Post",
+            success: function (data, textStatus) {
+                if (data) {
+                    if (data.State) {
+                        vm.ID = data.ID;
+                        vm.Title = data.Title;
+                        vm.SubTitle = data.SubTitle;
+                        for (var i = 0; i < data.FormDic.length; i++) {
+                            data.FormDic[i]["Onclick"] = "openDetail('" + data.FormDic[i].FieldName + "','" + data.FormDic[i].FieldValue + "')";
+                            data.FormDic[i]["ImageSrc"] = "../../Scripts/css/images/" + data.FormDic[i]["IconCls"] + ".png";
+                        }
+                        for (var i = 0; i < data.SubFormDic.length; i++) {
+                            var fieldName = data.SubFormDic[i]["FieldName"];
+                            if (fieldName == "Collact" || fieldName == "Audit" || fieldName == "Approve") {
+                                var isCur = false;
+                                if (fieldName == data.AuditStep)
+                                    isCur = true;
+                                if (data.SubFormDic[i]["FieldValue"] != "0")
+                                    data.SubFormDic[i]["IsLink"] = true;
+                                data.SubFormDic[i]["Onclick"] = "showFiles('" + data.ID + "','" + fieldName + "','" + isCur + "')";
+                                data.SubFormDic[i]["IsCurrent"] = isCur;
+                                data.SubFormDic[i]["FieldValue"] = fieldName == "Collact" ? "校对(" + data.SubFormDic[i]["FieldValue"] + ")" :
+                                    fieldName == "Audit" ? "审核(" + data.SubFormDic[i]["FieldValue"] + ")" :
+                                    fieldName == "Approve" ? "审定(" + data.SubFormDic[i]["FieldValue"] + ")" : "";
+                            }
+                        }
+                        vm.FormDic = data.FormDic;
+                        vm.SubFormDic = data.SubFormDic;
+                        if (data.AuditStep) {
+                            head.AuditStep = data.AuditStep;
+                        }
+                        head.Type = data.Type;
+                    }
+                    else {
+                        alert(data.Message);
+                    }
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+            }
+        });
+    }
+
+    function showFiles(id, step, isCur) {
+        $monitor.go("/QrCode/FileList?ID=" + id + "&Step=" + step, "_Detail", "", function (info) { });
+    }
+
+    function openDetail(title, value) {
+        if (value == "null") value = "";
+        $monitor.go("/QrCode/Detail?Key=" + title + "&Value=" + value, "_Detail", "", function (info) { });
+    }
+
+    function closeWin() {
+        $ydtHelper.closeWindow();
+    }
+</script>

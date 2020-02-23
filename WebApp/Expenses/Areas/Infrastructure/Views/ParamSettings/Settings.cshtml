@@ -1,0 +1,178 @@
+﻿@{
+    ViewBag.Title = "Settings";
+}
+
+<div id="formlayout" class="mini-layout" style="width: 100%; height: 100%;">
+    <div title="north" region="north" height="36" showspliticon="false" showheader="false" allowresize="false"
+         splitsize="0" style="border: 0;">
+        <div class="mini-toolbar" id="btnDiv">
+            <table>
+                <tr>
+                    <td>
+                        <a class="mini-button" iconcls="icon-save" onclick="save({ closeWindow: false });" plain="true">保存</a>
+                        <a class="mini-button" iconcls="icon-ok" onclick="reset();" plain="true">应用</a>
+                    </td>
+                    <td id="btnRight">
+                        <a class="mini-button" onclick="showHelp()" iconcls="icon-help" plain="true">帮助</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div title="center" region="center" style="border: 0;">
+        <form id="dataForm">
+            <input name="ID" class="mini-hidden" />
+            <div class="formDiv">
+                <fieldset>
+                    <legend>收入确认相关设置</legend>
+                    <div>
+                        <table>
+                            <tr class="hideRow">
+                                <td width="15%"></td>
+                                <td width="35%"></td>
+                                <td width="15%"></td>
+                                <td width="35%"></td>
+                            </tr>
+                            <tr>
+                                <td>收入计算校验模式</td>
+                                <td>
+                                    <input name="IncomeValidateMode" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value"
+                                           data="IncomeValidateMode" allowinput="false" required="true" />
+                                </td>
+                                <td style="padding-left:20px;">收入调整校验模式</td>
+                                <td>
+                                    <input name="ValidateAdjustMode" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value"
+                                           data="IncomeAdjustValidateMode" allowinput="false" required="true" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>撤销收入校验模式</td>
+                                <td>
+                                    <input name="IncomeRemoveValidateMode" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value"
+                                           data="IncomeValidateMode" allowinput="false" required="true" />
+                                </td>
+                                <td style="padding-left:20px;">节点法自动确认收入</td>
+                                <td>
+                                    <input name="ProgressAutoIncome" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value"
+                                           data="trueOrFalse" allowinput="false" required="true" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>允许补录月份数</td>
+                                <td>
+                                    <input name="IncomeDefaultMonthCount" style="width: 100%" class="mini-textbox" required="true" vtype="datatype:int" />
+                                </td>
+                                <td style="padding-left:20px;">允许提前确认月份数</td>
+                                <td>
+                                    <input name="IncomeLastMonthCount" style="width: 100%" class="mini-textbox" required="true" vtype="datatype:int" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>开票收入确认</td>
+                                <td>
+                                    <input name="IncomeInvoiceConfirm" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value"
+                                           data="trueOrFalse" allowinput="false" required="true" />
+                                </td>
+                                <td style="padding-left:20px;"></td>
+                                <td>
+                                     
+                                </td>
+                            </tr>
+                            @*<tr>
+                                    <td>成本法计算成本包含：</td>
+                                    <td>
+                                        <input name="IncomeCalCostType" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value"
+                                               data="CostType" multiselect="true" allowinput="false" required="true" />
+                                    </td>
+                                    <td style="padding-left:20px;"></td>
+                                    <td></td>
+                                </tr>*@
+                        </table>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>成本核算相关设置</legend>
+                    <div>
+                        <table>
+                            <tr class="hideRow">
+                                <td width="15%"></td>
+                                <td width="35%"></td>
+                                <td width="15%"></td>
+                                <td width="35%"></td>
+                            </tr>
+                            <tr>
+                                <td>成本调整校验方式</td>
+                                <td>
+                                    <input name="CostAdjustValidateMode" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value"
+                                           data="CostAdjustValidateMode" allowinput="false" required="true" />
+                                </td>
+                                <td style="padding-left:20px;">分摊移除校验方式</td>
+                                <td>
+                                    <input name="RemoveApportionValidateMode" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value"
+                                           data="RemoveApportionValidateMode" allowinput="false" required="true" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>允许补录月份数</td>
+                                <td>
+                                    <input name="CostDefaultMonthCount" style="width: 100%" class="mini-textbox" required="true" vtype="datatype:int" />
+                                </td>
+                                <td style="padding-left:20px;">允许提前确认月份数</td>
+                                <td>
+                                    <input name="CostLastMonthCount" style="width: 100%" class="mini-textbox" required="true" vtype="datatype:int" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>工时直接确认成本</td>
+                                <td>
+                                    <input name="WorkHourToCost" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value"
+                                           data="trueOrFalse" allowinput="false" required="true" />
+                                </td>
+                                <td style="padding-left:20px;">结账时操作</td>
+                                <td>
+                                    <input name="CloseOperation" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value"
+                                           data="CloseOperationEnum" allowinput="false" required="true" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>外委成本确认</td>
+                                <td>
+                                    <input name="SubContractConfirmMethod" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value"
+                                           data="subContractMethod" allowinput="false" required="true" />
+                                </td>
+                                <td style="padding-left:20px;">工时填报项目来源</td>
+                                <td>
+                                    <input name="WorkHourSelectFrom" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value"
+                                           data="WorkHourSelectFrom" allowinput="false" required="true" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </fieldset>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum(typeof(Expenses.Logic.IncomeValidateMode))
+    @Html.GetEnum(typeof(Expenses.Logic.IncomeAdjustValidateMode))
+    @Html.GetEnum(typeof(Expenses.Logic.CloseOperationEnum))
+</script>
+
+<script type="text/javascript">
+    var trueOrFalse = [{ value: "true", text: "是" }, { value: "false", text: "否" }];
+    var subContractMethod = [{ value: "ProgressConfirm", text: "委外进度确认" }, { value: "SubContractConfirm", text: "委外合同确认" },
+        { value: "PaymentConfirm", text: "委外付款确认" }, { value: "InvoiceConfirm", text: "委外开票确认" }];
+    var RemoveApportionValidateMode = [{ value: "None", text: "不校验" }, { value: "Confirm", text: "异常后询问" }, { value: "Forbidden", text: "异常后禁止删除" }];
+    var CostAdjustValidateMode = [{ value: "None", text: "不校验" }, { value: "Confirm", text: "异常后询问" }, { value: "Forbidden", text: "异常后禁止删除" }];
+    var WorkHourSelectFrom = [{ value: "DesignProject", text: "设计项目" }, { value: "CostUnit", text: "核算项目" }];
+    function reset() {
+
+        execute("ResetSysParam", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                msgUI("应用成功");
+            }, validateForm: false
+        });
+
+    }
+</script>

@@ -1,0 +1,9 @@
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileViewConvertJob\Common.Logic\bin\Debug\Common.Logic.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileViewConvertJob\Common.Logic\bin\Debug\Common.Logic.pdb
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileViewConvertJob\Common.Logic\bin\Debug\EntityFramework.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileViewConvertJob\Common.Logic\bin\Debug\log4net.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileViewConvertJob\Common.Logic\bin\Debug\MySql.Data.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileViewConvertJob\Common.Logic\bin\Debug\Newtonsoft.Json.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileViewConvertJob\Common.Logic\obj\Debug\Common.Logic.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileViewConvertJob\Common.Logic\obj\Debug\Common.Logic.pdb
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileViewConvertJob\Common.Logic\obj\Debug\Common.Logic.csprojResolveAssemblyReference.cache

@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Car";
+}
+<div id="mainTab" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;" borderstyle="border:0;" tabposition="left">
+</div>
+<script type="text/javascript">
+    function pageLoad() {
+        var tabs = mini.get("mainTab");
+        var type = getQueryString("Type");
+        if (!type) {
+            tabs.setTabs([
+                 { url: "BorrowCar", title: "借<br>阅<br>车", refreshOnClick: true },
+                 { url: "DownloadCar", title: "下<br>载<br>车", refreshOnClick: true }
+            ]);
+        }
+        else if (type == "Borrow") {
+            tabs.setTabs([
+                 { url: "BorrowCar", title: "借<br>阅<br>车", refreshOnClick: true }
+            ]);
+        }
+        else if (type == "Download") {
+            tabs.setTabs([
+                 { url: "DownloadCar", title: "下<br>载<br>车", refreshOnClick: true }
+            ]);
+        }
+    }
+</script>

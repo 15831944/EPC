@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "CustomerSingle";
+}
+<div class="mini-toolbar" style="padding: 0px; border-bottom: 0px; border-top: 0px;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" iconcls="icon-ok" plain="true" onclick="returnValue()">选择</a>
+                <a class="mini-button" iconcls="icon-cancel" plain="true" onclick="closeWindow()">取消</a>
+            </td>
+            <td style="white-space: nowrap;">
+                <input class="mini-buttonedit searchbox" id="key" emptytext="请输入客户编号或名称" style="width: 200px;"
+                    onenter="quickSearch('Name,Code');" onbuttonclick="quickSearch('Name,Code');" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit">
+    <div id="dataGrid" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID"
+        allowmovecolumn="false" allowresize="true" url="GetSingleCustomerList" pagesize="20">
+        <div property="columns">
+            <div type="checkcolumn">
+            </div>
+            <div field="Code" width="15%" align="center" allowsort="true" headeralign="center">
+                客户编号</div>
+            <div field="Name" width="20%" align="left" allowsort="true" headeralign="center">
+                客户名称</div>
+            <div field="ShortName" width="15%" align="center" align="center" headeralign="center">
+                客户简称</div>
+            <div field="Telephone" align="center" width="15%" allowsort="true" headeralign="center">
+                电话</div>
+            <div field="Address" width="20%" allowsort="true" align="left" headeralign="center">
+                联系地址</div>
+            <div field="Industry" renderer="onEnumRender" headeralign="center" align="center"
+                width="15%" allowsort="true">
+                所属行业</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+  @Html.GetEnum("Market.Industry")
+</script>
+<script type="text/javascript">
+    addGridEnum("dataGrid", "Industry", "Industry");
+    function returnValue() {
+        var grid = mini.get("dataGrid");
+        closeWindow(grid.getSelecteds());
+    }
+</script>

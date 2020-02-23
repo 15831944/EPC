@@ -1,0 +1,549 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{17DA645C-8769-44B4-A141-7D72C4C129CE}</ProjectGuid>
+    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Expenses</RootNamespace>
+    <AssemblyName>Expenses</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Config.Logic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BaseFrame\Resource\Dll\Config.Logic.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BaseFrame\Resource\Dll\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Formula, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BaseFrame\Resource\Dll\Formula.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MvcAdapter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BaseFrame\Resource\Dll\MvcAdapter.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BaseFrame\Resource\Dll\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\..\BaseFrame\Resource\Dll\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Mvc.FixedDisplayModes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.FixedDisplayModes.1.0.0\lib\net40\Microsoft.Web.Mvc.FixedDisplayModes.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.0.30506.0\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.4.0.30506.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.0.30506.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.4.0.30506.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.30506.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.4.0.30506.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.AspNet.Razor.2.0.30506.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Areas\AutoUI\AutoUIAreaRegistration.cs" />
+    <Compile Include="Areas\AutoUI\Controllers\ReimbursementSubmitController.cs" />
+    <Compile Include="Areas\Budget\BudgetAreaRegistration.cs" />
+    <Compile Include="Areas\Budget\Controllers\BudgetingController.cs" />
+    <Compile Include="Areas\Budget\Controllers\BudgetSubmitController.cs" />
+    <Compile Include="Areas\Budget\Controllers\ComparisonController.cs" />
+    <Compile Include="Areas\Build\BuildAreaRegistration.cs" />
+    <Compile Include="Areas\Build\Controllers\S_EP_CBSInfoCancelController.cs" />
+    <Compile Include="Areas\Build\Controllers\S_EP_CBSInfoBuilderController.cs" />
+    <Compile Include="Areas\Cost\Controllers\CostApportionController.cs" />
+    <Compile Include="Areas\Cost\Controllers\WorkHourCostInfoController.cs" />
+    <Compile Include="Areas\Cost\Controllers\CostInfoController.cs" />
+    <Compile Include="Areas\Cost\Controllers\DrawMoneyController.cs" />
+    <Compile Include="Areas\Cost\Controllers\IndirectExpensesController.cs" />
+    <Compile Include="Areas\Cost\Controllers\RefundInfoController.cs" />
+    <Compile Include="Areas\Cost\Controllers\ReimbursementSubmitController.cs" />
+    <Compile Include="Areas\Cost\Controllers\SubContractConfirmController.cs" />
+    <Compile Include="Areas\Cost\Controllers\SubContractConfirmRevertController.cs" />
+    <Compile Include="Areas\Cost\Controllers\SubContractProgressConfirmController.cs" />
+    <Compile Include="Areas\Cost\Controllers\SubContractSettlementController.cs" />
+    <Compile Include="Areas\Cost\Controllers\SubContractTaskChangeController.cs" />
+    <Compile Include="Areas\Cost\Controllers\SubContractTaskController.cs" />
+    <Compile Include="Areas\Cost\Controllers\SubInvoiceConfirmController.cs" />
+    <Compile Include="Areas\Cost\Controllers\SubInvoiceConfirmRevertController.cs" />
+    <Compile Include="Areas\Cost\Controllers\WorkHourUserLogController.cs" />
+    <Compile Include="Areas\Cost\Controllers\WorkHourUserController.cs" />
+    <Compile Include="Areas\Cost\Controllers\WorkHourDepartSubmitController.cs" />
+    <Compile Include="Areas\Cost\Controllers\WorkHourSubmitController.cs" />
+    <Compile Include="Areas\Cost\Controllers\WorkHourDepartSubmitRevertController.cs" />
+    <Compile Include="Areas\Cost\Controllers\WorkHourSubmitRevertController.cs" />
+    <Compile Include="Areas\InCome\Controllers\IncomeInvoiceConfirmRevertController.cs" />
+    <Compile Include="Areas\InCome\Controllers\IncomeInvoiceConfirmController.cs" />
+    <Compile Include="Areas\InCome\Controllers\IncomeSubmitRevertController.cs" />
+    <Compile Include="Areas\InCome\Controllers\ProgressConfirmRevertController.cs" />
+    <Compile Include="Areas\Cost\Controllers\SettlementController.cs" />
+    <Compile Include="Areas\Infrastructure\Controllers\ProductionDefineController.cs" />
+    <Compile Include="Areas\Production\Controllers\ProductionBatchSettleApplyController.cs" />
+    <Compile Include="Areas\Production\Controllers\ProductionBatchSettleRevertController.cs" />
+    <Compile Include="Areas\Production\Controllers\ProductionDeductionController.cs" />
+    <Compile Include="Areas\Production\Controllers\ProductionDistributeController.cs" />
+    <Compile Include="Areas\Production\Controllers\ProductionInputController.cs" />
+    <Compile Include="Areas\Production\Controllers\ProductionProgressConfirmDetailAdjustController.cs" />
+    <Compile Include="Areas\Production\Controllers\ProductionProgressConfirmAdjustController.cs" />
+    <Compile Include="Areas\Production\Controllers\ProductionSettleApplyController.cs" />
+    <Compile Include="Areas\Production\Controllers\ProductionSettleRevertController.cs" />
+    <Compile Include="Areas\Production\Controllers\ProductionSubsidyController.cs" />
+    <Compile Include="Areas\Production\ProductionAreaRegistration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\WorkOfUnitCostSelectorController.cs" />
+    <Compile Include="Areas\Cost\CostAreaRegistration.cs" />
+    <Compile Include="Areas\InCome\Controllers\IncomeConfirmController.cs" />
+    <Compile Include="Areas\InCome\Controllers\IncomeSubmitController.cs" />
+    <Compile Include="Areas\InCome\Controllers\ProgressConfirmController.cs" />
+    <Compile Include="Areas\InCome\Controllers\IncomeAdjustController.cs" />
+    <Compile Include="Areas\InCome\Controllers\RevenueRecognitionController.cs" />
+    <Compile Include="Areas\InCome\InComeAreaRegistration.cs" />
+    <Compile Include="Areas\Infrastructure\Controllers\AccountingPeriodController.cs" />
+    <Compile Include="Areas\Infrastructure\Controllers\ApportionDefineController.cs" />
+    <Compile Include="Areas\Infrastructure\Controllers\BudgetDefineController.cs" />
+    <Compile Include="Areas\Infrastructure\Controllers\CBSDefineNodeController.cs" />
+    <Compile Include="Areas\Infrastructure\Controllers\DefineListController.cs" />
+    <Compile Include="Areas\Infrastructure\Controllers\ExpenseTypeController.cs" />
+    <Compile Include="Areas\Infrastructure\Controllers\IncomeDefineController.cs" />
+    <Compile Include="Areas\Infrastructure\Controllers\ParamSettingsController.cs" />
+    <Compile Include="Areas\Infrastructure\Controllers\ProgressDefineController.cs" />
+    <Compile Include="Areas\Infrastructure\Controllers\SubjectController.cs" />
+    <Compile Include="Areas\Infrastructure\Controllers\TaxRateController.cs" />
+    <Compile Include="Areas\Infrastructure\InfrastructureAreaRegistration.cs" />
+    <Compile Include="Areas\Report\Controllers\CustomizeReportController.cs" />
+    <Compile Include="Areas\Report\Controllers\DeptReportController.cs" />
+    <Compile Include="Areas\Report\Controllers\ExpenseMonitorController.cs" />
+    <Compile Include="Areas\Report\ReportAreaRegistration.cs" />
+    <Compile Include="Areas\Schema\Controllers\S_EP_CBSInfoSchemaController.cs" />
+    <Compile Include="Areas\Schema\SchemaAreaRegistration.cs" />
+    <Compile Include="Controllers\CBSDefineNodeSelectorController.cs" />
+    <Compile Include="Controllers\BudgetUnitSelectorController.cs" />
+    <Compile Include="Controllers\CostUnitSelectorController.cs" />
+    <Compile Include="Controllers\ExpenseReportController.cs" />
+    <Compile Include="Controllers\SubjectSelectorController.cs" />
+    <Compile Include="InstrasController.cs" />
+    <Compile Include="ExpensesController.cs" />
+    <Compile Include="ExpensesFormController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="Global.asax" />
+    <Content Include="Scripts\Common\jquery.tmpl.js" />
+    <Content Include="Scripts\Common\new_blue.png" />
+    <Content Include="Scripts\Common\new_red.png" />
+    <Content Include="Scripts\Common\red-line.jpg" />
+    <Content Include="Scripts\Common\red-line_black.jpg" />
+    <Content Include="Scripts\Cost\Reimbursement\applyUser.css" />
+    <Content Include="Scripts\Cost\Reimbursement\chose-spec.png" />
+    <Content Include="Scripts\Cost\Reimbursement\chose-specleft.png" />
+    <Content Include="Scripts\Cost\Reimbursement\reimbursement.css" />
+    <Content Include="Scripts\Income\designport.png" />
+    <Content Include="Scripts\Income\designporton.png" />
+    <Content Include="Scripts\Income\filter_down.png" />
+    <Content Include="Scripts\Income\filter_up.png" />
+    <Content Include="Scripts\Income\monitorport.png" />
+    <Content Include="Scripts\Income\monitorporton.png" />
+    <Content Include="Scripts\Income\project.css" />
+    <Content Include="Scripts\Income\Project.png" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Areas\AutoUI\Models\" />
+    <Folder Include="Areas\Budget\Models\" />
+    <Folder Include="Areas\Build\Models\" />
+    <Folder Include="Areas\Cost\Models\" />
+    <Folder Include="Areas\InCome\Models\" />
+    <Folder Include="Areas\Infrastructure\Models\" />
+    <Folder Include="Areas\Production\Models\" />
+    <Folder Include="Areas\Production\Views\Shared\" />
+    <Folder Include="Areas\Report\Models\" />
+    <Folder Include="Areas\Schema\Models\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_LayoutTab.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Error.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\PageView.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\BusinessModule\BaseLogic\Base.Logic\Base.Logic.csproj">
+      <Project>{ec8bb43b-4f2b-4e79-9be7-5521d4a86f62}</Project>
+      <Name>Base.Logic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BusinessModule\BaseLogic\Workflow.Logic\Workflow.Logic.csproj">
+      <Project>{ed0d8a90-6a47-4092-802b-869e4a76b41d}</Project>
+      <Name>Workflow.Logic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BusinessModule\Logic\Expenses.Logic\Expenses.Logic.csproj">
+      <Project>{7d4d8047-f4b1-4070-a1ec-5b56744f7007}</Project>
+      <Name>Expenses.Logic</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\DefineList\CBSDefineList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\DefineList\CBSDefineEdit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\Subject\TreeList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\DefineList\CBSDefineConfig.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\CBSDefineNode\TreeList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SubjectSelector\MultiTreeSelector.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Budget\Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Cost\Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\InCome\Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\InCome\Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Cost\Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Budget\Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\ProgressDefine\DefineList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\ProgressDefine\DefineEdit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\ProgressDefine\EvidenceDefine.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\BudgetDefine\TreeList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CBSDefineNodeSelector\TreeList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\IncomeDefine\DefineList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\ApportionDefine\DefineList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Build\Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Build\Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Budget\Views\Comparison\Comparison.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Budget\Views\Comparison\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\IncomeDefine\ConditionSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BudgetUnitSelector\Selector.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Schema\Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Schema\Views\CBSSchema\TreeList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Schema\Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\DefineList\AutoCreateConfig.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\ApportionDefine\DefineConfig.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\ApportionDefine\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\InCome\Views\RevenueRecognition\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\InCome\Views\IncomeConfirm\PageView.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\ParamSettings\Settings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Cost\Views\CostInfo\LockList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ExpenseReport\CostAnalysisView.cshtml" />
+    <Content Include="Views\ExpenseReport\DeptAnalysisView.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\ExpenseReport\IncomeAnalysisView.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\CBSDefineNode\NodeSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\CBSDefineNode\NodeSettingList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Budget\Views\Budgeting\TreeList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\BudgetDefine\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Budget\Views\BudgetSubmit\PageView.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Report\Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Report\Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Report\Views\DeptReport\DeptOverView.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Report\Views\ExpenseMonitor\ReportView.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ExpenseReport\DepartAnalysisView.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\AccountingPeriod\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\AccountingPeriod\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\AccountingPeriod\PeriodChange.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\TaxRate\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\TaxRate\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\ExpenseType\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\ExpenseType\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CostUnitSelector\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Report\Views\CustomizeReport\CustomizeAnalysisView.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Cost\Views\CostInfo\SettleList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WorkOfUnitCostSelector\WorkSelector.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Production\Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\ProductionDefine\ConditionSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\ProductionDefine\DefineList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Production\Views\ProductionSettleApply\Tab.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Production\Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Infrastructure\Views\CBSDefineNode\StaticDefaultValue.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\AutoUI\Views\ReimbursementSubmit\ApplyUserDepartInfo.cshtml" />
+    <Content Include="Areas\AutoUI\Views\ReimbursementSubmit\ApplyUserRelateInfo.cshtml" />
+    <Content Include="Areas\AutoUI\Views\ReimbursementSubmit\CompanyRelateInfo.cshtml" />
+    <Content Include="Areas\AutoUI\Views\ReimbursementSubmit\ContractRelateInfo.cshtml" />
+    <Content Include="Areas\AutoUI\Views\ReimbursementSubmit\PageView.cshtml" />
+    <Content Include="Areas\AutoUI\Views\ReimbursementSubmit\ProjectRelateInfo.cshtml" />
+    <Content Include="Areas\AutoUI\Views\ReimbursementSubmit\TraceGrid.cshtml" />
+    <Content Include="Areas\AutoUI\Views\Web.config" />
+    <Content Include="Areas\AutoUI\Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>55782</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:55782/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

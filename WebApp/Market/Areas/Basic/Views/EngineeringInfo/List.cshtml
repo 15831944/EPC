@@ -1,0 +1,356 @@
+﻿@{
+    ViewBag.Title = "List";
+}
+<div class="mini-toolbar" style="padding: 2px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" iconcls="icon-add" onclick="add({ url: '/Market/MarketUI/EngineeringInfo/PageView?TmplCode=EngineeringInfo', width: '800px', height: '80%' });" plain="true">增加</a>
+                <a class="mini-button" iconcls="icon-edit" onclick="edit({ url: '/Market/MarketUI/EngineeringInfo/PageView?TmplCode=EngineeringInfo', width: '800px', height: '80%' });" plain="true">编辑</a>
+                <a class="mini-button" iconcls="icon-remove" onclick="delEngineering()" plain="true">删除</a>
+                <a class='mini-button' iconcls='icon-addnew' onclick='pushTaskForMP("TaskNotice")' plain='true' id="btnTaskPush">建筑任务下达</a>
+                <a class='mini-button' iconcls='icon-addnew' onclick='pushTaskForMP("MunicipalTaskNotice")' plain='true' id="btnMulStart">市政任务下达</a>
+                <a class='mini-button' iconcls='icon-addnew' onclick='pushTaskForMP("PlanTaskNotice")' plain='true' id="btnPlanStart">规划任务下达</a>
+                <a class='mini-button' iconcls='icon-addnew' onclick='pushTaskForMP("ElectricalPowerTaskNotice")' plain='true' id="btnElectricalPowerStart">电力院标准任务下达</a>
+            </td>
+            <td style="white-space: nowrap;">
+                <input class="mini-buttonedit searchbox" id="key" emptytext="请输入名称或编号" style="width: 200px;"
+                    onenter="quickSearch('Name,Code');" onbuttonclick="quickSearch('Name,Code');" />
+                <a class="mini-button" onclick="showWindow('queryWindow')" iconcls="icon-find" plain="true">详细查询</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit" style="height: 100px;">
+    <div id="dataGrid" url="GetList" class="mini-datagrid" style="width: 100%; height: 100%;"
+        idfield="ID" onshowrowdetail="onShowRowDetail" multiselect="true">
+        <div property="columns">
+            <div type="checkcolumn">
+            </div>
+            <div type="expandcolumn">
+            </div>
+            <div field="Code" width="120" headeralign="center" allowsort="true" align="center">
+                工程编号
+            </div>
+            <div field="Name" width="350" headeralign="center" allowsort="true">
+                工程名称
+            </div>
+            <div field="CustomerInfoSubName" width="250" headeralign="center" allowsort="true">
+                甲方单位
+            </div>
+            <div field="PhaseContent" width="200" headeralign="center" allowsort="true">
+                阶段
+            </div>
+            <div field="Investment" width="120" headeralign="center" allowsort="true" align="right">
+                投资额（万元）
+            </div>
+            <div field="Address" width="120" headeralign="center" allowsort="true">
+                建设地点
+            </div>
+            <div field="Country" width="100" headeralign="center" allowsort="true" align="center">
+                国家
+            </div>
+            <div field="Province" width="100" headeralign="center" allowsort="true" align="center">
+                省份
+            </div>
+            <div field="City" width="100" headeralign="center" allowsort="true" align="center">
+                城市
+            </div>
+            <div field="Proportion" headeralign="center" width="120" allowsort="true" align="right">
+                建筑面积（㎡）
+            </div>
+        </div>
+    </div>
+</div>
+<div id="queryWindow" class="mini-window" title="详细查询" style="width: 700px;" showmodal="true"
+    allowresize="false" allowdrag="true">
+    <div class="queryDiv">
+        <form id="queryform" method="post">
+            <table>
+                <tr>
+                    <td width="10%" align="center">工程名称
+                    </td>
+                    <td width="23%" align="left">
+                        <input name="$LK$Name" style="width: 100%" class="mini-textbox" vtype="maxLength:50" />
+                    </td>
+                    <td width="10%" align="center">工程编号
+                    </td>
+                    <td width="23%" align="left">
+                        <input name="$LK$Code" style="width: 100%" class="mini-textbox" vtype="maxLength:50" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">阶段
+                    </td>
+                    <td align="left">
+                        <input name="$IL$PhaseValue" class="mini-combobox" style="width: 100%;" textfield="text"
+                            valuefield="value" data="Phase" allowinput="false" multiselect='true' />
+                    </td>
+                    <td align="center"></td>
+                    <td align="left"></td>
+                </tr>
+            </table>
+        </form>
+        <div>
+            <a class="mini-button" onclick="search()" iconcls="icon-find" style="margin-right: 20px;">查询</a> <a class="mini-button" onclick="clearQueryForm({ queryFormId: 'queryform' })"
+                iconcls="icon-undo">清空</a>
+        </div>
+    </div>
+</div>
+<div id="detailForm" style="width: 1300px; height: 100%; display: none; padding-left: 47px;">
+    <div class="mini-fit" style="padding-top: 5px;">
+        <div id="mainTab" class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;">
+            <div title="任务单信息">
+                <div id="TaskNoticeGrid" class="mini-datagrid" style="width: 100%; height: 300px;"
+                    allowresize="false" showpager="false" borderstyle="border:0px;" idfield="ID"
+                    pagesize="10" multiselect="true">
+                    <div property="columns">
+                        <div type="checkcolumn">
+                        </div>
+                        <div field="view" width="60" headeralign="center" align="center" visible="false">
+                            查看
+                        </div>
+                        <div field="FlowPhase" width="70" allowsort="true" align="center">
+                            流程状态
+                        </div>
+                        <div field="ProjectInfo" headeralign="center" width="300" allowsort="true" align="left">
+                            项目名称
+                        </div>
+                        <div field="Phase" headeralign="center" width="120" align="left">
+                            设计阶段
+                        </div>
+                        <div field="CreateDate" haderalign="center" width="80" datatype="date" dateformat="yyyy-MM-dd"
+                            allowsort="true" align="center">
+                            下达日期
+                        </div>
+                        <div field="StepName" haderalign="center" width="80" allowsort="true" align="center" visible="false">
+                            状态
+                        </div>
+                        <div field="ChargeUserName" headeralign="center" width="80" allowsort="true" align="center">
+                            项目负责人
+                        </div>
+                        <div field="CreateUser" headeralign="center" width="80" allowsort="true" align="center">
+                            创建人
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div title="合同信息">
+                <div class="mini-fit">
+                    <div id="ContractGrid" class="mini-datagrid" style="width: 100%; height: 300px;"
+                        idfield="ID" showpager="false" borderstyle="border:0px;" showsummaryrow="true"
+                        ondrawsummarycell="onDrawSummaryCell" multiselect="true">
+                        <div property="columns">
+                            <div type="indexcolumn">
+                            </div>
+                            <div field="Name" width="250" headeralign="center" allowsort="true" align="left">
+                                合同名称
+                            </div>
+                            <div field="SerialNumber" headeralign="center" width="150" allowsort="true" align="left">
+                                合同编号
+                            </div>
+                            <div summarytype="sum" field="ContractRMBAmount" datatype="currency" headeralign="center"
+                                width="100" allowsort="true" align="right">
+                                合同金额(元)
+                            </div>
+                            <div summarytype="sum" field="SumInvoiceValue" datatype="currency" headeralign="center"
+                                width="100" allowsort="true" align="right">
+                                开票金额(元)
+                            </div>
+                            <div summarytype="sum" field="SumReceiptValue" datatype="currency" headeralign="center"
+                                width="100" allowsort="true" align="right">
+                                到款金额(元)
+                            </div>
+                            <div field="ReceiptRate" datatype="currency" headeralign="center" width="70" allowsort="true"
+                                align="right">
+                                到款率(%)
+                            </div>
+                            <div field="ContractState" headeralign="center" width="120" allowsort="true" align="center">
+                                合同状态
+                            </div>
+                            <div field="SignDate" width="150" headeralign="center" dateformat="yyyy-MM-dd" allowsort="true"
+                                align="center">
+                                签约日期
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div title="经营项目信息">
+                <div id="ClueGrid" class="mini-datagrid" style="width: 100%; height: 300px;" allowresize="false"
+                    showpager="false" borderstyle="border:0px;" idfield="ID" pagesize="10" multiselect="true">
+                    <div property="columns">
+                        <div type="checkcolumn">
+                        </div>
+                        <div field="SerialNumber" headeralign="center" width="100" allowsort="true" align="center">
+                            项目编号
+                        </div>
+                        <div field="Name" headeralign="center" width="300" allowsort="true" align="left">
+                            项目名称
+                        </div>
+                        <div field="Source" headeralign="center" width="80" align="center">
+                            来源
+                        </div>
+                        <div field="State" haderalign="center" width="80" allowsort="true" align="center">
+                            项目状态
+                        </div>
+                        <div field="CustomerInfoName" headeralign="center" width="300" align="left">
+                            客户名称
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum("Project.Phase")
+    @Html.GetEnum("Market.EngineeringScale")
+    @Html.GetEnum("Market.BusinessOpportunity")
+    @Html.GetEnum(typeof(Market.Logic.ClueState))
+    @Html.GetEnum("Market.ContractState")
+    @Html.GetEnum("FlowPhase")
+    @Html.GetEnum("Market.PreProjectState")
+    @Html.GetEnum("Market.Resource")
+</script>
+<script type="text/javascript">
+    addGridEnum("dataGrid", "PhaseContent", "Phase");
+    addGridLink("dataGrid", "Name", "/MvcConfig/UI/Form/PageView?TmplCode=EngineeringInfo&ID={ID}", { funcType: "view", height: "80%", width: "800px" });
+    addGridEnum("TaskNoticeGrid", "Phase", "Phase");
+    //    addGridLink('TaskNoticeGrid', 'view', '/Project/AutoUI/TaskNotice/PageView?TmplCode=TaskNotice&FlowCode=TaskNotice&ID={ID}', { width: "800px", height: "80%", linkText: '查看' });
+    addGridLink('ContractGrid', 'Name', '/Market/Basic/ManageContract/Index?ID={ID}&&CustomerID={PartyA}&FuncType=View', { width: "80%", height: "80%" });
+
+    addGridEnum("ContractGrid", "ContractState", "ContractState");
+    addGridEnum("ClueGrid", "Source", "Resource");
+    addGridEnum("ClueGrid", "State", "PreProjectState");
+    addGridLink('ClueGrid', 'Name', '/MvcConfig/UI/Form/PageView?TmplCode=MarketClue&ID={ID}&CustomerID={CustomerID}&FuncType=View', { width: "80%", height: "80%" });
+    addGridEnum("TaskNoticeGrid", "FlowPhase", "FlowPhase");
+    addGridLink('TaskNoticeGrid', 'FlowPhase', '/MvcConfig/Workflow/Trace/Diagram?ID={ID}&FuncType=FlowTrace', { width: "80%", height: "80%" });
+
+
+    addGridButton("TaskNoticeGrid", "view", {
+        linkText: '流程跟踪', onButtonClick: function (row) {
+            var type = "TaskNotice";
+            if (row.ProjectClass == "规划")
+                type = "PlanTaskNotice";
+            else if (row.ProjectClass == "市政园林设计")
+                type = "MunicipalTaskNotice";
+
+            var url = "/Project/AutoUI/TaskNotice/PageView?TmplCode=" + type + "&FlowCode=" + type + "&ID=" + row.ID
+            openWindow(url, { "width": "800px", height: "80%", "title": "查看" })
+        }
+
+    });
+
+    addGridButton("TaskNoticeGrid", "ProjectInfo", {
+        onButtonClick: function (row) {
+            var type = "TaskNotice";
+            if (row.TmplCode)
+                type = row.TmplCode;
+
+            var url = "/Project/AutoUI/TaskNotice/PageView?TmplCode=" + type + "&FlowCode=" + type + "&ID=" + row.ID
+            openWindow(url, { "width": "800px", height: "80%", "title": "查看" })
+        }
+
+    });
+
+    function onDrawSummaryCell(e) {
+        var result = e.result;
+        if (e.field == "Name") {
+            e.cellHtml = "总计：";
+            e.cellStyle = "text-align:right; color:Brown";
+        }
+        else {
+            e.cellStyle = "text-align:right; color:Brown";
+        }
+    }
+
+    function pushTaskForMP(type) {
+        var Grid = mini.get("dataGrid");
+        var rows = Grid.getSelecteds();
+        if (rows.length > 1)
+            return msgUI("请选择一个工程下达任务单！", 1);
+
+        var url = "";
+        var textMess = "您确认要直接下达新的任务单并创建工程吗？";
+        if (rows.length == 0) {
+            var date = new Date;
+            var currentYear = date.getFullYear();
+            url = "/Project/AutoUI/TaskNotice/PageView?TmplCode=" + type + "&Code=" + currentYear + "&FlowCode=" + type + "&HideEngineerInfo=True";
+        }
+        else {
+            url = "/Project/AutoUI/TaskNotice/PageView?TmplCode=" + type + "&FlowCode=" + type + "&Code=" + rows[0].Code + "&EngineeringInfoID=" + rows[0].ID;
+            textMess = "您确认要下达 [" + rows[0].Name + "] 的新任务单吗？";
+        }
+        msgUI(textMess, 2, function (result) {
+            if (result != "ok") return;
+            openWindow(url,
+                {
+                    refresh: false, title: "设计任务通知单", width: "70%", height: "80%", onDestory: function () {
+                        Grid.reload();
+                        mini.get("trackDataGrid").reload();
+                    }
+                });
+        });
+    }
+
+    var detailForm = document.getElementById("detailForm");
+    function onShowRowDetail(e) {
+        var grid = e.sender;
+        var row = e.record;
+        projectGridRow = e.record;
+        var td = grid.getRowDetailCellEl(row);
+        td.appendChild(detailForm);
+        detailForm.style.display = "block";
+
+        var taskGrid = mini.get("TaskNoticeGrid");
+        var url = "GetTaskNoticeList?EngineeringInfoID=" + row.ID;
+        taskGrid.setUrl(url);
+        taskGrid.load();
+
+        var contractGrid = mini.get("ContractGrid");
+        var contractUrl = "GetContractInfo?EngineeringInfoID=" + row.ID;
+        contractGrid.setUrl(contractUrl);
+        contractGrid.load();
+
+        var clueGrid = mini.get("ClueGrid");
+        var clueGridUrl = "GetClue?EngineeringInfoID=" + row.ID;
+        clueGrid.setUrl(clueGridUrl);
+        clueGrid.load();
+
+    }
+
+    function delEngineering() {
+        var dataGrid = mini.get("dataGrid");
+        var rows = dataGrid.getSelected();
+        if (rows.length == 0) { msgUI("请至少选择一条记录"); return; }
+        var Ids = "";
+        for (var i = 0; i < rows.length; i++) {
+            if (i == rows.length - 1)
+                Ids += rows[i].ID;
+            else
+                Ids += rows[i].ID + ",";
+        }
+        addExecuteParam("ListIDs", Ids);
+        execute("ValidateData", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                if (data.length > 0) {
+                    var message = "工程";
+                    for (var i = 0; i < data.length; i++) {
+                        message += "【" + data[i].Name + "】\n";
+                    }
+                    message += " 已经绑定了合同，是否确认删除？";
+                    msgUI(message, 2, function (result) {
+                        if (result != "ok") return;
+                        del();
+                    });
+                }
+                else {
+                    del();
+                }
+            }, validateForm: false
+        });
+
+    }
+
+</script>

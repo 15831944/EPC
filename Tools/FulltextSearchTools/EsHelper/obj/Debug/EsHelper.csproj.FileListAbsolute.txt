@@ -1,0 +1,13 @@
+E:\产品代码\EPM\Tools\FulltextSearchTools\EsHelper\bin\Debug\EsHelper.dll
+E:\产品代码\EPM\Tools\FulltextSearchTools\EsHelper\bin\Debug\EsHelper.pdb
+E:\产品代码\EPM\Tools\FulltextSearchTools\EsHelper\bin\Debug\Elasticsearch.Net.dll
+E:\产品代码\EPM\Tools\FulltextSearchTools\EsHelper\bin\Debug\Nest.dll
+E:\产品代码\EPM\Tools\FulltextSearchTools\EsHelper\bin\Debug\System.Buffers.dll
+E:\产品代码\EPM\Tools\FulltextSearchTools\EsHelper\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+E:\产品代码\EPM\Tools\FulltextSearchTools\EsHelper\bin\Debug\Elasticsearch.Net.xml
+E:\产品代码\EPM\Tools\FulltextSearchTools\EsHelper\bin\Debug\Nest.xml
+E:\产品代码\EPM\Tools\FulltextSearchTools\EsHelper\bin\Debug\System.Buffers.xml
+E:\产品代码\EPM\Tools\FulltextSearchTools\EsHelper\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+E:\产品代码\EPM\Tools\FulltextSearchTools\EsHelper\obj\Debug\EsHelper.csprojResolveAssemblyReference.cache
+E:\产品代码\EPM\Tools\FulltextSearchTools\EsHelper\obj\Debug\EsHelper.dll
+E:\产品代码\EPM\Tools\FulltextSearchTools\EsHelper\obj\Debug\EsHelper.pdb

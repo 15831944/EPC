@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{133DD9CC-9505-4EED-BD4A-9CA1205B2CB4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Interface.Logic</RootNamespace>
+    <AssemblyName>Interface.Logic</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="RestSharp, Version=104.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dll\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BusinessFacade\Interface\DataSynQueueCreator.cs" />
+    <Compile Include="BusinessFacade\Interface\DataSynQueueHandler.cs" />
+    <Compile Include="BusinessFacade\Interface\FileSynQueueHandler.cs" />
+    <Compile Include="BusinessFacade\Interface\FileSynUploadQueueCreator.cs" />
+    <Compile Include="BusinessFacade\SynData\AuditAdviceCatalogFO.cs" />
+    <Compile Include="BusinessFacade\SynData\AuditAdviceFO.cs" />
+    <Compile Include="BusinessFacade\SynData\BaseEnumFO.cs" />
+    <Compile Include="BusinessFacade\SynData\GetDataFO.cs" />
+    <Compile Include="BusinessFacade\SynData\SynDataFO.cs" />
+    <Compile Include="BusinessFacade\SynData\TaskWorkFO.cs" />
+    <Compile Include="BusinessFacade\SynData\UserFO.cs" />
+    <Compile Include="BusinessFacade\SynData\ProjectFO.cs" />
+    <Compile Include="BusinessFacade\SynData\MilestoneFO.cs" />
+    <Compile Include="BusinessFacade\SynData\DesignInputFO.cs" />
+    <Compile Include="BusinessFacade\SynData\DesignInputFileFO.cs" />
+    <Compile Include="Common\Enums.cs" />
+    <Compile Include="Common\GlobalData.cs" />
+    <Compile Include="Helper\DataHelper.cs" />
+    <Compile Include="Helper\HttpHelper.cs" />
+    <Compile Include="Model\SynData\S_AE_AuditAdvice.cs" />
+    <Compile Include="Model\SynData\S_AE_AuditAdviceCatalog.cs" />
+    <Compile Include="Model\SynData\S_A_BaseEnum.cs" />
+    <Compile Include="Model\SynData\S_A_User.cs" />
+    <Compile Include="Model\Interface\I_DataSynQueue.cs" />
+    <Compile Include="Model\Interface\I_FileSynQueue.cs" />
+    <Compile Include="Model\Interface\I_GetDataLog.cs" />
+    <Compile Include="Model\SynData\S_D_Input.cs" />
+    <Compile Include="Model\SynData\S_D_InputDocument.cs" />
+    <Compile Include="Model\SynData\S_I_ProjectInfo.cs" />
+    <Compile Include="Model\SynData\S_P_MileStone.cs" />
+    <Compile Include="Model\SynData\S_W_TaskWork.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\BaseFrame\Config.Logic\Config.Logic.csproj">
+      <Project>{232fda97-d43f-4e27-a5d3-9734c6178b01}</Project>
+      <Name>Config.Logic</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="dll\RestSharp.dll" />
+    <Content Include="dll\RestSharp.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

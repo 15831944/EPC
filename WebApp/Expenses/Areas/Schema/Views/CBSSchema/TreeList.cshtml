@@ -1,0 +1,96 @@
+﻿@{
+    ViewBag.Title = "TreeList";
+}
+
+<div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" iconcls="icon-add" onclick="" plain="true">新增</a>
+                <a class="mini-button" iconcls="icon-remove" onclick="" plain="true"> 删除</a>
+                <a class="mini-button" iconcls="icon-save" onclick="" plain="true">保存</a>
+            </td>
+            <td style="white-space: nowrap;"></td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit">
+    <div id="dataGrid" class="mini-treegrid" style="width: 100%; height: 100%;" url="" autoload="false"
+         showtreeicon="true" iconfield="NodeType" borderstyle="border-right:0;" treecolumn="Name"
+         idfield="ID" parentfield="ParentID" resultastree="false" allowresize="false" expandonload="true" allowcelledit="true" allowcellselect="true" editnextonenterkey="true"
+         contextmenu="#treeMenu" multiselect="true" oncellbeginedit="OnCellBeginEdit" allowdrag="true" allowdrop="true"
+         allowleafdropin="true" ongivefeedback="onGiveFeedback" ondrop="onNodeDrop"
+         allowresize="false" fitcolumns="false" ondrawcell="onDrawingCell">
+        <div property="columns">
+            <div type="checkcolumn">
+            </div>
+            <div type="indexcolumn" width="40">
+            </div>
+            <div name="Name" field="Name" width="250" headeralign="center" vtype="required">
+                名称<input property="editor" class="mini-textbox" style="width: 100%;" />
+            </div>
+            <div field="Code" width="120" headeralign="center">
+                编号<input property="editor" class="mini-textbox" style="width: 100%;" />
+            </div>
+            <div name="ChargerUser" field="ChargerUser" displayfield="ChargeUserName" width="80" headeralign=" center" align="center">
+                负责人
+                <input name='ChargerUser' property='editor' class='mini-buttonedit' allowinput='true' style='width:100%;' />
+            </div>
+            <div name="ChargerDept" field="ChargerDept" displayfield="ChargerDeptName" width="80" headeralign=" center" align="center">
+                责任部门
+                <input name='ChargerDept' property='editor' class='mini-buttonedit' allowinput='true' style='width:100%;' />
+            </div>
+            <div field="ContractValue" width="100" headeralign="center" align="right" datatype='currency'>
+                合同额（元）<input property="editor" class="mini-textbox" style="width: 100%;" />
+            </div>
+            <div field="BudgetValue" width="100" headeralign="center" align="right" datatype='currency'>
+                预算
+            </div>
+            <div field="CostValue" width="100" headeralign="center" align="right" datatype='currency'>
+                成本（元）
+            </div>
+            <div field="IncomeValue" width="100" headeralign="center" align="right" datatype='currency'>
+                收入（元）
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    addSingleUserSelector("ChargerUser");
+    addSingleOrgSelector("ChargerDept");
+</script>
+
+<script type="text/javascript">
+    var cbsInfoID = getQueryString("CBSInfoID");
+    var url = "GetTreeList?CBSInfoID=" + cbsInfoID;
+    $("#dataGrid").attr("url", url);
+
+    function pageLoad() {
+        mini.get("dataGrid").load();
+    }
+
+    function OnCellBeginEdit(e) {
+        var record = e.record, field = e.field;
+        if (!record.ParentID) {
+            e.cancel = true;
+        }
+        if (record.NodeType == "Subject") {
+            e.cancel = true;
+        }
+    }
+
+    function onDrawingCell(e) {
+        var record = e.record;
+        var column = e.column;
+        var field = e.field;
+        var locked = true;
+        if (!record.ParentID) {
+            e.cellStyle = "background:#F0F0F0";
+        }
+        if (record.NodeType == "Subject") {
+            e.cellStyle = "background:#F0F0F0";
+        }
+    }
+
+</script>

@@ -1,0 +1,16 @@
+E:\产品代码\EPM\Tools\DataInitTool\DataInitTool\bin\Debug\DataInitTool.exe.config
+E:\产品代码\EPM\Tools\DataInitTool\DataInitTool\bin\Debug\Settings.json
+E:\产品代码\EPM\Tools\DataInitTool\DataInitTool\bin\Debug\TemplateExcel.xlsx
+E:\产品代码\EPM\Tools\DataInitTool\DataInitTool\bin\Debug\DataInitTool.exe
+E:\产品代码\EPM\Tools\DataInitTool\DataInitTool\bin\Debug\DataInitTool.pdb
+E:\产品代码\EPM\Tools\DataInitTool\DataInitTool\bin\Debug\Aspose.Cells.dll
+E:\产品代码\EPM\Tools\DataInitTool\DataInitTool\bin\Debug\log4net.dll
+E:\产品代码\EPM\Tools\DataInitTool\DataInitTool\bin\Debug\Newtonsoft.Json.dll
+E:\产品代码\EPM\Tools\DataInitTool\DataInitTool\obj\Debug\DataInitTool.frmConfig.resources
+E:\产品代码\EPM\Tools\DataInitTool\DataInitTool\obj\Debug\DataInitTool.frmMain.resources
+E:\产品代码\EPM\Tools\DataInitTool\DataInitTool\obj\Debug\DataInitTool.frmSheetConfig.resources
+E:\产品代码\EPM\Tools\DataInitTool\DataInitTool\obj\Debug\DataInitTool.Properties.Resources.resources
+E:\产品代码\EPM\Tools\DataInitTool\DataInitTool\obj\Debug\DataInitTool.csproj.GenerateResource.Cache
+E:\产品代码\EPM\Tools\DataInitTool\DataInitTool\obj\Debug\DataInitTool.exe
+E:\产品代码\EPM\Tools\DataInitTool\DataInitTool\obj\Debug\DataInitTool.pdb
+E:\产品代码\EPM\Tools\DataInitTool\DataInitTool\obj\Debug\DataInitTool.csprojResolveAssemblyReference.cache

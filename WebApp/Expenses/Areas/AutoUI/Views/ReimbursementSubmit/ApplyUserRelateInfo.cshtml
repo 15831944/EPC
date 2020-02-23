@@ -1,0 +1,135 @@
+﻿@{
+    ViewBag.Title = "ApplyUserRelateInfo";
+}
+
+<script src="/CommonWebResource/CoreLib/HighCharts/highcharts.js" type="text/javascript"></script>
+<script src="/CommonWebResource/CoreLib/HighCharts/highcharts-3d.js" type="text/javascript"></script>
+<link href="@Url.Content("/Expenses/Scripts/Cost/Reimbursement/applyUser.css")" rel="stylesheet" type="text/css" />
+
+<div id="mainlayout" class="mini-layout" style="width: 100%; height: 100%;">
+    <div title="center" region="center">
+        <div class="row1">
+            <div class="col1">
+                <img src="/PortalLTE/Main/UserImage" class="user-image" alt="User Image">
+                <div class="describ">
+                    <div class="col1_name">@(ViewBag.UserName == null || string.IsNullOrEmpty(ViewBag.UserName) ? "管理员" : ViewBag.UserName)</div>
+                    <div class="col1_resource">@(ViewBag.UserResourceCode == null || string.IsNullOrEmpty(ViewBag.UserResourceCode)
+                                                ? "高级工程师" : ViewBag.UserResourceCode)</div>
+                </div>
+            </div>
+            <div class="col2">
+                <div class="top">@ViewBag.UserLoanValue</div>
+                <div class="bot">个人借款</div>
+            </div>
+            <div class="col3">
+                <div class="top">@ViewBag.UserRestLoanValue</div>
+                <div class="bot">未还金额</div>
+            </div>
+        </div>
+        <div class="row2">
+            <div class="left">
+                <div class="innerRow">
+                    <div class="lDescrib">当月借款</div>
+                    <div class="rValue">@ViewBag.UserMonthLoanValue<span>元</span></div>
+                </div>
+                <div class="innerRow">
+                    <div class="lDescrib">当月冲账</div>
+                    <div class="rValue">@ViewBag.UserMonthCzValue<span>元</span></div>
+                </div>
+                <div class="innerRow">
+                    <div class="lDescrib">当月报销</div>
+                    <div class="rValue">@ViewBag.UserMonthBxValue<span>元</span></div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="innerRow">
+                    <div class="lDescrib">当年借款</div>
+                    <div class="rValue">@ViewBag.UserYearLoanValue<span>元</span></div>
+                </div>
+                <div class="innerRow">
+                    <div class="lDescrib">当年冲账</div>
+                    <div class="rValue">@ViewBag.UserYearCzValue<span>元</span></div>
+                </div>
+                <div class="innerRow">
+                    <div class="lDescrib">当年报销</div>
+                    <div class="rValue">@ViewBag.UserYearBxValue<span>元</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="rowTitle">月度费用分布(元)</div>
+        <div class="chart" style="height:300px">
+            <div id="monthChartContainer" class="mini-fit">
+            </div>
+        </div>
+        <div class="rowTitle">科目费用分布</div>
+        <div class="chart" style="height:300px">
+            <div id="monthPieContainer" class="mini-fit">
+            </div>
+        </div>
+        <div class="rowTitle">个人当月报销</div>
+        <div class="grid">
+            <div class="mini-toolbar gw-grid-toolbar" borderstyle="border-left:0px">
+                <table>
+                    <tr>
+                        <td>
+
+                        </td>
+                        <td class="gw-toolbar-right">
+                            <input id="key" class="mini-buttonedit gw-searchbox" emptytext="请输入科目编号或名称" onenter="quickSearch('SubjectCode,SubjectName', { gridId: 'Details' });" onbuttonclick="    quickSearch('SubjectCode,SubjectName', { gridId: 'Details' });" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id='Details' multiselect='true' allowalternating='false' showsummaryrow='true' showindexcolumn='false' showcheckcolumn='true' pagesize='50' style='width:100%;height:300px;' class='mini-datagrid' allowcellvalid='true' multiselect='true' allowcelledit='true'
+                 allowcellselect='true' showpager='false' allowunselect='false' sortmode='client'>
+                <div property='columns'>
+                    <div type='indexcolumn'></div>
+                    <div name='CostUnit' field='CostUnit' header='项目名称' displayfield='CostUnitName' visible='true' width='200' align='left' autoshowpopup='true' allowsort='true'>
+                    </div>
+                    <div name='SubjectDetailID' field='SubjectDetailID' header='报销内容' displayfield='SubjectDetailName' visible='true' width='90' align='left' autoshowpopup='true' allowsort='true'>
+                    </div>
+                    <div name='SubjectName' field='SubjectName' header='对应科目' visible='true' readonly='true' width='90' align='center' autoshowpopup='true' allowsort='true'>
+                    </div>
+                    <div name='SubjectCode' field='SubjectCode' header='科目编号' visible='true' readonly='true' width='90' align='center' autoshowpopup='true' allowsort='true'>
+                    </div>
+                    <div name='ChargerDept' field='ChargerDept' displayfield='ChargerDeptName' header='部门' visible='true' readonly='true' width='100' align='center' autoshowpopup='true' allowsort='true'>
+                    </div>
+                    <div name='ApplyValue' field='ApplyValue' header='报销金额（元）' vtype='required;' visible='true' width='100' align='right' autoshowpopup='true' summarytype='sum' summaryrenderer='onSummaryRenderer' allowmove='false' allowresize='true' datatype='currency'
+                         decimalplaces='2' allowsort='true'>
+                    </div>
+                    <div name='InvoiceType' field='InvoiceType' header='发票类型' type='comboboxcolumn' vtype='required;' visible='true' width='90' align='center' autoshowpopup='true' allowsort='true'>
+                    </div>
+                    <div name='TaxRate' field='TaxRate' header='税率（%）' vtype='required;' visible='true' width='90' align='right' autoshowpopup='true' allowsort='true'>
+                    </div>
+                    <div name='TaxValue' field='TaxValue' header='税金（元）' visible='true' readonly='true' width='100' align='right' autoshowpopup='true' allowmove='false' allowresize='true' datatype='currency' decimalplaces='2' allowsort='true'>
+                    </div>
+                    <div name='ClearValue' field='ClearValue' header='去税金额（元）' visible='true' readonly='true' width='100' align='right' autoshowpopup='true' allowmove='false' allowresize='true' datatype='currency' decimalplaces='2' allowsort='true'>
+                    </div>
+                    <div name='Remark' field='Remark' header='备注' visible='true' width='200' align='left' autoshowpopup='true' allowsort='true'>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var applyUserID = getQueryString('ApplyUserID')
+</script>
+<script>
+
+    function pageLoad() {
+        mini.get("Details").setUrl('GetApplyUserReimbursementDetail?applyUserID=' + applyUserID);
+        addExecuteParam("ApplyUserID", applyUserID);
+        execute("GetApplyUserData", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                if (data.chartData) {
+                    $("#monthChartContainer").highcharts(mini.decode(data.chartData));
+                }
+
+                if (data.pieData) {
+                    $("#monthPieContainer").highcharts(mini.decode(data.pieData));
+                }
+            }, validateForm: false
+        });
+    }
+</script>

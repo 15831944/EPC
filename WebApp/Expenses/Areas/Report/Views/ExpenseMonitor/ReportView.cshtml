@@ -1,0 +1,475 @@
+﻿@{
+    ViewBag.Title = "项目费用监控";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style type="text/css">
+    .mini-grid-columns-lock .mini-grid-table {
+        height: 66px !important;
+    }
+</style>
+
+<div class='mini-toolbar gw-grid-toolbar' style='padding: 0px 0px 0px 0px;'>
+    <table>
+        <tr>
+            <td width="100px" align="left">@Html.ExportButton()</td>
+            <td>
+                &nbsp;
+            </td>
+            <td class='gw-toolbar-right'>
+                分组：<input class="mini-combobox" id="cbGroup" style="width:100px;" textField="text" valueField="value" data="group" onvaluechanged="onGroupChange" />
+                &emsp;
+                统计期间：
+                <input class="mini-combobox" id="dateType" style="width:50px;" textField="text" valueField="value" data="dateType" onvaluechanged="onDateTypeChange" />
+                &emsp;
+                <input class="mini-combobox" id="cbYears" style="width:80px;" textField="text" valueField="value" data="YearEnum" onvaluechanged="onDateChange" />
+                <span id="spYear">年</span>&emsp;
+                <input class="mini-combobox" id="cbQuarters" style="width:50px;" textField="text" valueField="value" data="quarters" onvaluechanged="onDateChange" visible="false" />
+                <span id="spQuarter" style="display:none">季</span>
+                <input class="mini-combobox" id="cbMonths" style="width:50px;" textField="text" valueField="value" data="months" onvaluechanged="onDateChange" visible="false" />
+                <span id="spMonth" style="display:none">月</span>
+                &emsp;
+                <input id='key' class='mini-buttonedit gw-searchbox' emptytext='请输入编号或名称' onenter="quickSearch('Code,Name');" onbuttonclick="quickSearch('Code,Name');" />
+                <a class='mini-button' onclick="showWindow('queryWindow');" iconcls='icon-find'>详细查询</a>
+                <a class='mini-button' onclick='showHelp()' iconcls='icon-help'>帮助</a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class='mini-fit' id='divGrid'>
+    <div id='dataGrid' class='mini-datagrid' style='width: 100%; height: 100%;' showPager="true" expandonload='true' istreegrid='false'
+         ondrawgroup='onDrawGroup' ondrawcell='onDrawCell'  frozenstartcolumn='0' frozenendcolumn='2' >
+        <div property='columns'>
+            <div type="indexcolumn"></div>
+            <div field="Name" header='项目名称' width="200" ></div>
+            <div field="Code" header='项目编号' width="100"></div>
+
+            <div header='合同及收入' headerAlign='center'>
+                <div property='columns'>
+                    <div field="ContractValue" header='合同额（元）' width="100" align='right' datatype='currency'></div>
+                    <div field="CurrentRevenueValue" header='当期收入（元）' width="100" align='right' datatype='currency'></div>
+                    <div field="TotalRevenueValue" header='累计收入（元）' width="100" align='right' datatype='currency'></div>
+                    <div field="TotalRevenueRate" header='完工百分比' width="100" align='right' numberformat='p'></div>
+                </div>
+            </div>
+
+            <div header='开票及到款' headerAlign='center'>
+                <div property='columns'>
+                    <div field="CurrentInvoiceValue" header='当期开票（元）' width="100" align='right' datatype='currency'></div>
+                    <div field="CurrentReceiptValue" header='当期到款（元）' width="100" align='right' datatype='currency'></div>
+                    <div field="TotalInvoiceValue" header='累计开票（元）' width="100" align='right' datatype='currency'></div>
+                    <div field="TotalReceiptValue" header='累计到款（元）' width="100" align='right' datatype='currency'></div>
+                    <div field="Receivables" header='应收款（元）' width="100" align='right' datatype='currency'></div>
+                </div>
+            </div>
+
+            <div header='预算' headerAlign='center'>
+                <div property='columns'>
+                    <div field="PrimitiveBudgetValue" header='初版预算（元）' width="100" align='right' datatype='currency'></div>
+                    <div field="LastBudgetValue" header='终版预算（元）' width="100" align='right' datatype='currency'></div>
+                </div>
+            </div>
+
+            <div header='成本' headerAlign='center'>
+                <div property='columns'>
+                    <div field="CurrentCostValue" header='当期（元）' width="100" align='right' datatype='currency'></div>
+                    <div field="TotalCostValue" header='累计（元）' width="100" align='right' datatype='currency'></div>
+                    <div field="CostAndBudgetRate" header='预算执行%' width="100" align='right' numberformat='p'></div>
+                </div>
+            </div>
+
+            <div header='利润' headerAlign='center'>
+                <div property='columns'>
+                    <div field="CurrentProfitValue" header='当期（元）' width="100" align='right' datatype='currency'></div>
+                    <div field="TotalProfitValue" header='累计（元）' width="100" align='right' datatype='currency'></div>
+                    <div field="ProfitRate" header='利润率' width="100" align='right' numberformat='p'></div>
+                </div>
+            </div>
+
+            <div header="基本信息" headerAlign='center'>
+                <div property="columns">
+                    <div field="CustomerName" header='客户名称' width="100"></div>
+                    @*<div field="Industry" header='客户类型' width="100" align="center"></div>*@
+                    <div field="Area" header='区域' width="100" align="center"></div>
+                    <div field="ChargerDeptName" header='承担部门' width="100"></div>
+                    <div field="ProjectClass" header='业务类型' width="100" align="center"></div>
+                    <div field="ProjectState" header='项目状态' align="center" width="100"></div>
+                    <div field="ProgressNodeName" header='当前节点' width="100"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id='queryWindow' class='mini-window' title='详细查询' style='width: 690px; height: 220px;'>
+    <div class='queryDiv'>
+        <form id='queryForm' method='post'>
+            <table>
+                <tr><td width="15%">项目名称</td><td width="35%" nowrap="nowrap"><input name="$LK$Name" class="mini-textbox" style='width:100%' /></td><td width="15%">项目编号</td><td width="35%" nowrap="nowrap"><input name="$LK$Code" class="mini-textbox" style='width:100%' /></td>
+                <tr><td width="15%">客户名称</td><td width="35%" nowrap="nowrap"><input name="$LK$CustomerName" class="mini-textbox" style='width:100%' /></td><td width="15%">区域</td><td width="35%" nowrap="nowrap"><input name="$LK$Area" class="mini-textbox" style='width:100%' /></td>
+                <tr><td width="15%">承担部门</td><td width="35%" nowrap="nowrap"><input name="$LK$ChargerDeptName" class="mini-textbox" style='width:100%' />
+            </table>
+        </form>
+        <div>
+            <a class='mini-button' onclick='search()' iconcls='icon-find' style='margin-right: 20px;'>查询</a>
+            <a class='mini-button' onclick='clearQueryForm()' iconcls='icon-undo'>清空</a>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    @Html.GetEnum("YearEnum")
+    var group = [{ "value": "", "text": "无" }, { "value": "ProjectClass", "text": "业务类型" }, { "value": "Area", "text": "区域" }, { "value": "ChargerDeptName", "text": "承担部门" }];
+    var dateType = [{ "value": "year", "text": "年" }, { "value": "quarter", "text": "季" }, { "value": "month", "text": "月" }];
+    var quarters = [{ "value": "1", "text": "一" }, { "value": "2", "text": "二" }, { "value": "3", "text": "三" }, { "value": "4", "text": "四" }];
+    var months = [{ "value": "1", "text": "1" }, { "value": "2", "text": "2" }, { "value": "3", "text": "3" }, { "value": "4", "text": "4" }, { "value": "5", "text": "5" }, { "value": "6", "text": "6" }, { "value": "7", "text": "7" }, { "value": "8", "text": "8" }, { "value": "9", "text": "9" }, { "value": "10", "text": "10" }, { "value": "11", "text": "11" }, { "value": "12", "text": "12" }];
+
+    function pageLoad() {
+        mini.get("dateType").setValue('year');
+        mini.get("cbYears").setValue(2019);
+        search();
+    }
+
+    //分组
+    var groupValue = '';
+    var groupText = '';
+    function onGroupChange() {
+        var grid = mini.get("dataGrid");
+        groupValue = mini.get("cbGroup").getValue();
+        groupText = mini.get("cbGroup").getText();
+        if (groupValue) {
+            grid.groupBy(groupValue, "asc");
+        }
+        else {
+            grid.clearGroup();
+        }
+        grid.reload();
+    }
+
+    //统计时间区间类型
+    function onDateTypeChange() {
+        var dType = mini.get("dateType").getValue();
+        switch (dType) {
+            case "year":
+                mini.get("cbQuarters").hide();
+                mini.get("cbMonths").hide();
+                document.getElementById("spQuarter").style.display = "none";
+                document.getElementById("spMonth").style.display = "none";
+                break;
+
+            case "quarter":
+                mini.get("cbQuarters").setValue(1);
+                mini.get("cbQuarters").show();
+                mini.get("cbMonths").hide();
+                document.getElementById("spQuarter").style.display = "inline";
+                document.getElementById("spMonth").style.display = "none";
+                break;
+
+            case "month":
+                mini.get("cbMonths").setValue(1);
+                mini.get("cbQuarters").hide();
+                mini.get("cbMonths").show();
+                document.getElementById("spQuarter").style.display = "none";
+                document.getElementById("spMonth").style.display = "inline";
+                break;
+        }
+        search();
+    }
+    //日期
+    function onDateChange() {
+        search();
+    }
+
+    //获取标签数据
+    function GetTabsData() {
+        var data = [];
+        $.each($("#divTabs").find("ul.tab_menu_top"), function (i, ulTab) {
+            if ($(ulTab).find("a.currentall").length == 0) {
+                var tabData = {};
+                tabData.queryfield = $(ulTab).attr("queryfield");
+                tabData.querymethod = $(ulTab).attr("querymethod");
+                var vals = [];
+                $(ulTab).find("a.current").each(function (i) {
+                    vals.push($(this).attr("value"));
+                });
+                tabData.value = vals.join(',');
+                data.push(tabData);
+            }
+        });
+        return data;
+    }
+
+    function tabSearch(normalSettings) {
+        var tabData = GetTabsData();
+        if (typeof (cusTabSearch) != "undefined") {
+            cusTabSearch(tabData, normalSettings);
+            return;
+        }
+        var settings = $.extend(true, {}, normalParamSettings, normalSettings);
+        var quickSearchData = {};
+        var keyCo = mini.get(settings.queryBoxId);
+        if (keyCo && settings.searchFields) {
+            var keys = settings.searchFields.split(',');
+            for (i = 0, len = keys.length; i < len; i++) {
+                quickSearchData["$IL$" + keys[i]] = keyCo.getValue();
+            }
+        }
+
+        var _formId = $("#" + settings.queryWindowId).find("form").attr("id");
+        var data = {};
+        if (_formId) {
+            var form = new mini.Form("#" + _formId);
+            form.validate(); if (form.isValid() == false) return;
+            data = form.getData();
+        }
+        for (var i = 0; i < tabData.length; i++) {
+            var tabDataInfo = tabData[i];
+            var key = "$IN$" + tabDataInfo.queryfield;
+            data[key] = tabDataInfo.value;
+        }
+
+        var grid = mini.get("#" + settings.gridId);
+        if (grid != undefined)
+            grid.load({
+                queryTabData: mini.encode(tabData), queryFormData: mini.encode(data),
+                quickQueryFormData: mini.encode(quickSearchData)
+            });
+        var searchWindow = mini.get("#" + settings.queryWindowId);
+        if (searchWindow)
+            hideWindow(settings.queryWindowId);
+    }
+
+    function quickSearch(fileds) {
+        normalParamSettings.searchFields = fileds;
+        tabSearch(normalParamSettings);
+    }
+
+    function search() {
+
+        var dType = mini.get("dateType").getValue();
+        if (!dType) {
+            msgUI('请选择【统计期间】');
+            return;
+        }
+        var year = mini.get("cbYears").getValue();
+        var quarter = mini.get("cbQuarters").getValue();
+        var month = mini.get("cbMonths").getValue();
+
+        if (!year) {
+            msgUI('请选择【年】');
+            return;
+        }
+
+        switch (dType) {
+            case "quarter":
+                if (!quarter) {
+                    msgUI('请选择【季】');
+                    return;
+                }
+                break;
+
+            case "month":
+                if (!month) {
+                    msgUI('请选择【月】');
+                    return;
+                }
+                break;
+        }
+
+        var url = "GetList?dType=" + dType + "&year=" + year + "&quarter=" + quarter + "&month=" + month;
+        var dataGrid = mini.get("dataGrid");
+        dataGrid.setUrl(url);
+        tabSearch();
+        dataGrid.reload();
+    }
+
+    function onDrawGroup(e) {
+        if (groupValue && groupText) {
+            e.cellHtml = groupText + "：" + (e.value ? e.value : "");
+        }
+    }
+
+    function onDrawCell(e) {
+        var record = e.record;
+        var field = e.field;
+
+        //未签合同但已确认进度
+        if (field == 'TotalProgressScale') {
+            var TotalProgressScale = parseFloat(record.TotalProgressScale);
+            if (!isNaN(TotalProgressScale) && TotalProgressScale > 0 && record.IsBandContract =='N') {
+                e.cellStyle = " background: red;";
+            }
+        }
+
+        //预算执行超过完工百分比
+        if (field == 'CostAndBudgetRate') {
+            var CostAndBudgetRate = parseFloat(record.CostAndBudgetRate);
+            var TotalProgressScale = parseFloat(record.TotalProgressScale);
+            if (!isNaN(CostAndBudgetRate) && !isNaN(TotalProgressScale) && CostAndBudgetRate > TotalProgressScale) {
+                e.cellStyle = " background: red;";
+            }
+        }
+
+        //开票额超过到款额
+        if (field == 'DiffInvoiceAndReceiptRate') {
+            var DiffInvoiceAndReceiptRate = parseFloat(record.DiffInvoiceAndReceiptRate);
+            if (!isNaN(DiffInvoiceAndReceiptRate) && DiffInvoiceAndReceiptRate > 0) {
+                e.cellStyle = " background: red;";
+            }
+        }
+
+    }
+
+    var projectState = [{ value: 'Create', text: '未下达' }, { value: 'Execute', text: '设计中' }, { value: 'Finish', text: '已完成' }, { value: 'Pause', text: '已暂停' }, { value: 'Plan', text: '策划中' }, { value: 'Terminate', text: '已终止' }];
+    addGridEnum('dataGrid', 'ProjectState', 'projectState');
+
+
+    var queryParam = '';
+    function createQueryParam() {
+        queryParam = '';
+        var dType = mini.get('dateType').getValue();
+        var BelongYear = mini.get('cbYears').getValue();
+        if (dType && BelongYear) {
+            queryParam += '&BelongYear=' + BelongYear;
+            switch (dType) {
+                case 'year':
+                    break;
+
+                case 'quarter':
+                    var BelongQuarter = mini.get('cbQuarters').getValue();
+                    if (BelongQuarter)
+                        queryParam += '&BelongQuarter=' + BelongQuarter;
+                    break;
+
+                case 'month':
+                    var BelongMonth = mini.get('cbMonths').getValue();
+                    if (BelongMonth)
+                        queryParam += '&BelongMonth=' + BelongMonth;
+                    break;
+            }
+        }
+    }
+
+    //合同额
+    addGridButton("dataGrid", "ContractValue", {
+        onButtonClick: function (row) {
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=ProjectContractInfoList&ProjectInfoId={ID}&FuncType=view' ;
+            openWindow(url, {
+                width: 1000, title: '合同名细', onDestroy: function (data) {
+                }
+            });
+        }
+    });
+
+    //开票_当期
+    addGridButton("dataGrid", "CurrentInvoiceValue", {
+        onButtonClick: function (row) {
+            createQueryParam();
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=ProjectInvoiceList&ProjectInfoID={ID}&FuncType=view' + queryParam;
+            openWindow(url, {
+                width: 1000, title: '开票明细', onDestroy: function (data) {
+                }
+            });
+        }
+    });
+    //开票_累计
+    addGridButton("dataGrid", "TotalInvoiceValue", {
+        onButtonClick: function (row) {
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=ProjectInvoiceList&ProjectInfoID={ID}&FuncType=view';
+            openWindow(url, {
+                width: 1000, title: '开票明细', onDestroy: function (data) {
+                }
+            });
+        }
+    });
+
+    //到款_当期
+    addGridButton("dataGrid", "CurrentReceiptValue", {
+        onButtonClick: function (row) {
+            createQueryParam();
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=ProjectReceipt&ProjectInfoId={ID}&FuncType=view' + queryParam;
+            openWindow(url, {
+                width: 1000, title: '到款明细', onDestroy: function (data) {
+                }
+            });
+        }
+    });
+    //到款_累计
+    addGridButton("dataGrid", "TotalReceiptValue", {
+        onButtonClick: function (row) {
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=ProjectReceipt&ProjectInfoId={ID}&FuncType=view';
+            openWindow(url, {
+                width: 1000, title: '到款明细', onDestroy: function (data) {
+                }
+            });
+        }
+    });
+
+    //收入_当期
+    addGridButton("dataGrid", "CurrentRevenueValue", {
+        onButtonClick: function (row) {
+            createQueryParam();
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=IncomeDetail&FuncType=view&State=Finish&CBSFullID=' + row['CBSFullID'] + '&CBSInfoID=' + row['CBSInfoID'] + queryParam;
+            openWindow(url, {
+                width: 1000, title: '收入明细', onDestroy: function (data) {
+                }
+            });
+        }
+    });
+    //收入_累计
+    addGridButton("dataGrid", "TotalRevenueValue", {
+        onButtonClick: function (row) {
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=IncomeDetail&FuncType=view&State=Finish&CBSFullID=' + row['CBSFullID'] + '&CBSInfoID=' + row['CBSInfoID'];
+            openWindow(url, {
+                width: 1000, title: '收入明细', onDestroy: function (data) {
+                }
+            });
+        }
+    });
+
+    //成本_当期
+    addGridButton("dataGrid", "CurrentCostValue", {
+        onButtonClick: function (row) {
+            createQueryParam();
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=CostDetail&FuncType=view&State=Finish&CBSFullID=' + row['CBSFullID'] + '&CBSInfoID=' + row['CBSInfoID'] + queryParam;
+            openWindow(url, {
+                width: 1000, title: '成本明细', onDestroy: function (data) {
+                }
+            });
+        }
+    });
+    //成本_累计
+    addGridButton("dataGrid", "TotalCostValue", {
+        onButtonClick: function (row) {
+            var url = '/MvcConfig/UI/List/PageView?TmplCode=CostDetail&FuncType=view&State=Finish&CBSFullID=' + row['CBSFullID'] + '&CBSInfoID=' + row['CBSInfoID'];
+            openWindow(url, {
+                width: 1000, title: '成本明细', onDestroy: function (data) {
+                }
+            });
+        }
+    });
+
+    //初版预算
+    addGridButton("dataGrid", "PrimitiveBudgetValue", {
+        onButtonClick: function (row) {
+            var url = '/Expenses/Budget/BudgetSubmit/PageView?TmplCode=ProjectBudget&FuncType=View&ID={PrimitiveBudgetID}';
+            openWindow(url, {
+                width: 1000, title: '预算', onDestroy: function (data) {
+                }
+            });
+        }
+    });
+    //终版预算
+    addGridButton("dataGrid", "LastBudgetValue", {
+        onButtonClick: function (row) {
+            var url = '/Expenses/Budget/BudgetSubmit/PageView?TmplCode=ProjectBudget&FuncType=View&ID={LastBudgetID}';
+            openWindow(url, {
+                width: 1000, title: '预算', onDestroy: function (data) {
+                }
+            });
+        }
+    });
+
+</script>

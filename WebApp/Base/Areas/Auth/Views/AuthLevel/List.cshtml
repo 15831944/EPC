@@ -1,0 +1,358 @@
+﻿<div class="mini-splitter" style="width: 100%; height: 100%;" borderstyle="border-right:0px;">
+    <div size="250" showcollapsebutton="false" minsize="200">
+        <div class="mini-fit">
+            <ul id="dataTree" class="mini-tree" style="overflow: hidden; width: 100%; height: 100%" url="GetOrgTree" showtreeicon="true" iconfield="Type" textfield="Name" idfield="ID" parentfield="ParentID"
+                resultastree="false" onnodeselect="onNodeSelect" expandonload="0" selectonload="false"></ul>
+        </div>
+    </div>
+    <div style="width: 100%; height: 100%; border: 0px;">
+        <div class="mini-splitter" vertical="false" style="width: 100%; height: 100%;" borderstyle="border-top:0px;border-bottom:0px">
+            <div size="65%" showcollapsebutton="false" style="width: 100%; height: 100%; border-left-width: 0px; border-top-width: 0px; border-bottom-width: 0px; border-right-width: 0px;" minsize="450px;">
+                <div class="mini-toolbar gw-grid-toolbar" style="border-left-width: 0px; border-top-width: 0px; border-bottom-width: 0px;">
+                    <table>
+                        <tr>
+                            <td>
+                                <div id="roleValue" name="roleValue" class="mini-radiobuttonlist" value="-1" repeatdirection="horizontal" textfield="text" valuefield="value" data="yesNo" onvaluechanged="filterRole"></div>
+                            </td>
+                            <td class="gw-toolbar-right" style="align: right">
+                                <input id="key" class="mini-buttonedit gw-searchbox" emptytext="请输入账号或姓名" onenter="quickSearch('Code,Name',{gridId:'userGrid'});" onbuttonclick="quickSearch('Code,Name',{gridId:'userGrid'});" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="mini-fit">
+                    <div id="userGrid" class="mini-datagrid" url="GetUserList" style="width: 100%; height: 100%;" borderstyle="border-left:0px;border-bottom:0px" multiselect="false" allowunselect="false" onrowclick="onRowSelect"
+                         selectonload="false">
+                        <div property="columns">
+                            <div type="indexcolumn" width="15">
+                            </div>
+                            <div field="DeptName" width="100px" allowsort="true" align="center">
+                                当前部门
+                            </div>
+                            <div field="WorkNo" width="60px" allowsort="true" align="center">
+                                工号
+                            </div>
+                            <div field="Name" width="60px" allowsort="true" align="center">
+                                姓名
+                            </div>
+                            <div field="Code" width="60px" allowsort="true" align="center">
+                                账号
+                            </div>
+                            <div type="checkboxcolumn" field="IsRole" name="IsRole" width="25" headeralign="center">
+                                已授权
+                            </div>
+                            <div field="ShowAll" name="ShowAll" hidden="hidden" width="0" headeralign="center">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div showcollapsebutton="false" borderstyle="border:0px" minsize="280px;">
+                <div class="mini-tabs" id="tabs" activeindex="0" onactivechanged="activechanged" style="width: 100%; height: 100%; padding: 0px;" borderstyle="border:0px;">
+                    @*<div title="菜单入口" name="res">
+                        <div class="mini-toolbar" style="border-bottom:1px solid #ccc">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <a class="mini-button" id="btnSaveRes" plain="true" iconcls="icon-save" onclick="saveResAuth();">保存</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="mini-fit">
+                            <ul id="resTree" class="mini-tree" style="overflow: hidden; width: 100%; height: 100%;" showtreeicon="false" iconfield="Type" textfield="Name" idfield="ID" parentfield="ParentID" checkedfield="Checked"
+                                resultastree="false" autocheckparent="true" checkrecursive="false" expandonload="0" showcheckbox="false" onnodeclick="onTreeNodeClicked"></ul>
+                        </div>
+                    </div>
+                    <div title="授权对象" name="rule">
+                        <div class="mini-toolbar" style="border-bottom:1px solid #ccc">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <a class="mini-button" id="btnSaveRule" plain="true" iconcls="icon-save" onclick="saveRuleAuth();">保存</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="mini-fit">
+                            <ul id="ruleTree" class="mini-tree" style="overflow: hidden; width: 100%; height: 100%;" showtreeicon="false" iconfield="Type" textfield="Name" idfield="ID" parentfield="ParentID" checkedfield="Checked"
+                                resultastree="false" autocheckparent="false" checkrecursive="false" expandonload="0" showcheckbox="false" onnodeclick="onTreeNodeClicked"></ul>
+                        </div>
+                    </div>*@
+                    <div title="子公司" name="org">
+                        <div class="mini-toolbar" id="btnDiv">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <a class="mini-button" id="btnSaveOrg" plain="true" iconcls="icon-save" onclick="saveOrgAuth();">保存</a>
+                                    </td>
+                                    <td id="btnRight"></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="mini-fit">
+                            <ul id="orgTree" class="mini-tree" style="overflow: hidden; width: 100%; height: 100%;" showtreeicon="false" iconfield="Type" textfield="Name" idfield="ID" parentfield="ParentID" checkedfield="Checked"
+                                resultastree="false" expandonload="0" showcheckbox="true" checkrecursive="false"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    var userAuth = new Array();
+    var flag = false;
+    function onRowSelect(e) {
+        var userID = e.record.ID;
+        var index = mini.get("tabs").activeIndex;
+
+        mini.get("orgTree").setUrl("GetOrgTreeByUserID?UserID=" + userID);
+        //if (index == 0) {
+        //    mini.get("resTree").setUrl("GetTreeByUserID?UserID=" + userID + "&RootFullID=a1b10168-61a9-44b5-92ca-c5659456deb5&Type=");
+        //}
+        //else if (index == 1) {
+        //    mini.get("ruleTree").setUrl("GetTreeByUserID?UserID=" + userID + "&RootFullID=a1b10168-61a9-44b5-92ca-c5659456deb6&Type=1");
+        //}
+        //else {
+        //    mini.get("orgTree").setUrl("GetOrgTreeByUserID?UserID=" + userID);
+        //}
+    }
+
+    function activechanged(e) {
+        var node = mini.get("userGrid").getSelected();
+        if (!node) {
+            return;
+        }
+        if (e.tab.name == "res") {
+            mini.get("resTree").setUrl("GetTreeByUserID?UserID=" + node.ID + "&RootFullID=a1b10168-61a9-44b5-92ca-c5659456deb5&Type=");
+        }
+        else if (e.tab.name == "rule") {
+            mini.get("ruleTree").setUrl("GetTreeByUserID?UserID=" + node.ID + "&RootFullID=a1b10168-61a9-44b5-92ca-c5659456deb6&Type=1");
+        }
+        else {
+            mini.get("orgTree").setUrl("GetOrgTreeByUserID?UserID=" + node.ID);
+        }
+    }
+
+
+    function filterRole() {
+        var key = 'roleValue';
+        var keyCo = mini.get(key);
+        if (keyCo.getValue() < 0) {
+            quickSearch('ShowAll', { gridId: 'userGrid', queryBoxId: key });
+            return;
+        }
+        quickSearch('IsRole', { gridId: 'userGrid', queryBoxId: key });
+    }
+
+    function saveResAuth() {
+        var treeList = mini.get("resTree").getList();
+        for (var i = 0; i < treeList.length; i++) {
+
+            var Name = treeList[i].Name;
+            if (Name.match("checked.gif") != null && Name.match("unchecked.gif") == null) {
+                userAuth.push(treeList[i].FullID.toString());
+            }
+        }
+        var chenckedIDs = userAuth.join(',');
+        userAuth = new Array();
+        var grid = mini.get("userGrid");
+        var selectedRow = grid.getSelected();
+        var selectedRowID = "";
+        if (selectedRow != undefined) {
+            selectedRowID = selectedRow.ID;
+        }
+        else {
+            msgUI("请选择一条数据", 1);
+            return;
+        }
+
+        addExecuteParam("CheckedIDs", mini.encode(chenckedIDs));
+        addExecuteParam("UserID", selectedRowID);
+        execute("SaveUserRes", { actionTitle: '保存' });
+    }
+    function saveRuleAuth() {
+        var treeList = mini.get("ruleTree").getList();
+        for (var i = 0; i < treeList.length; i++) {
+            var Name = treeList[i].Name;
+            if (Name.match("checked.gif") != null && Name.match("unchecked.gif") == null) {
+                userAuth.push(treeList[i].FullID.toString());
+            }
+        }
+        var chenckedIDs = userAuth.join(',');
+        userAuth = new Array();
+
+        var grid = mini.get("userGrid");
+        var selectedRow = grid.getSelected();
+        var selectedRowID = "";
+        if (selectedRow != undefined) {
+            selectedRowID = selectedRow.ID;
+        }
+        else {
+            msgUI("请选择一条数据。", 1);
+            return;
+        }
+        addExecuteParam("CheckedIDs", mini.encode(chenckedIDs));
+        addExecuteParam("UserID", selectedRowID);
+        execute("SaveUserRule", { actionTitle: '保存' });
+    }
+
+    function saveOrgAuth() {
+        var treeList = mini.get("orgTree");
+
+        var chenckedIDs = getValues(treeList.getCheckedNodes(), "ID");
+
+        var grid = mini.get("userGrid");
+        var selectedRow = grid.getSelected();
+        var selectedRowID = "";
+        if (selectedRow != undefined) {
+            selectedRowID = selectedRow.ID;
+        }
+        else {
+            msgUI("请选择一条数据。", 1);
+            return;
+        }
+        addExecuteParam("CheckedIDs", mini.encode(chenckedIDs));
+        addExecuteParam("UserID", selectedRowID);
+        execute("SaveUserOrg", { actionTitle: '保存' });
+    }
+
+    function ViewDetail(userID, resID) {
+        flag = true;
+        var url = changeToFullUrl('GetUserAuthDetail'); //url转换为全路径
+        url += '?UserID=' + userID + '&ResID=' + resID;
+        $.ajax({
+            url: url,
+            type: "post",
+            cache: false,
+            success: function (text) {
+                //增加新版报错分支
+                if (text && typeof (text) == "string" && text.indexOf("{\"errcode\"") == 0) {
+                    var fail = jQuery.parseJSON(text);
+                    var msg = getErrorFromHtml(fail.errmsg);
+                    msgUI(msg, 4);
+                    return;
+                }
+
+                var arr = mini.decode(text);
+                var msg = getValues(arr, "Src");
+                msgUI(msg);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                var msg = getErrorFromHtml(jqXHR.responseText);
+                msgUI(msg, 4, function (act) {
+                });
+            }
+        });
+    }
+    function onNodeSelect(e) {
+        var dataGrid = mini.get("userGrid");
+        mini.get('roleValue').setValue(-1);
+        dataGrid.setUrl("GetUserList?NodeFullID=" + e.node.FullID);
+        dataGrid.load();
+    }
+
+
+    function ChangeAuth(tree, treeNode, denyAuthID) {
+
+        var nodeName = treeNode.Name;
+        var nodeID = denyAuthID;
+        var denyAuthID = "#" + denyAuthID;
+        var src = nodeName;
+        if (src.match("unchecked.gif") != null) {
+            nodeName = nodeName.replace(/unchecked.gif/, "checked.gif");
+            tree.updateNode(treeNode, { Name: nodeName });
+            var childNodes = tree.getAllChildNodes(treeNode);
+            for (var i = 0; i < childNodes.length; i++) {
+                nodeName = childNodes[i].Name;
+                nodeName = "<img src='/CommonWebResource/Theme/Default/MiniUI/icons/checked.gif' />" + nodeName.split('/>')[1]; //nodeName.replace(/DenyAuth.gif/, "unchecked.gif");
+                tree.updateNode(childNodes[i], { Name: nodeName });
+            }
+        }
+        else {
+            nodeName = nodeName.replace(/checked.gif/, "unchecked.gif");
+            tree.updateNode(treeNode, { Name: nodeName });
+            var childNodes = tree.getAllChildNodes(treeNode);
+            for (var i = 0; i < childNodes.length; i++) {
+                nodeName = childNodes[i].Name;
+                nodeName = "<img src='/CommonWebResource/Theme/Default/MiniUI/icons/unchecked.gif' />" + nodeName.split('/>')[1];;  //nodeName.replace(/unchecked.gif/, "checked.gif");
+                tree.updateNode(childNodes[i], { Name: nodeName });
+            }
+        }
+    }
+    function onTreeNodeClicked(e) {
+        if (!flag) {
+            var node = e.node;
+            nodeID = node.ID;
+            var sender = e.sender;
+            ChangeAuth(sender, node, nodeID);
+        }
+    }
+</script>
+<script type="text/javascript">
+    function onDrawNode(e) {
+        if (e.node.Type == "Menu")
+            e.showCheckBox = false;
+    }
+    var yesNo = [{ "value": "-1", "text": "全部" }, { "value": "1", "text": "已授权" }, { "value": "0", "text": "未授权" }];
+</script>
+<style type="text/css">
+    .Menu {
+        background: url(/CommonWebResource/Theme/Default/MiniUI/icons/flowstart.gif) no-repeat;
+    }
+
+    .Button {
+        background: url(/CommonWebResource/Theme/Default/MiniUI/icons/set.gif) no-repeat;
+    }
+
+    .Field {
+        background: url(/CommonWebResource/Theme/Default/MiniUI/icons/item.gif) no-repeat;
+    }
+
+    .FieldEdit {
+        background: url(/CommonWebResource/Theme/Default/MiniUI/icons/item.gif) no-repeat;
+    }
+
+    .Data {
+        background: url(/CommonWebResource/Theme/Default/MiniUI/icons/node.png) no-repeat;
+    }
+
+    .Page {
+        background: url(/CommonWebResource/Theme/Default/MiniUI/icons/node.png) no-repeat;
+    }
+
+    .Code {
+        background: url(/CommonWebResource/Theme/Default/MiniUI/icons/node.png) no-repeat;
+    }
+</style>
+<style type="text/css">
+    .GroupCompany {
+        background: url(/CommonWebResource/Theme/Default/MiniUI/icons/org.gif) no-repeat;
+    }
+
+    .Company {
+        background: url(/CommonWebResource/Theme/Default/MiniUI/icons/org.gif) no-repeat;
+    }
+
+    .Org {
+        background: url(/CommonWebResource/Theme/Default/MiniUI/icons/org.gif) no-repeat;
+    }
+
+    .Dept {
+        background: url(/CommonWebResource/Theme/Default/MiniUI/icons/dept.gif) no-repeat;
+    }
+
+    .ManufactureDept {
+        background: url(/CommonWebResource/Theme/Default/MiniUI/icons/cutover.png) no-repeat;
+    }
+
+    .SubDept {
+        background: url(/CommonWebResource/Theme/Default/MiniUI/icons/node.png) no-repeat;
+    }
+
+    .Post {
+        background: url(/CommonWebResource/Theme/Default/MiniUI/icons/user.png) no-repeat;
+    }
+</style>

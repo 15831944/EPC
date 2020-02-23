@@ -1,0 +1,1171 @@
+﻿@{
+    ViewBag.Title = "PhysicalReorganize";
+}
+<script src="/Project/Scripts/EngineeringSpace/js/jquery.nicescroll.js" type="text/javascript"></script>
+<!--   -->
+<div id="Tips" style="position: absolute;height: 32px;width: 56%;top: -100%;font-size: 50px;border: 1px solid #D99B52;left: 21px;
+border-radius: 5px;background-color: #FFF2DF;z-index: 100;color: #D99B52;">
+    <div style="margin-left: 12px;margin-top: 6px;float:left;width:20px;height:19px;background-image:url('../../Scripts/Images/Tips.png')"></div>
+    <div style=" font-size: 13px;float:left; margin-left: 13px;width: 270px;margin-top: 6px;">拖拽文件，完成整编</div>
+    <div onclick="closeTips()" style="margin-right: 2%; float: right;height: 20px;width: 19px;font-size: 20px;margin-top: 4px;cursor:pointer;text-align: center;font-weight: bold;">×</div>
+</div>
+<div id="watermarkList" style="left: 24%;position: absolute;height: 60px;top: 45%;font-size: 50px;color: #F0F0F0;">归档清单</div>
+<div id="watermarkCatalog" style="right: 127px;position: absolute;height: 60px;top: 45%;font-size: 50px;color: #F0F0F0;">归档目录</div>
+<div id="mainlayout" class="mini-layout" style="width: 100%; height: 100%;" splitsize="3">
+     <div title="north" region="north" height="45" splitsize="0" style="border: 0; /*border-bottom: 2px solid #C0C0C0; */background-image: linear-gradient(rgba(230,230,230,0.8),rgba(230,230,230,0.5), rgba(230,230,230,0.8));" showheader="false">
+        <div style="margin-top: 8px">
+            <a class="mini-button" iconcls="icon-search" onclick="ReorgaPageWatchPhysical()" plain="true">查看签收登记单</a>
+            <a class="mini-button" iconcls="icon-save" onclick="SaveTemporary()" plain="true">暂存退出</a>
+            <a class="mini-button" iconcls="icon-ok" onclick="finish()" plain="true">完成整编</a>
+            
+        </div>
+    </div>
+     <div title="center" region="center"  style="border: 1px solid #CACACB;" showheader="false"">
+        <div class="mini-toolbar gw-grid-toolbar">
+            <table>
+                <tr>
+                    <td>
+                        @{
+                            <ul id="popupMenu" class="mini-contextmenu">
+
+                            @foreach (System.Data.DataRow item in ViewBag.GetFileConfigName.Rows)
+                            {
+                                string str = item["Name"] + "|" + item["FormCode"] + "|" + item["FileConfigID"];
+                                <li text="@item["Name"] " onclick="Add('@str')" > </li>
+                            }
+                            </ul>
+                            }
+                        <a class="mini-menubutton" id="btnAdd" visible="true" iconcls="icon-add" plain="true" menu="#popupMenu">实物信息登记</a>
+                        <a class="mini-button" id="btnEdit" iconcls="icon-edit" plain="true" onclick="Modify">编辑</a>
+                        <a class="mini-button" id="btnDelete" iconcls="icon-remove" plain="true" onclick="deleted"> 删除</a>
+                        <a class="mini-button" iconcls="mini-pager-reload" onclick="ClearPath()" plain="true">取消归档</a>
+                    </td>
+                    <td class="gw-toolbar-right">
+                        <input id="key" class="mini-buttonedit gw-searchbox" style="width: 150px;" emptytext="请输入编号或名称" onenter="quickSearch('Name,Code');"
+                            onbuttonclick="quickSearch('Name,Code');" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        @Html.Raw(ViewBag.ListHtml)
+        <script type="text/javascript">
+            if (getQueryString("FuncType").toLowerCase() == "view") {
+                $('#dataGrid').attr('allowdrag', 'false');
+            } else
+                $('#dataGrid').attr('allowdrag', 'true');
+            $('#dataGrid').attr('allowResizeColumn', 'false');
+            $('#dataGrid div[property="columns"] div').attr('allowdrag', 'true');
+            $('#dataGrid').attr('ondragstart', 'onFileTreeDragStart');
+            $('#dataGrid').attr('onbeforedrop', 'onFileTreeBeforeDrop');
+            $('#dataGrid').attr('ondrawcell', 'onFileTreeDrawCell');
+            //$('#dataGrid').css({ "width": "1000px" });
+            @Html.Raw(ViewBag.Script)
+            @Html.Raw(ViewBag.FixedFields)
+        </script>
+    </div>
+     <div title="east" region="east" width="400" showheader="false" expanded="true" showspliticon="false"
+        style="border: 1px solid #CACACB;">
+      @*  <div class="mini-tabs" activeindex="0" style="width: 100%; height: 100%;">
+            <div title="归档目录">*@
+                <div class="mini-toolbar gw-grid-toolbar">
+                    <table style="height: 100%">
+                        <tr>
+                            <td>
+                                <a class="mini-button" iconcls="icon-add" onclick="SelectRootNodes()" plain="true">选择编目</a>
+                                <!--<a class="mini-button" iconcls="icon-refer" onclick="FinishReorganize()" plain="true">完成整编</a>-->
+                            </td>
+                            <td class="gw-toolbar-right">
+                                <div id="showAllFile" name="showAllFile" checked="false" class="mini-checkbox" text="显示全部文件" onvaluechanged="onCheckBoxValueChanged(this)"></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="mini-fit">
+                    <div id="nodeTreeGrid" class="mini-treegrid" style="width: 100%; height: 100%;" contextmenu="treeMenu" autoload="false"
+                url="GetNodeTreeList" showtreeicon="true" treecolumn="Name" idfield="ID" parentfield="ParentID"
+                resultastree="false" iconfield="NodeType" allowresize="true" fitcolumns="true" 
+                showCheckBox ="false" allowdrag="true" allowdrop="true"@* dropAction="copy"*@ allowLeafDropIn="true"
+                ondragstart="onNodeTreeDragStart" onbeforedrop="onNodeTreeBeforeDrop" ongivefeedback="onGiveFeedback"
+                ondrop="onNodeTreeDrop" contextmenu="#treeMenu" expandOnLoad="false" ondrawcell="onNodeTreeDrawCell" onload="onNodeTreeLoad">
+                        <div property="columns">
+                            <div field="Name" name="Name" width="160" headeralign="center" allowdrag="true">
+                                名称
+                            </div>
+                            <div field="ReorganizeCountFileCount" name="CurrentFileCount" width="50" align="center" headeralign="center" allowdrag="true">
+                                文件数
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @*</div>
+            <div title="归档案卷/文件目录" id="FileDir">*@
+                
+           @*</div>*@
+       </div>
+     <script type="text/javascript">
+            if (getQueryString("FuncType").toLowerCase() == "view") {
+                $("#nodeTreeGrid").attr({ "allowdrag": "false", "allowdrop": "false" });
+                $("#nodeTreeGrid").attr({ "contextmenu": "" });
+            }
+            </script>
+</div>
+<div id="backgroundGray" style="display:none; width: 100%; height: 100%; position: absolute;opacity:0;background:black; z-index: 43;top: 0;"></div>
+<div id="VolumnDir" style="left:100%;background:transparent; position: absolute; z-index:999; top: 0%; height: 100%; width: calc(95% - 144px);">
+
+    <div id="ArchiveFileBack" style="float:left;margin-left: -144px; margin-top: 6px;cursor:pointer;width:144px;height:35px;background-image:url(../../Scripts/Reorganize/Images/bg02.png);background-repeat:no-repeat"  onclick="ArchiveFile()" plain="true">
+        <img src="~/Scripts/Reorganize/Images/icon04.png" style="float:left;margin: 9px 0px 0px 28px;"/><div style="float:left;margin: 6px 0px 0px 6px;color:white">本次归档</div>
+        <div id="ReorganizeCount" style="float:left;width:25px;height:19px;background:white;border-radius:3px; margin: 8px 0px 0px 4px;color:#F39C12;font-family:'Cambria Math'"align="center">
+        </div>
+    </div>
+    <div style="height:100%;width:100%;float:left">
+         <div class="mini-toolbar" style="height: 42px;">
+                    <input class="mini-combobox" style="float:left; width: 150px;margin-top:1%" textfield="text" valuefield="id"
+                        url="" emptytext="打印机选择" allowinput="true" />
+                    <div id="printbtn" style="width: calc(100% - 281px);float: left;height:30px; margin-top: 7px;">
+                        <!---->
+                        @{
+                            foreach (var item in ViewBag.PrintButton)
+                            {
+                                
+                            <div class='mini-button' iconCls="icon-print" style="margin-top: 1%;" onclick="PrintButton(this)">@item</div>
+                            }
+                            
+                        }
+                     </div>
+                     <div style="right:0px; width:133px;top:0px;position:absolute">
+                        <div id="0" onclick="tabsArchFile(this)" style="background:white; float:left;cursor:pointer; width:43px;height:45px;border-left:1px solid #CCCCCC;border-right:1px solid #CCCCCC">
+                            <img src="~/Scripts/Reorganize/Images/icon03on.png" style="margin: 10px 0px 0px 12px;"/>
+                        </div>
+                        <div id="1" onclick="tabsArchFile(this)" style="background:#F2F2F2;float:left;cursor:pointer;width:43px;height:45px;border:0">
+                            <img src="~/Scripts/Reorganize/Images/icon02.png" style="margin: 10px 0px 0px 12px;"/>
+                        </div>
+                         <div id="2" onclick="tabsArchFile(this)" style="background:#F2F2F2;float:left;cursor:pointer;width:43px;height:45px;border-left:1px solid #CCCCCC;border-right:1px solid #CCCCCC">
+                             <img src="~/Scripts/Reorganize/Images/icon01.png" style="margin: 10px 0px 0px 12px;"/>
+                         </div>
+                     </div>
+                </div>
+         <div class="mini-tabs" id="tabsArchive" activeindex="0" style="width:100%;height:calc(100% - 42px)">
+                <div title="" showheader="false" headerstyle="display:none">
+                     <div id="treegridTree" class="mini-treegrid" style="width:100%;height:100%;"     
+                            url="NodeFileDetial" showTreeIcon="true" multiSelect="true"
+                            treeColumn="Name" idField="ID" parentField="ParentID" resultAsTree="false"  
+                            allowResize="true" expandOnLoad="true" ondrawcell="EnumSelector">
+                      <div property="columns">
+                          <div type="indexcolumn"></div>
+                          <div type="checkcolumn"></div>
+                          <div name="Name" field="Name" width="250" >名称</div>
+                          <div name="DocumentCode" field="DocumentCode" width="100" align="center" >档号</div> 
+                          <div name="SecretLevel" field="SecretLevel" width="100" align="center" >密级</div> 
+                          <div name="KeepYear" field="KeepYear" width="100" align="center" >保管期限</div> 
+                          <div name="Quantity" field="Quantity" width="100" align="right" >份数</div> 
+                          <div name="PageCount" field="PageCount" width="100" align="right" >页数</div> 
+                          <div name="RackNumberName" field="RackNumberName" width="100" align="center" >柜架号</div> 
+                          <div name="StorageRoomName" field="StorageRoomName" width="100" align="center" >库房</div> 
+                          <div name="ArchivePeopleName" field="ArchivePeopleName" width="100" align="center" >归档人</div>   
+                          <div name="ArchiveDepartmentName" field="ArchiveDepartmentName" width="100" align="center" >归档部门</div>   
+                          <div name="ArchiveDate" field="ArchiveDate" width="100" align="center" >归档日期</div>                  
+                      </div>
+                     </div>
+                 </div>
+                <div title="" showheader="false" headerstyle="display:none">
+                     <div id="datagridFile" class="mini-datagrid" style="width: 100%; height: 100%;"
+                                   url="NodeInfo" showpager="false" multiSelect="true" ondrawgroup="onDrawGroup"  showColumnsMenu="true" collapseGroupOnLoad="false" enableGroupOrder="false"
+                                    groupTitleCollapsible="false" ondrawcell="EnumSelector">
+                         <div property="columns">
+                            <div type="indexcolumn"></div>
+                            <div type="checkcolumn"></div>
+                            <div field="FullPathName" width="120" headeralign="center" align="left" allowsort="true">归档目录</div>
+                             <div field="Name" width="120" headeralign="center" align="center" allowsort="true">名称</div>
+                            <div field="DocumentCode" width="120" headeralign="center" align="left" allowsort="true">档号</div>
+                            <div field="SecretLevel" width="120" headeralign="center" align="center" allowsort="true">密级</div>
+                            <div field="KeepYear" width="120" headeralign="center" align="center" allowsort="true">保管期限</div>
+                            <div field="RackNumberName" width="120" headeralign="center" align="center" allowsort="true">柜架号</div>
+                            <div field="StorageRoomName" width="120" headeralign="center" align="center" allowsort="true">库房</div>
+                            <div field="ArchivePeopleName" width="120" headeralign="center" align="center" allowsort="true">归档人</div>
+                            <div field="ArchiveDepartmentName" width="120" headeralign="center" align="center" allowsort="true">归档部门</div>
+                            <div field="ArchiveDate" width="120" headeralign="center" align="center" allowsort="true">归档日期</div>
+                        </div>
+                      </div>
+                 </div>
+                <div title="" showheader="false" headerstyle="display:none">
+                    <div id="datagridList" class="mini-datagrid" style="width:100%;height:100%;" allowResize="true"
+                                url="FileList"  idField="id" showpager="false" multiSelect="true"  ondrawcell="EnumSelector">
+                        <div property="columns">
+                             <div type="indexcolumn"></div>
+                             <div type="checkcolumn"></div>
+                            <div field="FullPathName" width="120" headeralign="center" align="left" allowsort="true">归档目录</div>
+                             <div field="Name" width="120" headeralign="center" align="left" allowsort="true">文件名称</div>
+                            <div field="Code" width="120" headeralign="center" align="center" allowsort="true">文件编号</div>
+                            <div field="FileType" width="120" headeralign="center" align="center" allowsort="true">文件类型</div>
+                            <div field="Edition" width="120" headeralign="center" align="center" allowsort="true">版次</div>
+                            <div field="SecretLevel" width="120" headeralign="center" align="center" allowsort="true">密级</div>
+                            <div field="KeepYear" width="120" headeralign="center" align="right" allowsort="true">保管期限</div>
+                            <div field="Quantity" width="120" headeralign="center" align="right" allowsort="true">份数</div>
+                            <div field="PageCount" width="120" headeralign="center" align="center" allowsort="true">页数</div>
+                            <div field="Media" width="120" headeralign="center" align="center" allowsort="true">载体</div>
+
+                            <div field="ArchivePeopleName" width="120" headeralign="center" align="center" allowsort="true">归档人</div>
+                            <div field="ArchiveDepartmentName" width="120" headeralign="center" align="center" allowsort="true">归档部门</div>
+                            <div field="ArchiveDate" width="120" headeralign="center" align="center" allowsort="true">归档日期</div>
+                        </div>
+                     </div>
+                 </div>
+            </div>
+         
+     </div>
+</div>
+
+<div id='showFinishWindow' class='mini-window' title='资料整编' style='width: 325px; height: 198px;'>
+        <div style="float: left;width:77%; margin:26px 0px 3px 54px; ">
+         <span style="float:left;margin-top: -2px;margin-right:6%">是否发布档案及节点:</span>
+                   <div id="release" class="mini-checkboxlist" multiSelect="false" repeatLayout="table" repeatDirection="vertical"
+                    textField="text" valueField="id" value="0" data="YesOrNo" >
+                    </div>
+         </div>
+        <div style="float: left;width: 77%; margin: 14px 0px 24px 66px;">
+            <!--float: left;width: 100%; margin: 26px 0px 3px 20px;-->
+        <span style="float:left;margin-top: -2px;margin-right:6%;">是否通知送归档人:</span>
+                   <div id="sendArchiving" class="mini-checkboxlist" multiSelect="false" repeatLayout="table" repeatDirection="vertical"
+                    textField="text" padding="0" valueField="id" value="0" data="YesOrNo" >
+                    </div> 
+            </div>
+        <div style="text-align:center">
+            <a class='mini-button' plain="false" onclick='Confirm()' iconCls='icon-ok' style='margin-right: 20px;'>确认</a>
+            <a class='mini-button' plain="false" onclick='Cancel()' iconCls='icon-remove'>取消</a>
+        </div>
+</div>
+
+    <ul id="treeMenu" class="mini-contextmenu" onbeforeopen="onBeforeOpen">
+    </ul>
+
+    <script type="text/javascript">
+        @Html.Raw(ViewBag.FileTreeFieldsScript);
+        var SpaceID = getQueryString("SpaceID");
+        var YesOrNo = [{ id: 0, text: "是" }, { id: 1, text: "否" }];
+    </script>
+    <!--文件树脚本-->
+    <script type="text/javascript">
+
+        //显示完整树路径
+        $(document).ready(function () {
+            var tip = new mini.ToolTip();
+            tip.set({
+                target: document,
+                selector: '[data-tooltip]',
+                onbeforeopen: function (e) {
+                    //没有整编的不显示tooltip
+                    e.cancel = !e.content;
+                },
+            });
+        });
+
+        function onFileTreeDrawCell(e) {
+            var rec = e.record;
+            var field = e.field;
+            if (field == "ReorganizePath") {
+                var ele = $(e.cellHtml)[0];
+                if (ele) {
+                    var text = ShowFullPath(rec["ReorganizeFullID"]);
+                    ele.setAttribute("data-tooltip", text);
+                    ele.setAttribute("data-placement", "top");
+                    e.cellHtml = ele.outerHTML;
+                }
+            }
+        }
+
+        function ShowFullPath(fullid) {
+            if (!fullid) return '';
+            var nameAry = [];
+            var nodeTree = mini.get("nodeTreeGrid");
+            for (var i = 0; i < fullid.split('.').length; i++) {
+                var id = fullid.split('.')[i];
+                var node = nodeTree.findRow(function (row) {
+                    return row.ID == id;
+                });
+                if (node)
+                    nameAry.push(node["Name"]);
+            }
+            return nameAry.join(' > ');
+        }
+
+        //文件树脚本
+        function onFileTreeDragStart(e) {
+            var tree = e.sender;
+            var dispText = e.node.Name;
+            if (e.nodes.length > 1) {
+                dispText = "";
+                for (var i = 0; i < e.nodes.length; i++) {
+                    dispText += e.nodes[i].Name + "</br>";
+                }
+            }
+            e.dragText = dispText;
+        }
+        var DragFiles = [];
+        //MiniUI 3.5 版本 ：tree1 节点拖动至 tree2，触发tree1的beforedrop事件，触发tree2的drop事件
+        function onFileTreeBeforeDrop(e) {
+            var tree = e.sender;
+            var node = e.dragNode;
+            node.Name = node.Name + "[" + node.Code + "]";
+            var target = e.dropNode;
+            var nodes = tree.getSelecteds();
+            //文件树拖到目录树，复制拖动：记录文件树位置
+            DragFiles = [];
+            if (nodes.length > 1)
+                $.each(nodes, function (index, item) {
+                    item["_rowindex"] = tree.indexOf(item);
+                    DragFiles.push($.extend(true, {}, item));
+                });
+            else {
+                node["_rowindex"] = tree.indexOf(node);
+                DragFiles.push($.extend(true, {}, node));
+            }
+            if (DragFiles.length > 0) {
+                var nodeTree = mini.get("nodeTreeGrid");
+                $.each(DragFiles, function (index, item) {
+                    //文件树拖到目录树，目录树已经存在该文件，则把该文件删除，否则会有两个节点
+                    var _exists = nodeTree.findNodes(function (fnode) {
+                        return fnode.ID == item.ID;
+                    });
+                    if (_exists.length > 0) {
+                        var existNode = _exists[0];
+                        nodeTree.removeNode(existNode);
+                    }
+                });
+            }
+        }
+
+        function GoToFile(file) {
+            var nodeTree = mini.get("nodeTreeGrid");
+            var node = nodeTree.findNodes(function (fnode) {
+                return fnode.ID == file["ID"];
+            });
+            if (node.length) {
+                nodeTree.scrollIntoView(node[0])
+                nodeTree.selectNode(node[0]);
+                nodeTree.expandPath(node[0]);
+            }
+        }
+
+        addGridButton("dataGrid", "ReorganizePath", {
+            onButtonClick: function (row) {
+                //定位到目录树
+                GoToFile(row);
+            }
+        });
+    </script>
+
+    <!--目录树脚本-->
+    <script type="text/javascript">
+        //目录树脚本
+        function onNodeTreeDragStart(e) {
+            dispText = e.node.Name;
+            e.dragText = dispText;
+        }
+        //MiniUI 3.5 版本 ：tree1 节点拖动至 tree2，触发tree1的beforedrop事件，触发tree2的drop事件
+        function onNodeTreeBeforeDrop(e) {
+            var tree = e.sender;
+        }
+        function onNodeTreeDrop(e) {
+            var tree = e.sender;
+            var node = e.dragNode;
+            var target = e.dropNode;
+            var parentNode = tree.getParentNode(node);
+            var action = e.dragAction;
+            if (DragFiles.length <= 0) {
+                //目录树节点拖动后，保证文件树整编目录同步修改（右侧单树拖动）
+                if (node.NodeType == 'File') {
+                    var fileTree = mini.get("dataGrid");
+                    var _finds = fileTree.findNodes(function (fnode) {
+                        return fnode.ID == node.ID;
+                    });
+                    addExecuteParam("SpaceID", SpaceID);
+                    if (_finds.length > 0) {
+                        var fileTreeNode = _finds[0];
+                        fileTreeNode["ReorganizePath"] = parentNode.Name;
+                        fileTreeNode["ReorganizeFullID"] = parentNode.FullPathID;
+                        fileTree.updateNode(fileTreeNode);
+                        addExecuteParam("FileList", mini.encode(_finds));
+                        addExecuteParam("ID", node.ID);
+                        addExecuteParam("TargetNodeID", parentNode.ID);
+                        execute("ArchiveReorganize", {
+                            showLoading: true, refresh: false, async: true, onComplete: function (data, setting) {
+                                $.each(data, function (index, item) {
+                                    fileTree.updateNode(item, item);
+                                });
+                                Refresh();
+                            }
+                        });
+                    }
+                }
+                else if (node.NodeType == "Child" && action != "add") {
+                    //改节点排序号
+                    var executeAction = "MoveUp";
+                    if (action == "before")
+                        executeAction = "MoveDown";
+                    addExecuteParam("ID", node.ID);
+                    addExecuteParam("TargetNodeID", target.ID);
+                    execute(executeAction, {
+                        showLoading: true, refresh: false
+                    });
+                }
+            }
+            else if (DragFiles.length > 0) {
+                //文件树拖到目录树，复制拖动：复制文件树节点（左侧树拖到右侧树）
+                var fileTree = mini.get("dataGrid");
+                var root = fileTree.getRootNode();
+                $.each(DragFiles, function (index, item) {
+                    item["ReorganizePath"] = parentNode.Name;
+                    item["ReorganizeFullID"] = parentNode.FullPathID;
+                    fileTree.addNode(item, item["_rowindex"], root);
+                });
+                addExecuteParam("FileList", mini.encode(DragFiles));
+                //execute("SaveReorganize", {
+                //    showLoading: true, refresh: false, async: false
+                //});
+                addExecuteParam("ID", node.ID);
+                addExecuteParam("TargetNodeID", parentNode.ID);
+                execute("ArchiveReorganize", {
+                    showLoading: true, refresh: false, async: true, onComplete: function (data, setting) {
+                        //赋值ArchiveFileID
+                        $.each(DragFiles, function (index, item) {
+                            var newRow = $.grep(data, function (g, gi) {
+                                return g.ID == item.ID;
+                            })[0];
+                            fileTree.updateNode(item, { ArchiveFileID: newRow["ArchiveFileID"] });
+                        });
+                        Refresh();
+                        DragFiles = [];
+                    }
+                });
+            }
+            calculateReorganizeCountFileCount(tree);
+        }
+        //控制目录树节点能否投放
+        function onGiveFeedback(e) {
+            var tree = e.sender;
+            var fromTree = e.fromTree;
+            var nodes = e.nodes;              //被拖拽的节点
+            var targetNode = e.targetNode;  //目标投放节点
+            var effect = e.effect;          //投放方式：add|before|after
+            var p1 = [];
+            p1 = $.each(nodes, function (i, item) {
+                return tree.getParentNode(item)
+            });
+            var p2 = tree.getParentNode(targetNode);
+
+            //文件下不能投放
+            //if (targetNode.NodeType == "File" && effect == "add")
+            //    e.effect = "no";
+            //根节点外只能根节点之间排序，不能投放
+            //自身树的目录，不能投放到其他目录去，文件可以
+            //1.同层之间，只能移动顺序，（除非是自由节点，自由节点逻辑，是否可以父进子）
+            //2.文件只能移动至文件节点下
+            var isFile = true;
+            var isDrog = false;
+            var isP = false;
+            var p1EquP2 = false;
+            $.each(p1, function (i, item) {
+                if (item != p2)
+                    p1EquP2 = true;
+            })
+            $.each(nodes, function (i, item) {
+                if (item.NodeType != "File")
+                    isFile = false;
+                if (targetNode.HasFile.indexOf(item.FileConfigID) == -1)
+                    isDrog = true;
+                if (typeof p2.HasFile != "undefined" && p2.HasFile != "") {
+                    if (p2.HasFile.indexOf(item.FileConfigID) == -1)
+                        isP = true;
+                }
+            })
+            if (isFile) {
+                if (effect == "add") {
+                    if (!targetNode.HasFile)
+                        e.effect = "no";
+                    else if (isDrog)
+                        e.effect = "no";
+                }
+                else {
+                    if (!p2.HasFile)
+                        e.effect = "no";
+                    else if (isP)
+                        e.effect = "no";
+                }
+            }
+            else {
+                if (p1EquP2 || effect == "add") {
+                    e.effect = "no";
+                }
+            }
+            //根据是否可投放改变背景色
+            if (e.effect == "no") {
+                $("head").children("style:last").remove();
+                $("head").append('<style type="text/css">body .mini-grid-row-hover,.mini-grid-cell:hover{background:#f9eff3 !important;}</style>');
+            }
+            else {
+                $("head").children("style:last").remove();
+                $("head").append('<style type="text/css">body .mini-grid-row-hover,.mini-grid-cell:hover{background:#eff9f6 !important;}</style>');
+            }
+
+            $(".mini-grid-row").mouseup(function () {
+                $("head").children("style:last").remove();
+            });
+
+        }
+
+        function calculateReorganizeCountFileCount(nodeTree) {
+            nodeTree = nodeTree || mini.get("nodeTreeGrid");
+            var allNodes = nodeTree.findNodes(function (fnode) {
+                return fnode.NodeType != 'File';
+            });
+            $.each(allNodes, function (index, node) {
+                var allChildren = nodeTree.getAllChildNodes(node);
+                node["ReorganizeCountFileCount"] = $.grep(allChildren, function (g, gi) { return g.NodeType == 'File'; }).length == 0 ? "" : $.grep(allChildren, function (g, gi) { return g.NodeType == 'File'; }).length;
+                nodeTree.updateNode(node);
+            });
+        }
+
+        //首次加载根据文件列表自动拖动文件（因为没有记录目录树的数据，只在文件上记录了目录ID）
+        function onNodeTreeLoad(e) {
+            var nodeTree = e.sender;
+            var fileTree = mini.get("dataGrid");
+            var url = mini.get("dataGrid").url;
+            var _finds = [];
+            calculateReorganizeCountFileCount(nodeTree);
+
+        }
+
+        //pageload使用失败，没有使用onNodeTreeLoad(),datagrid加载数据在nodeTreeGrid之后
+        // this.onload = loads;
+        //区分节点颜色，本次整编的文件蓝色显示
+        function onNodeTreeDrawCell(e) {
+            var field = e.field, node = e.node;
+            if (field == "Name" && node.NodeType == "File") {
+                var fileTree = mini.get("dataGrid");
+                var exist = fileTree.findNodes(function (fnode) {
+                    return fnode.ID == node.ID;
+                });
+                if (exist.length > 0 || DragFiles.length > 0)
+                    e.cellStyle += "color:blue;";
+            }
+        }
+
+        function onBeforeOpen(e) {
+            var menu = e.sender;
+            var tree = mini.get("nodeTreeGrid");
+            var fileTree = mini.get("dataGrid");
+            var node = tree.getSelectedNode();
+            if (!node) {
+                e.cancel = true;
+                return;
+            }
+            if (node.NodeType == "File") {
+                if (fileTree.findNodes(function (fnode) { return fnode.ID == node.ID; }).length > 0)
+                    menu.setItems([{ "name": "delete", "text": "移除", "iconCls": "icon-remove", "onClick": "deleteNode" }]);
+                else {
+                    e.cancel = true;
+                    return;
+                }
+            }
+            else {
+                //if (node.PhysicalType == "Physical") {
+                //    addExecuteParam("SpaceID", SpaceID);
+                //    addExecuteParam("ConfigID", node.ConfigID);
+                //    execute("GetNodeTreeMenu", {
+                //        showLoading: false, refresh: true, onComplete: function (data) {
+                //            data.push({ "name": "delete", "text": "移除", "iconCls": "icon-remove", "onClick": "deleteNode" });
+                //            menu.setItems(data);
+                //            $("#treeMenu").css({ "height": "auto" }).children(".mini-menu-border").css({ "height": "auto" });
+                //        }
+                //    });
+                //}
+                //else {
+                    var url = "GetNodeTreeMenu?SpaceID=" + SpaceID + "&ConfigID=" + node.ConfigID;
+                    menu.load(url);
+                //}
+            }
+        }
+
+        function addNode(e) {
+            var menuItem = e.sender;
+            var configID = menuItem.name;
+            var tree = mini.get("nodeTreeGrid");
+            var node = tree.getSelectedNode(); if (!node) { mini.alert("请选中一个节点"); return; }
+            var url = "/DocSystem/Manager/NodeManager/Edit?ReturnData=true&SpaceID=" + SpaceID + "&ConfigID=" + configID + "&ParentID=" + node.ID + "&ReorganizeID=" + getQueryString("PhysicalReorganizeID");
+            openWindow(url, {
+                title: menuItem.text, width: 800, height: 500, funcType: 'edit', addQueryString: false, onDestroy: function (data) {
+                    if (data == "close") return;
+                    data["NodeType"] = "Child";
+                    tree.addNode(data, "add", node);
+                }
+            });
+        }
+
+        function editNode(e) {
+            var menuItem = e.sender;
+            var tree = mini.get("nodeTreeGrid");
+            var node = tree.getSelectedNode(); if (!node) { mini.alert("请选中一个节点"); return; }
+            var configID = node.ConfigID;
+            var url = "/DocSystem/Manager/NodeManager/TreeEdit?ReturnData=true&action=edit&SpaceID=" + SpaceID + "&ConfigID=" + configID + "&ID=" + node.ID;
+            openWindow(url, {
+                title: menuItem.text, width: 800, height: 500, funcType: 'edit', addQueryString: false, onDestroy: function (data) {
+                    if (data == "close") return;
+                    data["NodeType"] = "Child";
+                    tree.updateNode(node, data);
+                }
+            });
+        }
+
+        function deleteNode(e) {
+            var tree = mini.get("nodeTreeGrid");
+            var node = tree.getSelectedNode(); if (!node) { mini.alert("请选中一个节点"); return; }
+            if (node.NodeType == "File") {
+                //文件节点的情况
+                var fileTree = mini.get("dataGrid");
+                var fileRow = fileTree.findNodes(function (_frow) {
+                    return node.ID == _frow.ID;
+                });
+                if (fileRow.length) {
+                    addExecuteParam("SpaceID", SpaceID);
+                    addExecuteParam("FileList", mini.encode(fileRow));
+                    execute("DeleteReorganizeFile", {
+                        showLoading: true, refresh: false, onComplete: function (data) {
+                            fileTree.updateNode(fileRow[0], data[0]);
+                            //var nodeTree = mini.get("nodeTreeGrid");
+                            tree.removeNode(node);
+                            calculateReorganizeCountFileCount(tree);
+                            Refresh();
+                        }
+                    });
+                } else {
+                    msgUI("删除实物整编之外的文件,功能开发中...");
+                }
+            }
+            else {
+                    msgUI("确认需要删除该节点吗？", 2, function (result) {
+                        if (result != "ok") return;
+                        addExecuteParam("SpaceID", SpaceID);
+                        addExecuteParam("ListIDs", node.ID);
+                        execute("/DocSystem/Manager/NodeManager/Delete", {
+                            showLoading: true, refresh: false, onComplete: function (data) {
+                                //删除节点会删除本目录的已归档为你教案，所以需要同时更新文件树的整编目录
+                                var childFileRows = tree.getChildNodes(node);
+                                var fileTree = mini.get("dataGrid");
+                                var fileRow = fileTree.findNodes(function (_frow) {
+                                    var exists = $.grep(childFileRows, function (g, gi) {
+                                        return g.ID == _frow.ID;
+                                    }).length;
+                                    return exists > 0;//获得本次删除节点下存在于左侧文件树的节点
+                                });
+                                if (fileRow.length) {
+                                    var updateData = { ReorganizePath: "", ReorganizeFullID: "", ArchiveFileID: "", ArchiveFileAttrs: "" };
+                                    $.each(fileRow, function (index, item) {
+                                        fileTree.updateNode(item, updateData);
+                                    })
+                                }
+                                //删除节点树的节点
+                                tree.removeNode(node);
+                            }
+                        });
+                    });
+                }
+        }
+        function RemoveNode() {
+            var tree = mini.get("nodeTreeGrid");
+            var node = tree.getSelectedNode(); if (!node) { mini.alert("请选中一个节点"); return; }
+            var PhysicalReorganizeID = getQueryString("PhysicalReorganizeID");
+            msgUI("确认需要移除该节点吗？", 2, function (result) {
+                if (result == "ok") {
+                    addExecuteParam("nodeID", node.ID);
+                    addExecuteParam("PhysicalReorganizeID", PhysicalReorganizeID);//FileDetailID
+                    execute("DeleteReorganizeNode", {
+                        showLoading: true, refresh: true, onComplete: function () {
+                            tree.removeNode(node);
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+
+    <!--其它script-->
+    <script type="text/javascript">
+        function SelectRootNodes() {
+            var url = "/DocSystem/Manager/NodeManager/SelectTag?SpaceID=" + SpaceID;
+            openWindow(url, {
+                refresh: false, title: "选择", width: '80%', height: '80%',
+                onDestroy: function (data) {
+                    var selectData = data;
+                    if (data == "close" || data.length == 0) return;
+                    var idAry = [];
+                    var nodeTree = mini.get("nodeTreeGrid");
+                    $.each(data, function (index, item) {
+                        var _finds = nodeTree.findNodes(function (fnode) {
+                            return fnode.ID == item.ID;
+                        });
+                        if (_finds.length == 0)
+                            idAry.push(item.FullPathID);
+                    })
+                    if (idAry.length > 0) {
+                        var ids = idAry.join(',');
+                        addExecuteParam("FullPathIDs", ids);
+                        addExecuteParam("SpaceID", SpaceID);
+                        addExecuteParam("isSelect", true);
+                        execute("GetSelectedTreeList", {
+                            showLoading: true, refresh: false, onComplete: function (data) {
+                                var existList = nodeTree.getList();
+                                data = existList.concat(data);
+                                var Array = [];
+                                $.each(data, function (index, item) {
+                                    Array.push(item.ID);
+                                })
+                                data = removeRepeat(data, Array);
+                                nodeTree.loadList(data, "ID", "ParentID");
+                                //存储
+                                saveDirectorySelect(selectData);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        //数组去重
+        function removeRepeat(data,Array) {
+            var result = [];
+            $.each(Array, function (index, item) {
+                if (Array.indexOf(item) == index)
+                    result.push(data[index]);
+            })
+            return result;
+        }
+        function saveDirectorySelect(data) {
+            //获取右边树的数据
+            var FullPathIDs = "";
+            var names = "";
+            $.each(data, function (i, item) {
+                FullPathIDs += item.FullPathID + ',';
+                names += item.Name + ',';
+            });
+            addExecuteParam("names", names);
+            addExecuteParam("FullPathIDs", FullPathIDs);
+            addExecuteParam("SpaceID",getQueryString("SpaceID"))
+            execute("saveRootNodes", {
+                showLoading: true, refresh: false, validateForm: false
+            });
+        }
+    </script>
+    <style type="text/css">
+        .Root:before, .Child:before, .Node:before
+        {
+            content: "\f07b";
+            padding-right: 5px;
+            font-size: 14px;
+        }
+
+        .File:before
+        {
+            content: "\f0f6";
+            padding-right: 5px;
+            font-size: 14px;
+        }
+    </style>
+    <script type="text/javascript">
+        function pageLoad() {
+         
+            //点击tab标签自动隐藏左侧内容
+            var layout = mini.get("mainlayout");
+            //修改east的宽度
+            var childrenScrWidth = document.body.clientWidth * 0.4;
+            layout.updateRegion("east", { width: childrenScrWidth });
+            //归档案卷/文件目录分组
+            var grid = mini.get("datagridFile");
+            grid.groupBy("ConfigID", "desc");
+            //$('.mini-panel-viewport').css("overflow", "scroll");
+            //签收登记页面点击整编完成时，该页面为查看页面
+            if (getQueryString("FuncType").toLowerCase() == "view") {
+                $.each($(".mini-layout-region-body").find("a"), function (i) {
+                    if (i >0 && i != 3)
+                        $(this).remove();
+                });
+                $(".mini-toolbar").show();//functype=="view"时，默认隐藏mini-toolbar
+            } else {
+                //弹出提示
+                $("#Tips").animate({ top: "18%" }, 1500);
+                //自动隐藏
+                setTimeout(function () { closeTips(); }, 5000);
+            }
+            $(".mini-tabs-bodys").css({ "border-left": "1px solid #ccc" });
+            $(".mini-tabs-body").css({ "overflow": "hidden" });
+            $("#center").find(".mini-panel-border").css({ "border-left": "0px", "border-right": "0px", "border-bottom": "0px" });
+            //归档文件的显示和隐藏
+            $("body").css({ "overflow": "hidden" });
+            $(".gw-grid-toolbar:eq(1)").remove();//释放列表上toolbar所占位置
+            //归档文件数量
+            ArchiveFileCount();
+            //mini-layout-split-east背景色
+            $(".mini-layout-split-east").css("background", "#CACACB");
+            //表格边框
+            $(".mini-grid-border:eq(1)").css({ "border": "0px", "border-top": "1px solid #D2D2D2", "border-buttom": "1px solid #D2D2D2" });
+        }
+        //添加
+        function Add(item) {
+            var PhysicalReorganizeID = getQueryString('PhysicalReorganizeID');
+            var FileForms = item.split('|');
+            $('#btnAdd>span:first').text(FileForms[0]);
+            var Url = '/MvcConfig/UI/Form/PageView?TmplCode=' + FileForms[1] + '&FileConfID=' + FileForms[2] + '&PhysicalReorganizeID='
+                + PhysicalReorganizeID + "&FileType=" + FileForms[0] + "&Physical=Physical";
+            openWindow(Url, { title: '添加', height: '70%', width: '70%' })
+        }
+        //编辑
+        function Modify() {
+            var grid = mini.get("dataGrid");
+            var row = grid.getSelecteds();
+            if (row.length <= 0) {
+                msgUI("请选择一条记录");
+                return;
+            }
+            if (row.length > 1) {
+                msgUI("请选择一条记录");
+                return;
+            } if (row[0].ArchiveFileID != "" || typeof row.ArchiveFileID != 'undefined') {
+                msgUI('文件【' + row[0].Name + "】已归档禁止编辑");
+                return;
+            }
+            var Url = '/MvcConfig/UI/Form/PageView?TmplCode=' + row[0].FromCode + '&ID=' + row[0].ID;
+            openWindow(Url, { title: '编辑', height: '70%', width: '70%' });
+        }
+        //删除
+        function deleted() {
+            var grid = mini.get("dataGrid");
+            var rows = grid.getSelecteds();
+            if (rows.length <= 0) {
+                msgUI("请选择一条记录");
+                return;
+            }
+            else {
+                msgUI("确认执行删除操作吗？", 2, function (result) {
+                    if (result != 'ok')
+                        return;
+                    var IDs = "";
+                    $.each(rows, function (i, row) {
+                        IDs += row.ID + ",";
+                    });
+                    addExecuteParam("IDs", IDs);
+                    execute("Delete", {
+                        showLoading: true, refresh: false, onComplete: function (data) {
+                            msgUI("删除成功");
+                            grid.reload();
+                            var nodeTree = mini.get("nodeTreeGrid");
+                            nodeTree.load();
+                            Refresh();
+                        }, validateForm: false
+                    });
+                })
+
+            }
+        }
+        //暂存退出
+        function SaveTemporary() {
+            var taskid = getQueryString("PhysicalReorganizeID");
+            addExecuteParam("IDs", taskid);
+            msgUI("确认暂存吗？", 2, function (result) {
+                if (result != 'ok')
+                    return;
+                execute("SaveTemporary", {
+                    showLoading: true, refresh: false, onComplete: function (data) {
+                        window.CloseOwnerWindow();
+                    }, validateForm: false
+                });
+            })
+        }
+        function finish() {
+            var taskid = getQueryString("PhysicalReorganizeID");
+            addExecuteParam("IDs", taskid);
+            addExecuteParam("ReorganizeType", "File");
+            execute("CheckFinishReorganize", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    if (data.rtn) {
+                        msgUI("还有未整编的文件，确定要完成整编吗？", 2, function (result) {
+                            if (result != "ok") { return; }
+                            finishReorganize();
+                        });
+                    }
+                    else {
+                        //_finishReorganize();
+                        showWindow('showFinishWindow');
+                    }
+                }, validateForm: false
+            });
+        }
+        function finishReorganize() {
+            var grid = mini.get("dataGrid");
+            var taskid = getQueryString("PhysicalReorganizeID");
+            addExecuteParam("IDs", taskid);
+            execute("FinishReorganize", {
+                showLoading: true, refresh: true, validateForm: false, onComplete: function () {
+                    grid.load();
+                    msgUI("操作成功，整编完成！");
+                    closeWindow();
+
+                }
+            });
+        }
+        //查看签收登记单
+
+        function ReorgaPageWatchPhysical() {
+            var SpaceID = getQueryString("SpaceID");
+            addExecuteParam("SpaceID", SpaceID);
+            var url = "/MvcConfig/UI/Form/PageView?TmplCode=" + getQueryString('TmplCode') + "&ID=" + getQueryString('PhysicalReorganizeID') + "&FuncType=View";
+            openWindow(url, { width: "80%", height: "80%" });
+        }
+        //撤销文件整编window.CloseOwnerWindow
+        function ClearPath() {
+            var fileTree = mini.get("dataGrid");
+            var rows = fileTree.getSelecteds();
+            if (rows.length == 0) { msgUI("至少选择一条记录", 1); return; }
+
+            msgUI("确认重置文件的整编目录吗？", 2, function (result) {
+                if (result != "ok") return;
+                rows = $.grep(rows, function (g, gi) { return g.ArchiveFileID; })
+                addExecuteParam("FileList", mini.encode(rows));
+                addExecuteParam("SpaceID", SpaceID);
+                var selectIDs = getValues(rows, "ID");
+                execute("DeleteReorganizeFile", {
+                    showLoading: true, refresh: false, onComplete: function (data) {
+                        fileTree.reload();
+                        var nodeTree = mini.get("nodeTreeGrid");
+                        var files = nodeTree.findNodes(function (_frow) {
+                            return selectIDs.indexOf(_frow.ID) >= 0;
+                        });
+                        if (files.length > 0) {
+                            nodeTree.removeNodes(files);
+                            calculateReorganizeCountFileCount(nodeTree);
+                        }
+                        Refresh();
+                    }
+                });
+            });
+        }
+    </script>
+
+    <!--归档案卷/文件目录-->
+    <script type="text/javascript">
+        //分组
+        var grid = mini.get("datagridFile");
+        var FieldsData = [];
+        execute("GetGroupField", {
+            showLoading: false, refresh: false, onComplete: function (data) {
+                FieldsData = data;
+            }
+        });
+        function onDrawGroup(e) {
+            e.cellHtml = getGroupText(e.value);
+        }
+        function getGroupText(nodeConfigID) {
+            for (var i = 0; i < FieldsData.length; i++) {
+                if (nodeConfigID == FieldsData[i].ID)
+                    return FieldsData[i].Name;
+                else
+                    continue;
+            }
+        }
+
+
+        //配置后的打印按钮
+        //$(".button").append("<div class='mini-button'>配置按钮</div>");
+        //已归档的文件表
+        var detailHtml = '<div id="detailGrid_Form" style="display:none; width:100%">'
+           + '<div id="detailGrid" class="mini-datagrid" multiSelect="true" style="width:93%;height:250px;" showpager="false" url="" showsummaryrow="false" ondrawcell="EnumSelector">'
+           + '       <div property="columns">'
+           + '           <div type="indexcolumn"></div>'
+           + '            <div type="checkcolumn"></div>'
+           + '            <div field="Name" width="100" headerAlign="center" align="center">文件名称</div> '
+           + '            <div field="Code" width="200" headerAlign="center" align="left">文件编号</div>'
+           + '            <div field="FileType" width="100" headerAlign="center" align="center">文件类型</div> '
+           + '            <div field="Edition" width="80" headerAlign="center" align="center">版次</div>'
+           + '            <div field="SecretLevel" width="80" headerAlign="center" align="center">密级</div>'
+           + '            <div field="KeepYear" width="80" headerAlign="center" align="center">保管期限</div>'
+           + '            <div field="Quantity" width="80" headerAlign="right" align="center">份数</div>'
+           + '            <div field="PageCount" width="80" headerAlign="right" align="center">页数</div>'
+           + '            <div field="Media" width="100" headerAlign="center" align="center">载体</div>'
+           + '            <div field="ArchivePeopleName" width="100" headerAlign="center" align="center">归档人</div>'
+           + '            <div field="ArchiveDepartmentName" width="100" headerAlign="center" align="center">归档部门</div>'
+           + '            <div field="ArchiveDate" width="100" headerAlign="center" align="center">归档日期</div>'
+           + '      </div>'
+           + ' </div>'
+           + '</div>';
+        $("body").prepend(detailHtml);
+        $("#datagridFile").attr("onShowRowDetail", "onShowRowDetail");
+        $("#datagridFile div").first().find("div").first().after("<div type=\"expandcolumn\" ></div>");
+        var detailGrid_Form = document.getElementById("detailGrid_Form");
+        function onShowRowDetail(e) {
+            var grid = e.sender;
+            var row = e.record;
+            var td = grid.getRowDetailCellEl(row);
+            td.appendChild(detailGrid_Form);
+            detailGrid_Form.style.display = "block";
+            var detailGrid = mini.get("detailGrid");
+            $("#detailGrid").css("padding-left", "50px");
+            var url = "FileDetial?ReorganizeFullID=" + row.FullPathID + "&PhysicalReorganizeID=" + row.PhysicalReorganizeID;
+            detailGrid.setUrl(url);
+            detailGrid.load();
+        }
+        //打印按钮选择
+        function PrintButton(e) {
+            msgUI(e.defaultText + ",功能开发中...");
+        }
+        //refresh归档案卷/文件目录
+        function Refresh() {
+            var datagridFile = mini.get("datagridFile");
+            //var nodeTree = mini.get("nodeTreeGrid");
+            var datagrid = mini.get("dataGrid");
+            var treegridTree = mini.get("treegridTree");
+            var datagridList = mini.get("datagridList");
+            datagridFile.load();
+            datagrid.load();
+            treegridTree.load();
+            datagridList.load();
+            ArchiveFileCount();//刷新归档文件数量
+            //nodeTree.load();
+        }
+        //EnumSelector,归档案卷/文件目录表格枚举字段，根据key显示相应的value
+        @Html.GetEnum("DocConst.Media");
+        @Html.GetEnum("DocConst.KeepYear");
+        @Html.GetEnum("DocConst.SecretLevel");
+        function EnumSelector(e) {
+            var rec = e.record;
+            if (e.field == "Media" || e.field == "KeepYear" || e.field == "SecretLevel") {
+                $.grep(eval(e.field), function (item, i) {
+                    e.value == item.value ? e.cellHtml = item.text : e.value;
+                });
+            }
+            if (e.field == "FullPathName")
+            {
+                e.cellHtml = ShowFullPath(rec["FullPathID"]);
+            }
+            if(e.field=="ArchiveDate")
+                e.cellHtml = mini.formatDate(e.cellHtml, "yyyy-MM-dd");
+        }
+    </script>
+
+    <!--显示全部文件-->
+    <script type="text/javascript">
+        function onCheckBoxValueChanged(e) {
+            var nodeTreeGrid = mini.get("nodeTreeGrid");
+            var showAll = e.getValue();
+            nodeTreeGrid.load({ showAllFile: showAll });
+        }
+    </script>
+<!--整编完成弹出窗口中的确认和取消方法-->
+<script type="text/javascript">
+    function Confirm() {
+        //sendArchiving release
+        var release = mini.get("release").value;
+        var send = mini.get("sendArchiving").value;
+        if (typeof release != "undefined" && release == "0")
+            publish();
+        if (typeof send != "undefined" && send == "0")
+            sendMsg();
+        finishReorganize();//点击确认之后再完成归档
+        //closeWindow();
+    }
+    //发布
+    function publish() {
+        var grid = mini.get("dataGrid");
+        var data = grid.data;
+        var listIDs = "";
+        $.each(data, function (i, item) {
+            listIDs += item.ArchiveFileID + ",";
+        });
+        addExecuteParam("fileIDs", listIDs);
+
+        addExecuteParam("spaceID", SpaceID);
+        execute("Publish", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+            }
+        });
+        //    });
+    }
+    //送归档人
+    function sendMsg() {
+        addExecuteParam("userId", getQueryString("SendUser"));
+        addExecuteParam("userName", decodeURI(getQueryString("SendUserName")));
+        addExecuteParam("reciptName", decodeURI(getQueryString("reciptName")));
+        execute("SendMessage", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+            }
+        });
+    }
+    function Cancel() {
+        var window = mini.get("showFinishWindow");
+        window.hide();
+    }
+</script>
+<!--归档文件右侧滑出-->
+<script type="text/javascript">
+    function ArchiveFile() {
+        $("#backgroundGray").show();
+        $("#backgroundGray").animate({ opacity: 0.6 }, 1000);
+        var Width = $("#VolumnDir").width() * 0.05 + 154;
+        $("#VolumnDir").animate({ left: Width }, 1000, null, function () {
+            $("#VolumnDir").css({ left: "calc(5% + 144px)" });
+            $("#ArchiveFileBack").attr({ "onclick": "ArchiveBack()" });
+            $("#ArchiveFileBack").css({ "background-image": "url(../../Scripts/Reorganize/Images/bg01.png)" });
+            
+        });
+
+    }
+    function ArchiveBack() {
+        //var Width = $("#VolumnDir").width() - 80;
+        //$("#backgroundGray").show();
+        $("#backgroundGray").animate({ opacity: 0 }, 1000);
+        $("#VolumnDir").animate({ left: "100%" }, 1000, null, function () {
+            //$("#VolumnDir").css({left:"100%"});
+            $("#ArchiveFileBack").attr({ "onclick": "ArchiveFile()" });
+            $("#ArchiveFileBack").css({ "background-image": "url(../../Scripts/Reorganize/Images/bg02.png)" });
+            $("#backgroundGray").hide();
+        });
+
+    }
+
+    //文件归档数量
+    function ArchiveFileCount() {
+        //ReorganizeFullID PhysicalReorganizeID
+        var dataArchiveCount = 0;
+        addExecuteParam("PhysicalReorganizeID", getQueryString("PhysicalReorganizeID"));
+        execute("GetList", {
+            showLoading: true, refresh: false, async: true, onComplete: function (data) {
+                $.grep(data.data, function (item) {
+                    if (item.ReorganizeFullID != "" && item.ReorganizeFullID != undefined && item.ReorganizeFullID != null)
+                        dataArchiveCount++;
+                });
+                $("#ReorganizeCount").text(dataArchiveCount);
+            }
+        });
+    }
+    function tabsArchFile(e) {
+        $(e).css({ "background": "white" });
+        var src = $(e).children("img").attr("src");
+        if (src.search("on.png") == -1)
+            src = src.replace(".", "on.");
+        $(e).children("img").attr({ "src": src });
+        var siblings = $(e).siblings().css({ "background": "#F2F2F2" });
+        $.each(siblings, function (i, item) {
+            if (item.innerHTML.search("on.png") > -1)
+                item.innerHTML = item.innerHTML.replace("on.", ".");
+        });
+        var index = Math.abs($(e).attr("id"));
+        tabSwitch(index)
+    }
+    //tab页面切换
+    function tabSwitch(index) {
+        var tabs = mini.get("tabsArchive");
+        tabs.setActiveIndex(index);
+    }
+    //printbtn按钮架滚动条
+    $("#printbtn").niceScroll({ cursorborder: "none" });
+    //移除提示
+    function closeTips() {
+        $("#Tips").remove();
+    }
+</script>

@@ -1,0 +1,183 @@
+﻿HighlightTag
+{
+    color: red;
+}
+
+body
+{
+    overflow: hidden;
+}
+
+.body
+{
+    width: 80%;
+    height: 100%;
+    float: left;
+    margin-left: 25px;
+}
+.content {margin-bottom: 0px!important;border-radius: 4px 4px 0px 0px;}
+#gridArea
+{
+    width: 100%;
+    height: 100%;
+}
+.result-area {margin: 0 15px;
+    }
+.result
+{
+    background-color:rgba(255,255,255,0.95);
+    float: left;
+    font-size:10px;
+    color: #555658;
+    width: 100%;
+	height: 25px;
+	padding-left: 15px
+}
+.mini-fit-area{margin: 0 15px;height:calc(100% - 117px);}
+.title1
+{
+    /*background-color: yellow;*/
+    float: left;
+    font-size: 16px;
+    color: #1926A8;
+    width: 100%;
+    height: 20px;
+    padding-top: 10px;
+	cursor: pointer;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.title-word { background: url(/DocSystem/Scripts/Images/word.png) no-repeat left 9px; background-size: 20px; padding-left: 28px; }
+.title-excel { background: url(/DocSystem/Scripts/Images/excel.png) no-repeat left 9px; background-size: 20px; padding-left: 28px; }
+.title-pdf { background: url(/DocSystem/Scripts/Images/pdf.png) no-repeat left 9px; background-size: 20px; padding-left: 28px; }
+.title-txt1 { background: url(/DocSystem/Scripts/Images/file_1.png) no-repeat left 9px; background-size: 20px; padding-left: 28px; }
+.title-txt { background: url(/DocSystem/Scripts/Images/file.png) no-repeat left 9px; background-size: 20px; padding-left: 28px; }
+.title-dwg { background: url(/DocSystem/Scripts/Images/dwg.png) no-repeat left 9px; background-size: 20px; padding-left: 28px; }
+.title-image { background: url(/DocSystem/Scripts/Images/image.png) no-repeat left 9px; background-size: 20px; padding-left: 28px; }
+.property
+{
+    background-color: #F7F7F7;
+    float: left;
+    font-size: 12px;
+    padding-top: 2px;
+    color: #888;
+    width: 100%;
+    height: 20px;
+	padding-left: 10px;
+	/*border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;*/
+	margin-top: 3px;
+	overflow: hidden;
+text-overflow:ellipsis;
+white-space: nowrap;
+}
+
+.date
+{
+    /*background-color: burlywood;*/
+    float: left;
+    font-size: 12px;
+    color: #848685;
+    height: 15px;
+}
+
+.drop
+{
+    float: left;
+    text-align: center;
+    font-size: 12px;
+    color: #848685;
+    height: 15px;
+    width: 20px;
+}
+
+.contains
+{
+    /*background-color: gray;*/
+    float: left;
+    font-size: 12px;
+    color: #666;
+    width: 100%;
+   padding-top: 3px;
+    overflow: hidden;
+    white-space: pre-line;
+	    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
+.buttom
+{
+    /*background-color: pink;*/
+    float: left;
+    font-size: 12px;
+    color: #555658;
+    width: 100%;
+	padding-top: 5px;
+	padding-bottom: 10px;
+}
+
+.fileScret
+{
+    float: left;
+    color: #AAAAAA;
+    /*background-color: ActiveCaption;*/
+}
+
+.file
+{
+    /*background-color: aliceblue;*/
+    float: left;
+}
+
+.secret
+{
+    /*background-color: aqua;*/
+    margin-left: 15px;
+    float: left;
+}
+
+.ability
+{
+    /*background-color: brown;*/
+    float: left;
+    /*padding-left: 15px;*/
+    color: green;
+    cursor:pointer;
+}
+
+.line
+{
+    /*background-color: gray;*/
+    margin: 0px 10px 0px 10px;
+    font-size: 13px;
+    color: #BEBEBE;
+    float: left;
+}
+
+.browse
+{
+    float: left;
+    color: #167033;
+    cursor: pointer;
+    float: left;
+}
+
+.borrow
+{
+    color: #167033;
+    cursor: pointer;
+    float: left;
+    margin-left: 15px;
+}
+
+.down
+{
+    color: #167033;
+    cursor: pointer;
+    float: left;
+    margin-left: 15px;
+}
+.mini-grid-cell{border-bottom: #d2d2d2 0px solid;}

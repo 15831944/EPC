@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E339D431-B3B0-4B36-B878-068336E7FAF2}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataInitTool</RootNamespace>
+    <AssemblyName>DataInitTool</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Aspose.Cells, Version=7.4.1.0, Culture=neutral, PublicKeyToken=00725b1ceb58d0a9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Resource\dll\Aspose.Cells.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Resource\dll\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Resource\dll\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\Helper\DictionaryExtend.cs" />
+    <Compile Include="Common\ImportExport\AsposeExcelExporter.cs" />
+    <Compile Include="Common\ImportExport\IExporter.cs" />
+    <Compile Include="frmConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmConfig.Designer.cs">
+      <DependentUpon>frmConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmSheetConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSheetConfig.Designer.cs">
+      <DependentUpon>frmSheetConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Logic\Base\GlobalData.cs" />
+    <Compile Include="Common\Helper\FormulaHelper.cs" />
+    <Compile Include="Common\Helper\JsonHelper.cs" />
+    <Compile Include="Common\Helper\Log4NetConfig.cs" />
+    <Compile Include="Common\Helper\LogWriter.cs" />
+    <Compile Include="Common\Helper\SqlHelper.cs" />
+    <Compile Include="Common\ImportExport\AsposeExcelImporter.cs" />
+    <Compile Include="Common\ImportExport\Extensions.cs" />
+    <Compile Include="Common\ImportExport\FileHelper.cs" />
+    <Compile Include="Common\ImportExport\IImporter.cs" />
+    <Compile Include="Common\ImportExport\Models\ColumnInfo.cs" />
+    <Compile Include="Common\ImportExport\Models\Configs\CellConfig.cs" />
+    <Compile Include="Common\ImportExport\Models\Configs\ExcelConfig.cs" />
+    <Compile Include="Common\ImportExport\Models\Configs\Metadatas\DefaultExcelMetadataStorage.cs" />
+    <Compile Include="Common\ImportExport\Models\Configs\Metadatas\ExcelMetadata.cs" />
+    <Compile Include="Common\ImportExport\Models\Configs\Metadatas\IExcelMetadataStorage.cs" />
+    <Compile Include="Common\ImportExport\Models\Configs\TableConfig.cs" />
+    <Compile Include="Common\ImportExport\Models\ExcelCellInfo.cs" />
+    <Compile Include="Common\ImportExport\Models\ExcelData.cs" />
+    <Compile Include="Common\ImportExport\Models\ExcelRowInfo.cs" />
+    <Compile Include="Common\ImportExport\Models\ExcelTableInfo.cs" />
+    <Compile Include="Common\ImportExport\Models\Vaildation\CellErrorInfo.cs" />
+    <Compile Include="Common\ImportExport\Models\Vaildation\CellValidationArgs.cs" />
+    <Compile Include="Logic\Base\ImportTable.cs" />
+    <Compile Include="Logic\Base\IValidation.cs" />
+    <Compile Include="frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Logic\Partial\ImportTable.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmConfig.resx">
+      <DependentUpon>frmConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSheetConfig.resx">
+      <DependentUpon>frmSheetConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="TemplateExcel.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resource\dll\Aspose.Cells.dll" />
+    <Content Include="Resource\dll\log4net.dll" />
+    <Content Include="Resource\dll\Newtonsoft.Json.dll" />
+    <Content Include="Resource\favicon.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

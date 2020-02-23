@@ -1,0 +1,89 @@
+﻿.icon-Normal, .icon-Published,.icon-Identify ,.icon-SealUpApply ,.icon-SealUp ,.icon-Invalid , .icon-Green, .icon-Red, .icon-Yellow {
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+    margin: auto;
+    background: url(/CommonWebResource/Theme/Default/MiniUI/icons/end.gif) no-repeat;
+    text-align: center;
+    display: block;
+}
+
+.icon-Published {
+    background: url(/CommonWebResource/Theme/Default/MiniUI/icons/start.gif) no-repeat;
+}
+.icon-Identify {
+    background: url(/CommonWebResource/Theme/Default/MiniUI/icons/warning_normal.png) no-repeat;
+}
+.icon-SealUpApply {
+    background: url(/CommonWebResource/Theme/Default/MiniUI/icons/unlock.gif) no-repeat;
+}
+.icon-SealUp {
+    background: url(/CommonWebResource/Theme/Default/MiniUI/icons/lock.png) no-repeat;
+}
+.icon-Invalid {
+    background: url(/CommonWebResource/Theme/Default/MiniUI/icons/trash.png) no-repeat;
+}
+
+
+.icon-Green {
+    background: url(/CommonWebResource/Theme/Default/MiniUI/icons/trafficlightgreen.gif) no-repeat;
+}
+
+.icon-Red {
+    background: url(/CommonWebResource/Theme/Default/MiniUI/icons/trafficlightred.gif) no-repeat;
+}
+
+.icon-Yellow {
+    background: url(/CommonWebResource/Theme/Default/MiniUI/icons/trafficlightyellow.gif) no-repeat;
+}
+
+.myrow {
+    background: #fceee2;
+}
+
+.icon-removered:before {
+    content: "\f057";
+    padding-right: 5px;
+    font-size: 14px;
+    color: red;
+}
+
+.menu_indent {
+    background: url(/CommonWebResource/Theme/Default/Tab/images/menu_indent_bg.gif) #CCC repeat-x;
+    text-align: center;
+    height: 12px;
+}
+
+.tab_menu_img_up {
+    background-image: url(/CommonWebResource/Theme/Default/Tab/images/menu_indent_up.gif);
+    width: 83px;
+    height: 10px;
+    margin: 0 auto;
+    cursor: hand;
+}
+
+.tab_menu_img_down {
+    background-image: url(/CommonWebResource/Theme/Default/Tab/images/menu_indent_down.gif);
+    width: 83px;
+    height: 10px;
+    margin: 0 auto;
+    cursor: hand;
+}
+
+.icon-glyphicon-list:before {
+    content: "\f0ca";
+    padding-right: 5px;
+    font-size: 14px;
+}
+
+.icon-glyphicon-th:before {
+    content:"\f00a";
+    padding-right: 5px;
+    font-size: 14px;
+}
+
+.FileConfig:before {
+    content: "\f114";
+    padding-right: 5px;
+    font-size: 14px;
+}

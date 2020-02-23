@@ -1,0 +1,150 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
+using System.Windows.Media.Imaging;
+using BeSl.Controls.File.Upload;
+
+namespace BeSl.Controls.File.UploadControl
+{
+    /// <summary>
+    /// 文件上传UI控件（单行）（针对单个文件）  - edit by ray 2009-09-07
+    /// 修改自开源社区(CodePlex)的Silverlight上传控件代码
+    /// </summary>
+    public class FileUploadRowControl : ContentControl
+    {
+        #region 变量和属性
+
+        private bool m_isImageSet;  // 图片预览是否已经设置
+
+        #endregion
+
+        #region 模板及依赖属性
+
+        protected Image imagePreview;
+        protected Button removeButton;
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            imagePreview = GetTemplateChild("imagePreview") as Image;
+            removeButton = GetTemplateChild("removeButton") as Button;
+
+            removeButton.Click += new RoutedEventHandler(OnRemoveButtonClick);
+        }
+
+        #endregion
+
+        #region 构造函数
+
+        public FileUploadRowControl()
+        {
+            this.DefaultStyleKey = typeof(FileUploadRowControl);
+
+            m_isImageSet = false;
+
+            this.Loaded += new RoutedEventHandler(OnFileUploadRowControlLoaded);
+        }
+
+        #endregion
+
+        protected virtual void OnFileUploadRowControlLoaded(object sender, RoutedEventArgs e)
+        {
+            FileUploader fileUploader = DataContext as FileUploader;
+            fileUploader.PropertyChanged += new PropertyChangedEventHandler(OnFileUploaderPropertyChanged);
+
+            LoadImage(fileUploader);
+        }
+
+        // 上传属性变化时
+        protected virtual void OnFileUploaderPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            FileUploader fileUploader = sender as FileUploader;
+            if (e.PropertyName == "DisplayThumbnail")
+            {
+                LoadImage(fileUploader);
+            }
+            else if (e.PropertyName == "Status")
+            {
+                bool showtimeleft = false;
+
+                switch (fileUploader.UploadStatus)
+                {
+                    case UploadStatus.Pending:
+                        VisualStateManager.GoToState(this, "Pending", true);
+                        break;
+                    case UploadStatus.Uploading:
+                        VisualStateManager.GoToState(this, "Uploading", true);
+                        break;
+                    case UploadStatus.Complete:
+                        VisualStateManager.GoToState(this, "Complete", true);
+                        break;
+                    case UploadStatus.Error:
+                        VisualStateManager.GoToState(this, "Error", true);
+                        break;
+                    case UploadStatus.Canceled:
+                        VisualStateManager.GoToState(this, "Canceled", true);
+                        break;
+                    case UploadStatus.Removed:
+                        VisualStateManager.GoToState(this, "Removed", true);
+                        break;
+                    case UploadStatus.Resizing:
+                        VisualStateManager.GoToState(this, "Resizing", true);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        // 加载缩略图
+        protected virtual void LoadImage(FileUploader fileUploader)
+        {
+            if (fileUploader != null && fileUploader.DisplayThumbnail && (fileUploader.FileName.ToLower().EndsWith("jpg") || fileUploader.FileName.ToLower().EndsWith("png")))
+            {
+                if (!m_isImageSet)
+                {
+                    BitmapImage imageSource = new BitmapImage();
+
+                    try
+                    {
+                        imageSource.SetSource(fileUploader.File.OpenRead());
+                        imagePreview.Source = imageSource;
+                        m_isImageSet = true;
+                        imagePreview.Visibility = Visibility.Visible;
+                    }
+                    catch (Exception e)
+                    {
+                        string message = e.Message;
+                    }
+                }
+                else
+                {
+                    imagePreview.Visibility = Visibility.Visible;
+                }
+            }
+            else
+            {
+                imagePreview.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        protected virtual void OnRemoveButtonClick(object sender, RoutedEventArgs e)
+        {
+            FileUploader fileUploader = DataContext as FileUploader;
+            if (fileUploader != null)
+            {
+                fileUploader.RemoveUpload();
+            }
+        }
+    }
+}

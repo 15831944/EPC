@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "QuarterHistory";
+}
+<div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+            </td>
+            <td style="white-space: nowrap;">
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit" id="GridArea">
+    <div id="dataGrid" url="GetQuarterList?Year=@Request["Year"]&Version=@Request["Version"]" class="mini-datagrid" style="width: 100%; height: 100%;"
+        idfield="ID" multiselect="false" showpager="false" allowcelledit="true" allowcellselect="true"
+        editnextonenterkey="true" editnextrowcell="true" showsummaryrow="true" ondrawsummarycell="onDrawSummaryCell"   onload="onDataGridLoad">
+        <div property="columns">
+            <div type="indexcolumn" width="35px">
+            </div>
+            <div field="BelongYear" name="BelongYear" width="80" headeralign="center" align="center"
+                allowsort="true">
+                年度</div>
+            <div field="Version" name="Version" width="80" headeralign="center" align="center"
+                allowsort="true">
+                版本号</div>
+            <div field="CreateDate" name="CreateDate" width="100" headeralign="center" dateformat="yyyy-MM-dd"
+                allowsort="true" align="center">
+                版本时间</div>
+
+            <div field="BelongQuarter" name="BelongQuarter" width="80px" headeralign="center"
+                align="center">
+                季度</div>
+
+            @{
+                var list = ViewBag.IndicatorConfig as List<Market.Logic.Domain.S_KPI_IndicatorConfig>;
+                if (list != null)
+                {
+                    foreach (var item in list)
+                    {
+                        var field = item.IndicatorCode;
+                        var name = item.IndicatorCode;
+                <div name="@name" summaryType="sum" field="@field" datatype="currency" headeralign="center" width="120px" align="right">
+                    @item.IndicatorName                    
+                </div>
+                    }
+                } }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+@Html.GetEnum("Market.BusiniessCategory");
+@Html.GetEnum("Market.TOrF")
+@Html.GetEnum("System.Quarter");
+var writeFields = "@Html.Raw(ViewBag.WriteFields)";
+</script>
+<script type="text/javascript">
+    addGridEnum("dataGrid", "CurrentVersion", "TOrF");
+    addGridEnum("dataGrid", "BelongQuarter", "Quarter");
+    addGridEnum("dataGrid", "BusiniessCategory", "BusiniessCategory");
+    function onDrawSummaryCell(e) {
+        var result = e.result;
+        e.cellStyle = "text-align:right; color:Brown";
+    }
+
+    function onDataGridLoad(e) {
+        var dataGrid = mini.get("dataGrid");
+        dataGrid.mergeColumns(["BelongYear", "CreateDate", "BelongQuarter", "Version", "CurrentVersion"]);
+        dataGrid.frozenColumns(0, 4)
+    }
+
+</script>

@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{27ACBFEC-4D21-471F-8894-A694305BCBD5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Market.Logic</RootNamespace>
+    <AssemblyName>Market.Logic</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Config.Logic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\BaseFrame\Resource\Dll\Config.Logic.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\BaseFrame\Resource\Dll\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Formula, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\BaseFrame\Resource\Dll\Formula.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\BaseFrame\Resource\Dll\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BusinessFacade\Base\BusinessEnum.cs" />
+    <Compile Include="BusinessFacade\Base\Const.cs" />
+    <Compile Include="BusinessFacade\Base\IndicatorFO.cs" />
+    <Compile Include="BusinessFacade\Base\MarketHelper.cs" />
+    <Compile Include="BusinessFacade\HighChart\HighChartHelper.cs" />
+    <Compile Include="BusinessFacade\HighChart\PieChart\ColumnChart.cs" />
+    <Compile Include="BusinessFacade\HighChart\PieChart\PieChart.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\BaseChart.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\Chart.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\PlotOptions.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\Series.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\SubTitle.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\Title.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\ToolTip.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\xAxis.cs" />
+    <Compile Include="BusinessFacade\HighChart\Property\yAxis.cs" />
+    <Compile Include="BusinessFacade\MarketIndex\MarketIndexView.cs" />
+    <Compile Include="Domain.partial\Base\S_C_PlanReceipt.cs" />
+    <Compile Include="Domain.partial\Base\S_F_Customer.cs" />
+    <Compile Include="Domain.partial\Flow\T_B_Bid.cs" />
+    <Compile Include="Domain.partial\Flow\T_C_CreditNoteApply.cs" />
+    <Compile Include="Domain.partial\Flow\T_C_InvoiceMakeUpApply.cs" />
+    <Compile Include="Domain\Base\BaseModelExtend.cs" />
+    <Compile Include="Domain\Base\S_B_Bid.cs" />
+    <Compile Include="Domain\Base\S_C_Invoice.cs" />
+    <Compile Include="Domain\Base\S_C_ManageContract.cs" />
+    <Compile Include="Domain\Base\S_C_PlanReceipt.cs" />
+    <Compile Include="Domain\Base\S_C_Receipt.cs" />
+    <Compile Include="Domain\Base\S_I_Engineering.cs" />
+    <Compile Include="Domain\Base\S_I_Project.cs" />
+    <Compile Include="Domain\Base\S_KPI_Category.cs" />
+    <Compile Include="Domain\Base\S_KPI_IndicatorCompany.cs" />
+    <Compile Include="Domain\Base\S_KPI_IndicatorConfig.cs" />
+    <Compile Include="Domain\Base\S_KPI_IndicatorPerson.cs" />
+    <Compile Include="Domain.partial\Flow\T_C_InvoiceApply.cs" />
+    <Compile Include="Domain\Base\S_C_ManageContract_ReceiptObj.cs" />
+    <Compile Include="Domain\Base\S_F_Customer.cs" />
+    <Compile Include="Domain\Base\S_C_ReceiptRegister.cs" />
+    <Compile Include="Domain\Base\S_P_MarketClue.cs" />
+    <Compile Include="Domain\Base\S_SP_Invoice.cs" />
+    <Compile Include="Domain\Base\S_SP_Payment.cs" />
+    <Compile Include="Domain\Base\S_SP_PaymentPlan.cs" />
+    <Compile Include="Domain\Base\S_SP_Supplier.cs" />
+    <Compile Include="Domain\Base\S_SP_SupplierContract.cs" />
+    <Compile Include="Domain.partial\Flow\T_SP_PaymentApply.cs" />
+    <Compile Include="Domain\Market.cs">
+      <DependentUpon>Market.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\BaseLogic\Base.Logic\Base.Logic.csproj">
+      <Project>{EC8BB43B-4F2B-4E79-9BE7-5521D4A86F62}</Project>
+      <Name>Base.Logic</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Domain\EF.Reverse.POCO.Core.ttinclude" />
+    <None Include="Domain\EF.Reverse.POCO.ttinclude" />
+    <None Include="Domain\Market.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Market.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

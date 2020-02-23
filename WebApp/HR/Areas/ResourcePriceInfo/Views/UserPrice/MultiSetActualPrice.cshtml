@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "MultiSetPrice";
+}
+<div id="formlayout" class="mini-layout" style="width: 100%; height: 100%;">
+    <div region="north" height="32" showspliticon="false" showheader="false" allowresize="false" splitsize="0"
+         style="border: 0;">
+        <div class="mini-toolbar" style="padding: 0px; border-left: 0; border-top: 0; border-right: 0;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        <a class="mini-button" iconcls="icon-save" onclick="calActualUnitPrice();" plain="true">计算</a>
+                        <a class="mini-button" iconcls="icon-cancel" onclick="closeWindow('close')" plain="true">取消</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div title="center" region="center" style="border: 0;">
+        <div id="dataForm" autogetdata="false">
+            <div style="padding-left: 20px; padding-top: 10px;">
+                <table width="100%" border="0" cellpadding="0" cellspacing="2">
+                    <tr>
+                        <td></td>
+                        <td colspan="3" style="padding-right: 40px;"></td>
+                    </tr>
+                    <tr>
+                        <td>计算方式</td>
+                        <td style="padding-right: 40px;">
+                            <input name="ActualUnitPriceDefine" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value" required="true"
+                                   data="actualUnitPriceDefine" allowinput="false" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>年份</td>
+                        <td style="padding-right: 40px;">
+                            <input name="BelongYear" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value" required="true"
+                                   data="YearEnum" value="@DateTime.Now.AddMonths(-1).Year" allowinput="false" />
+                        </td>
+                        <td>月份</td>
+                        <td style="padding-right: 40px;">
+                            <input name="BelongMonth" class="mini-combobox" style="width: 100%;" textfield="text" valuefield="value" required="true"
+                                   data="MonthEnum" value="@DateTime.Now.AddMonths(-1).Month" allowinput="false" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>备注</td>
+                        <td colspan="3" style="padding-right: 40px;">
+                            <input name="Remark" class="mini-textarea" style="width: 100%;height:100px;" vtype="maxLength:100" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum("YearEnum")
+    @Html.GetEnum("MonthEnum")
+    var actualUnitPriceDefine = @Html.Raw(ViewBag.ActualUnitPriceDefine);
+    var trueOrFalse = [{ value: "true", text: "是" }, { value: "false", text: "否" }];
+</script>
+<script type="text/javascript">
+
+
+
+    function calActualUnitPrice() {
+        var form = new mini.Form("dataForm");
+        form.validate();
+        if (form.isValid() == false) return;
+        var _formData = form.getData();
+           
+        addExecuteParam("belongYear", mini.getbyName('BelongYear').getValue());
+        addExecuteParam("belongMonth", mini.getbyName('BelongMonth').getValue());
+        addExecuteParam("actualUnitPriceDefineCode", mini.getbyName('ActualUnitPriceDefine').getValue());
+        execute("SetUserActualUnitPrice", { showLoading: true, refresh: false, onComplete: function (data) {
+            msgUI("计算成功");
+            closeWindow('true');
+            returnValue();
+        }, validateForm: false
+        });
+
+    }
+
+</script>

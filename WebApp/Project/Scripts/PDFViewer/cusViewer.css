@@ -1,0 +1,109 @@
+﻿.blur {
+    -webkit-filter: blur(5px); /* Chrome, Opera */
+    -moz-filter: blur(5px);
+    -ms-filter: blur(5px);
+    filter: blur(5px);
+}
+
+.blur2 {
+    -webkit-filter: blur(2px); /* Chrome, Opera */
+    -moz-filter: blur(2px);
+    -ms-filter: blur(2px);
+    filter: blur(2px);
+}
+
+.toolbar {
+    position: relative;
+    left: 0;
+    right: 0;
+    z-index: 0;
+    cursor: default;
+}
+
+.tip {
+    z-index: 99999;
+    position: fixed;
+    width: 100%;
+}
+
+    .tip > div {
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        position: absolute;
+        width: 400px;
+        left: 50%;
+        top: 2px;
+        margin-left: -200px;
+        text-align: center;
+        background-color: #ffd791;
+        height: 30px;
+        color: #ad5100;
+        line-height: 30px;
+        box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    }
+
+.mini-button-icon {
+    padding-left: 0px !important;
+    background-image: none !important;
+}
+
+.mini-menuitem-icon, .mini-menuitem-allow {
+    width: 16px !important;
+}
+
+.mini-menuitem-text {
+    /*font-family: serif !important;*/
+}
+
+.mini-menuitem-hover {
+    color: black !important;
+}
+
+    .mini-menuitem-hover .mini-menuitem-text {
+        color: black !important;
+    }
+
+    .mini-menuitem-hover .mini-menuitem-icon, .mini-menuitem-allow {
+        width: 16px !important;
+    }
+
+.pdfViewButton {
+    padding: 0 !important;
+    color: hsl(0,0%,85%) !important;
+    border: 1px solid transparent !important;
+    background: none !important;
+    cursor: pointer;
+}
+
+#rightMenu {
+    position: absolute;
+    width: 120px;
+    border-radius: 5px;
+    background-color: white;
+    border: rgb(13,78,146);
+    z-index: 9999;
+    padding: 2px;
+    display: none;
+}
+
+.rotate-left, .rotate-right, .goto-copy {
+    font: normal normal normal 12px/14px FontAwesome, "微软雅黑";
+}
+
+    .rotate-left:before {
+        content: "\f0e2";
+        padding-right: 5px;
+        font-size: 14px;
+    }
+
+    .rotate-right:before {
+        content: "\f01e";
+        padding-right: 5px;
+        font-size: 14px;
+    }
+
+    .goto-copy:before {
+        content: "\f0c5";
+        padding-right: 5px;
+        font-size: 14px;
+    }

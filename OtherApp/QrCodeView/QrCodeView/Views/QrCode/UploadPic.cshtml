@@ -1,0 +1,218 @@
+﻿<div class="head" style="text-align: left; border-bottom: 1px solid #dbdbdb;">
+    <div class="qr-head-left">
+        <a onclick="$monitor.goback(this);" id="_task_detail_back">
+            <span class="icon-back">返回</span>
+        </a>
+    </div>
+    <div id="_fileList_step" class="qr-head-right">
+        <span id="_uploadPic_step" onclick="saveAuditFiles();">保存</span>
+    </div>
+</div>
+<article id="_uploadPic_body" class="main">
+    <div id="scroller">
+        <ul>
+            <li v-for="img_item in Img_items" >
+                <img style="width: 100%" :src="img_item.Src" onclick="openWordsLayer();"/>
+            </li>
+        </ul>
+    </div>
+    <div id="_words_layer" class="words-layer" v-if="ShowWords">
+        <div class="words-layer-title">
+            <div>请选择识别文本</div>
+            <div>
+                <input type="checkbox" name="checkboxinput" class="input-checkbox" style="-webkit-appearance: checkbox;" onchange="changeAll(this.checked);">
+            </div>
+        </div>
+        <div id="_words_items_div" style="overflow: auto; height: 400px;">
+            <ul>
+                <li class="words-layer-items-li" v-for="word_item in Word_items">
+                    <div>{{word_item.UID}}.
+                        <textarea :id="word_item.UID" class="words-textarea" onchange="TextChange(this.id,this.value)" :value="word_item.Value"/>
+                    </div>
+                    <div>
+                        <input type="checkbox" name="checkboxinput" class="input-checkbox" style="-webkit-appearance: checkbox;" v-model="Checked" :value="word_item.UID">
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="words-layer-btns">
+            <div onclick="OnCancel();">取消</div>
+            <div onclick="OnSubmit();">提交</div>
+        </div>
+    </div>
+    <div class="mask" v-if="ShowMask" onclick="OnClickMask();"></div>
+    <div class="spinner" v-if="ShowLoading">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+        <span id="loadingText"></span>
+    </div>
+</article>
+<script type="text/javascript">
+    var id = getWXQueryString("ID");
+    var step = getWXQueryString("Step");
+    var fileID = getWXQueryString("FileID");
+</script>
+<script type="text/javascript">
+    var FileIDs = "";
+    //$("#_uploadPic_step").html(step == "Collact" ? "校对" : step == "Audit" ? "审核" : step == "Approve" ? "审定" : "");
+    var vmPicDetail = new Vue({
+        el: '#_uploadPic_body',
+        data: {
+            Img_items: [],
+            Word_items: [{ "UID": 0, "Value": "111" }, { "UID": 1, "Value": "222" }],
+            Checked: [],
+            ShowWords: false,
+            ShowLoading: false,
+            ShowMask: false
+        }
+    })
+    loadImg();
+    function loadImg() {
+        if (fileID) {
+            vmPicDetail.Img_items.push({ "Src": goodwayApiURL + "/api/Files/" + fileID });
+        }
+        else {
+            setTimeout(function () {
+                openCamera();
+            }, 100);
+        }
+    }
+
+    function saveAuditFiles() {
+        addAudit(FileIDs);
+        loadList();
+        $monitor.goback($("#_task_detail_back"));
+        //layer.open({
+        //    content: "保存成功",
+        //    skin: 'msg',
+        //    time: 2
+        //});
+    }
+
+    function changeAll(value) {
+        if (value)
+            $.each(vmPicDetail.Word_items, function (i, item) {
+                vmPicDetail.Checked.push(item["UID"]);
+            });
+        else
+            vmPicDetail.Checked = [];
+    }
+
+    function OnClickMask() {
+        vmPicDetail.ShowMask = false;
+        vmPicDetail.ShowWords = false;
+    }
+
+    function SetLoading(isShow, text) {
+        vmPicDetail.ShowLoading = isShow;
+        setTimeout(function () {
+            $("#loadingText").text(text);
+        }, 100);
+    }
+
+    function TextChange(uid, value) {
+        vmPicDetail.Word_items[uid]["Value"] = value;
+    }
+
+    function OnCancel() {
+        vmPicDetail.ShowMask = false;
+        vmPicDetail.ShowWords = false;
+        openCamera();
+    }
+
+    function OnSubmit() {
+        SetLoading(true, "正在保存");
+        addAudit(FileIDs);
+        var messages = [];
+        for (var i = 0; i < vmPicDetail.Checked.length; i++) {
+            messages.push({
+                "Step": step,
+                "SubmitUser": account,
+                "Content": vmPicDetail.Word_items[vmPicDetail.Checked[i]]["Value"]
+            });
+        }
+        if (!isForm) {
+            addAuditMessage(messages);
+            $ydtHelper.closeWindow();
+        }
+        else {
+            $ydtHelper.closeWindow(messages);
+        }
+    }
+
+    function openWordsLayer() {
+        if (!fileID) {
+            vmPicDetail.ShowMask = true;
+            vmPicDetail.ShowWords = true;
+            var availHeight = window.screen.availHeight;
+            setTimeout(function () { $("#_words_items_div").height(availHeight - 170); }, 100);
+        }
+    }
+
+    function openCamera() {
+        var url = goodwayApiURL + "/api/Files/0/UploadAttachmentWithSnap";
+        $ydtHelper.selectImage(url);
+    }
+    $ydtHelper.selectImageCallback = function (message) {
+        var ids = message.info.split(",");
+        for (var i = 0; i < ids.length; i++) {
+            vmPicDetail.Img_items.push({ "Src": goodwayApiURL + "/api/Files/" + ids[i] });
+        }
+        FileIDs = message.info
+        return;
+        vmPicDetail.ShowMask = true;
+        SetLoading(true, "正在识别文字");
+        $.ajax({
+            url: goodwayApiURL + "/api/BaiduAI/0/GetHandWrite?FileIDs=" + message.info,
+            cache: false,
+            success: function (data, textStatus) {
+                vmPicDetail.Word_items = [];
+                vmPicDetail.Checked = [];
+                for (var i = 0; i < data.length; i++) {
+                    vmPicDetail.Word_items.push({ "UID": i, "Value": data[i] });
+                    vmPicDetail.Checked.push(i);
+                }
+                setTimeout(function () {
+                    vmPicDetail.ShowWords = true;
+                    SetLoading(false, "正在识别文字");
+                    var availHeight = window.screen.availHeight;
+                    setTimeout(function () { $("#_words_items_div").height(availHeight - 170); }, 100);
+                }, 500);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+            }
+        });
+    }
+
+    function addAudit(fileIDs) {
+        $.ajax({
+            url: goodwayApiURL + "/api/Project/0/AddAuditFile?ProductID=" + id + "&Account=" + account + "&Token=" + token + "&FileIDs=" + fileIDs,
+            type: "Post",
+            cache: false,
+            async: false,
+            success: function (data, textStatus) {
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+            }
+        });
+    }
+
+    function addAuditMessage(messages) {
+        $.ajax({
+            url: goodwayApiURL + "/api/Project/0/AddAuditMessage?ProductID=" + id + "&Account=" + account + "&Token=" + token,
+            type: "Post",
+            cache: false,
+            contentType: "application/json",
+            data: JSON.stringify(messages),
+            async: false,
+            success: function (data, textStatus) {
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+            }
+        });
+    }
+</script>

@@ -1,0 +1,9 @@
+包含两个控制台应用程序
+1.人员和部门同步程序：RTX_SynchDataTool.exe，配置文件：RTX_SynchDataTool.exe.config
+说明：同步时根据部门名称和人员账号来进行差异同步；以我们系统为准，部门不存在会删除，人员不存在不会删除，人员部门不对应，会重置人员部门关系；
+2.消息和任务同步程序：RTX_SendMsgAndTaskTool.exe，配置文件：RTX_SendMsgAndTaskTool.exe.config
+
+1.修改两个程序的配置文件
+2.修改Base库S_S_MsgReceiver得触发器
+3.手动运行RTX_SynchDataTool.exe，初始化人员部门，程序结束后检查RTX人员部门是否正确导入
+4.针对两个同步程序创建两个WIndows计划任务定时同步人员、部门、消息、任务

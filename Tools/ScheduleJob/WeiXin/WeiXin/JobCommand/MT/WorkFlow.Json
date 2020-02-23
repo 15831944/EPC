@@ -1,0 +1,2 @@
+﻿ <br>任务名称： {DefFlowName}<br>当前环节： {DefStepName} <br>接收时间： {CreateTime} <br>发  送  人： {SendTaskUserNames} <br>发起人：{CreateUserName}({CreateUserDept})
+|| <br>【{ExecUserName}】您好，截止到 {EndTime} <br>您还有{TaskCount}条待办任务

@@ -1,0 +1,98 @@
+﻿@{
+    ViewBag.Title = "ApplyUserRelateInfo";
+}
+
+<script src="/CommonWebResource/CoreLib/HighCharts/highcharts.js" type="text/javascript"></script>
+<script src="/CommonWebResource/CoreLib/HighCharts/highcharts-3d.js" type="text/javascript"></script>
+
+<link href="@Url.Content("/Expenses/Scripts/Cost/Reimbursement/applyUser.css")" rel="stylesheet" type="text/css" />
+<div id="mainlayout" class="mini-layout" style="width: 100%; height: 100%;">
+    <div title="center" region="center">
+        <div class="row2" style="border-bottom:none">
+            <div class="lDescrib">当前合同额</div>
+            <div class="rValue">@ViewBag.ContractAmountValue<span>元</span></div>
+
+            <div class="lDescrib">合同当月收款</div>
+            <div class="rValue">@ViewBag.MonthContractReceiptValue<span>元</span></div>
+        </div>
+        <div class="row2">
+            <div class="lDescrib">合同当年收款</div>
+            <div class="rValue">@ViewBag.YearContractReceiptValue<span>元</span></div>
+        </div>
+        <div class="rowTitle">月度费用分布(元)</div>
+        <div class="chart" style="height:300px">
+            <div id="monthChartContainer" class="mini-fit">
+            </div>
+        </div>
+        <div class="rowTitle">科目费用分布</div>
+        <div class="chart" style="height:300px">
+            <div id="monthPieContainer" class="mini-fit">
+            </div>
+        </div>
+        <div class="rowTitle">所属合同当月报销</div>
+        <div class="grid">
+            <div class="mini-toolbar gw-grid-toolbar" borderstyle="border-left:0px">
+                <table>
+                    <tr>
+                        <td></td>
+                        <td class="gw-toolbar-right">
+                            <input id="key" class="mini-buttonedit gw-searchbox" emptytext="请输入科目编号或名称" onenter="quickSearch('SubjectCode,SubjectName', { gridId: 'Details' });" onbuttonclick="quickSearch('SubjectCode,SubjectName', { gridId: 'Details' });" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id='Details' multiselect='true' allowalternating='false' showsummaryrow='true' showindexcolumn='false' showcheckcolumn='true' pagesize='50' style='width:100%;height:300px;' class='mini-datagrid' allowcellvalid='true' multiselect='true' allowcelledit='true'
+                 allowcellselect='true' showpager='false' allowunselect='false' sortmode='client'>
+                <div property='columns'>
+                    <div type='indexcolumn'></div>
+                    <div name='CostUnit' field='CostUnit' header='项目名称' displayfield='CostUnitName' visible='true' width='200' align='left' autoshowpopup='true' allowsort='true'>
+                    </div>
+                    <div name='SubjectDetailID' field='SubjectDetailID' header='报销内容' displayfield='SubjectDetailName' visible='true' width='90' align='left' autoshowpopup='true' allowsort='true'>
+                    </div>
+                    <div name='SubjectName' field='SubjectName' header='对应科目' visible='true' readonly='true' width='90' align='center' autoshowpopup='true' allowsort='true'>
+                    </div>
+                    <div name='SubjectCode' field='SubjectCode' header='科目编号' visible='true' readonly='true' width='90' align='center' autoshowpopup='true' allowsort='true'>
+                    </div>
+                    <div name='ApplyUser' field='ApplyUser' displayfield='ApplyUserName' header='报销人' visible='true' readonly='true' width='100' align='center' autoshowpopup='true' allowsort='true'>
+                    </div>
+                    <div name='ChargerDept' field='ChargerDept' displayfield='ChargerDeptName' header='部门' visible='true' readonly='true' width='100' align='center' autoshowpopup='true' allowsort='true'>
+                    </div>
+                    <div name='ApplyValue' field='ApplyValue' header='报销金额（元）' vtype='required;' visible='true' width='100' align='right' autoshowpopup='true' summarytype='sum' summaryrenderer='onSummaryRenderer' allowmove='false' allowresize='true' datatype='currency'
+                         decimalplaces='2' allowsort='true'>
+                    </div>
+                    <div name='InvoiceType' field='InvoiceType' header='发票类型' type='comboboxcolumn' vtype='required;' visible='true' width='90' align='center' autoshowpopup='true' allowsort='true'>
+                    </div>
+                    <div name='TaxRate' field='TaxRate' header='税率（%）' vtype='required;' visible='true' width='90' align='right' autoshowpopup='true' allowsort='true'>
+                    </div>
+                    <div name='TaxValue' field='TaxValue' header='税金（元）' visible='true' readonly='true' width='100' align='right' autoshowpopup='true' allowmove='false' allowresize='true' datatype='currency' decimalplaces='2' allowsort='true'>
+                    </div>
+                    <div name='ClearValue' field='ClearValue' header='去税金额（元）' visible='true' readonly='true' width='100' align='right' autoshowpopup='true' allowmove='false' allowresize='true' datatype='currency' decimalplaces='2' allowsort='true'>
+                    </div>
+                    <div name='Remark' field='Remark' header='备注' visible='true' width='200' align='left' autoshowpopup='true' allowsort='true'>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    var costUnitArr = "@ViewBag.CostUnitArr";
+</script>
+<script>
+    function pageLoad() {
+        mini.get("Details").setUrl('GetContractReimbursementDetail?costUnitArr=' + costUnitArr);
+        addExecuteParam("costUnitArr", costUnitArr);
+        execute("GetContractData", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                if (data.chartData) {
+                    $("#monthChartContainer").highcharts(mini.decode(data.chartData));
+                }
+
+                if (data.pieData) {
+                    $("#monthPieContainer").highcharts(mini.decode(data.pieData));
+                }
+            }, validateForm: false
+        });
+    }
+</script>

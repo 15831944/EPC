@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "ProgrammeInfoSingle";
+}
+<div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" iconcls="icon-ok" plain="true" onclick="returnValue()">选择</a>
+                <a class="mini-button" iconcls="icon-cancel" plain="true" onclick="closeWindow()">取消</a>
+            </td>
+            <td style="white-space: nowrap;">
+                <input class="mini-buttonedit searchbox" id="key" emptytext="请输入工程编号或工程名称" style="width: 200px;"
+                    onenter="quickSearch('Name,Code');" onbuttonclick="quickSearch('Name,Code');" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit">
+    <div id="dataGrid" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID"
+        allowresize="true" url="GetProgrammeList" pagesize="20">
+        <div property="columns">
+            <div type="checkcolumn">
+            </div>
+            <div field="Code" width="80" align="center" allowsort="true" headeralign="center">
+                工程编号</div>
+            <div field="Name" width="200" align="left" allowsort="true" headeralign="center">
+                工程名称</div>
+            <div field="Type" width="80" align="center" align="center" headeralign="center">
+                工程类型</div>
+            <div field="PreProjectDesignPhase" align="center" width="80" allowsort="true" headeralign="center">
+                设计阶段</div>
+            <div field="CustomerName" width="150" allowsort="true" align="left" headeralign="center">
+                客户名称</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum("Market.PreProjectDesignPhase", "PreProjectDesignPhase")
+    @Html.GetEnum("Market.Industry", "Industry")
+    @Html.GetEnum("Market.ProjectType", "ProjectType")
+</script>
+<script type="text/javascript">
+    addGridEnum("dataGrid", "PreProjectDesignPhase", "PreProjectDesignPhase");
+    addGridEnum("dataGrid", "Industry", "Industry");
+    addGridEnum("dataGrid", "Type", "ProjectType");
+
+    function returnValue() {
+        var grid = mini.get("dataGrid");
+        closeWindow(grid.getSelecteds());
+    }
+
+</script>

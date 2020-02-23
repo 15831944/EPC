@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{08A52368-F737-4FAB-906C-AD4282ABE0ED}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Monitor.Logic</RootNamespace>
+    <AssemblyName>Monitor.Logic</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\..\BaseFrame\Resource\Dll\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\BaseFrame\Resource\Dll\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BusinessFacade\Base.cs" />
+    <Compile Include="BusinessFacade\BusinessDetailBll.cs" />
+    <Compile Include="BusinessFacade\BusinessOverviewBll.cs" />
+    <Compile Include="BusinessFacade\ContractBll.cs" />
+    <Compile Include="BusinessFacade\ContractSearchBll.cs" />
+    <Compile Include="BusinessFacade\ProjectDetailBll.cs" />
+    <Compile Include="BusinessFacade\ProjectIndexBll.cs" />
+    <Compile Include="BusinessFacade\BusinessIndexBll.cs" />
+    <Compile Include="BusinessFacade\ProjectOverviewBll.cs" />
+    <Compile Include="BusinessFacade\ProjectSearchBll.cs" />
+    <Compile Include="Domain\Market1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Market.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Domain\Project.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Project.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DTO\ContractDTO.cs" />
+    <Compile Include="DTO\ContractStatisticsDTO.cs" />
+    <Compile Include="DTO\MileStoneDTO.cs" />
+    <Compile Include="DTO\ProjectDTO.cs" />
+    <Compile Include="DTO\ProjectUser.cs" />
+    <Compile Include="DTO\StageDistributionDTO.cs" />
+    <Compile Include="DTO\PlanReceiptDTO.cs" />
+    <Compile Include="DTO\ProjectStatisticsDTO.cs" />
+    <Compile Include="DTO\ReceiptRecordDTO.cs" />
+    <Compile Include="DTO\SectorDistributionDTO.cs" />
+    <Compile Include="Enum\BusinessEnum.cs" />
+    <Compile Include="Enum\ConnEnum.cs" />
+    <Compile Include="Enum\ContractSearchEnum.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enum\DateEnum.cs" />
+    <Compile Include="Enum\ExceptionEnum.cs" />
+    <Compile Include="Enum\ProjectSearchEnum.cs" />
+    <Compile Include="Helper\JsonHelper.cs" />
+    <Compile Include="Helper\SqlHelper.cs" />
+    <Compile Include="Helper\WebApiHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <None Include="Domain\EF.Reverse.POCO.Core.ttinclude" />
+    <None Include="Domain\EF.Reverse.POCO.ttinclude" />
+    <None Include="Domain\Market.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Market1.cs</LastGenOutput>
+    </None>
+    <None Include="Domain\Project.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Project.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

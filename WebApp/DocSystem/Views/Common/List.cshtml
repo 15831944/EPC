@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "List";
+}
+<div id="editList" class="mini-fit">
+    <div class="mini-splitter" style="width: 100%; height: 100%;">
+        <div size="15%">
+            <div class="mini-toolbar gw-grid-toolbar" borderstyle="border-left:0px">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 10%;">
+                            <a class="mini-button" onclick="get(-1)" plain="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+                        </td>
+                        <td style="width: 80%;" align="center">
+                            <span id="index">0</span>/<span id="count">0</span>
+                        </td>
+                        <td style="width: 10%;">
+                            <a class="mini-button" onclick="get(1)" plain="true"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="mini-fit">
+                <div id="dataGrid" style="width: 100%; height: 100%;" class="mini-datagrid" showpager="false" onselect="onSelect">
+                    <div property="columns">
+                        <div type="indexcolumn"></div>
+                        <div field="Name" width="*" align="left">
+                            名称
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <iframe id="EditFrame" style="width: 100%; height: 100%;"></iframe>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var index = 1;
+    var url = "";
+    function onSelect(e) {
+        var row = e.record;
+        $("#EditFrame").attr("src", url + "?ID=" + row.ID + "&SpaceID=" + getQueryString("SpaceID") + "&ConfigID=" + getQueryString("ConfigID") + "&IsMulti=True");
+        index = row._id;
+        $("#index").html(index);
+    }
+
+    function get(isNext) {
+        var dataGrid = mini.get("dataGrid");
+        var count = dataGrid.getData().length;
+        index += isNext;
+        if (index == 0)
+            index = count;
+        else if (index == count + 1)
+            index = 1;
+        var row = mini.get("dataGrid").getRow(index - 1);
+        dataGrid.select(row, true);
+    }
+
+    function setData(data) {
+        mini.get("dataGrid").setData(data.List);
+        url = data.URL;
+        $("#count").html(data.List.length);
+        $("#index").html(1);
+        if (data.List.length > 0)
+            mini.get("dataGrid").select(data.List[0]);
+    }
+</script>

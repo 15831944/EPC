@@ -1,0 +1,9 @@
+﻿<UserControl x:Class="BeSl.Controls.FileUpload.SingleFileUpload"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:bfu="clr-namespace:BeSl.Controls.File.UploadControl;assembly=BeSl.Controls.File"
+    Width="Auto" Height="Auto">
+    <Grid x:Name="LayoutRoot" Background="White">
+        <bfu:SingleFileUploadControl x:Name="PageFileUploadCtrl" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5"></bfu:SingleFileUploadControl>
+    </Grid>
+</UserControl>

@@ -1,0 +1,121 @@
+﻿@{
+    ViewBag.Title = "ContractAndPlanReceiptSelector";
+}
+<div id="mainlayout" class="mini-layout" style="width: 100%; height: 100%;" splitsize="3">
+    <div title="north" showheader="false" region="north" height="300" showspliticon="false">
+        <div class="mini-toolbar" style="padding: 0px; border-top: 0; border-left: 0; border-right: 0;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        <a class="mini-button" iconcls="icon-add" onclick="returnValue();" plain="true">选择</a>
+                        <a class="mini-button" iconcls="icon-cancel" onclick="closeWindow();" plain="true">取消</a>
+                    </td>
+                    <td style="white-space: nowrap;">
+                        <input class="mini-buttonedit searchbox" id="key" emptytext="请输入合同名称或合同编号" style="width: 240px;"
+                               onenter="quickSearch('Name,SerialNumber')" onbuttonclick="quickSearch('Name,SerialNumber')" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="mini-fit">
+            <div id="dataGrid" url="GetContractList" class="mini-datagrid" style="width: 100%;
+                height: 100%;" idfield="ID" multiselect="false" borderstyle="border-bottom: 0; border-left: 0; border-right: 0;" onselectionchanged="onSelectionChanged">
+                <div property="columns">
+                    <div type="checkcolumn">
+                    </div>
+                    <div field="SerialNumber" width="80" allowsort="true" headeralign="center">
+                        合同编号
+                    </div>
+                    <div field="Name" width="150" allowsort="true" headeralign="center">
+                        合同名称
+                    </div>
+                    <div field="ContractType" width="80" allowsort="true" headeralign="center" align="center">
+                        合同类型
+                    </div>
+                    <div field="ContractRMBAmount" datatype="currency" currencyunit="￥" allowsort="true"
+                         headeralign="center" align="right">
+                        合同金额
+                    </div>
+                    <div field="SumInvoiceValue" datatype="currency" allowsort="true" headeralign="center"
+                         align="right">
+                        已开票金额（元）
+                    </div>
+                    <div field="SumReceiptValue" datatype="currency" allowsort="true" headeralign="center"
+                         align="right">
+                        已经到款金额（元）
+                    </div>
+                    <div field="NoInvoiceAmount" datatype="currency" allowsort="true" headeralign="center"
+                         align="right">
+                        剩余可开票金额（元）
+                    </div>
+                    <div field="ProductionDeptName" allowsort="true" headeralign="center" align="center">
+                        生产负责部门
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div title="center" region="center">
+        <div class="mini-fit">
+            <div id="planReceiptGrid" url="" class="mini-datagrid" style="width: 100%; height: 100%;"
+                 idfield="ID" multiselect="true" borderstyle="border:0" showpager="false">
+                <div property="columns">
+                    <div type="checkcolumn">
+                    </div>
+                    <div field="Name" width="350" headeralign="center" allowsort="true">
+                        收款项名称
+                    </div>
+                    <div field="PlanFinishDate" width="150" headeralign="center" dateformat="yyyy-MM"
+                         allowsort="true" align="center">
+                        计划收款日期
+                    </div>
+                    <div field="ReceiptValue" datatype="currency" currencyunit="￥" headeralign="center"
+                         width="120" allowsort="true" align="right">
+                        计划金额（元）
+                    </div>
+                    <div field="FactInvoiceValue" datatype="currency" currencyunit="￥" headeralign="center"
+                         width="120" allowsort="true" align="right">
+                        已开票金额（元）
+                    </div>
+                    <div field="RemainInvoiceValue" datatype="currency" currencyunit="￥" headeralign="center"
+                         width="120" allowsort="true" align="right">
+                        可开票金额（元）
+                    </div>
+                    <div field="BadDebtValue" datatype="currency" headeralign="center" width="120" allowsort="true"
+                         align="right">
+                        坏账（元）
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum(typeof(Market.Logic.PlanReceiptState))
+    @Html.GetEnum("Market.ContractType")
+</script>
+<script type="text/javascript">
+    addGridEnum("planReceiptGrid", "State", "PlanReceiptState");
+    addGridEnum("dataGrid", "ContractType", "ContractType");
+
+    function returnValue() {
+        var grid = mini.get("dataGrid");
+        var contract = grid.getSelected();
+        var plans = mini.get("planReceiptGrid").getSelecteds();
+        contract.PlanReceipt = plans;
+        closeWindow(contract);
+    }
+
+    //合同选择发生改变时
+    function onSelectionChanged(e) {
+        var row = e.selected;
+        if (row != null) {
+            var contractInfoID = row.ID;
+            var url = "GetReceiptObjectList?ContractInfoID=" + contractInfoID;
+            var planReceiptGrid = mini.get("planReceiptGrid");
+            planReceiptGrid.setUrl(url);
+            planReceiptGrid.reload();
+        }
+    }
+</script>

@@ -1,0 +1,164 @@
+﻿<div class="mini-toolbar" id="btnDiv">
+    <table>
+        <tr>
+            <td>
+                <a class="mini-button" iconcls="icon-ok" onclick="returnValue">选择</a>
+                <a class="mini-button" iconcls="icon-cancel" onclick="closeWindow">取消</a>
+            </td>
+            <td id="btnRight">
+                <a class="mini-button" iconcls="icon-project" onclick="showOrHide">显示/隐藏</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit">
+    <div id="parent" class="mini-splitter" style="width: 100%; height: 100%;" borderstyle="border:0px;border-width:0px" allowresize="false">
+        <div showcollapsebutton="false" size="45%" style="border-bottom: 0px; border-right: 0px;">
+            <div class="mini-toolbar" style="border-top: 0px; border-bottom: 0px; border-left:0px;">已选择的图章</div>
+            <div class="mini-fit">
+                <div id="dataGrid" class="mini-datagrid" style="width: 100%; height: 100%;" url=""
+                     borderstyle="border-left:0px;border-bottom:0px" multiselect="true" showfooter="false" showpager="false">
+                    <div property="columns">
+                        <div type="checkcolumn"></div>
+                        <div field="Type" width="80" align="center" headeralign="center">
+                            类型
+                        </div>
+                        <div field="BlockKey" width="80" align="center" headeralign="center">
+                            图块Key
+                        </div>
+                        <div field="Code" width="80" align="left" headeralign="center">
+                            编号
+                        </div>
+                        <div field="Name" width="120" align="left" headeralign="center">
+                            名称
+                        </div>
+                        <div field="Pos" width="200" align="left" headeralign="center">
+                            位置
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div showcollapsebutton="true" size="55%" style="border-bottom: 0px; border-left: 1px;" expanded="false">
+            <div class="mini-splitter" style="width: 100%; height: 100%;" borderstyle="border-left-width:1px; border-top:0px" allowresize="false" handlersize="0">
+                <div showcollapsebutton="false" size="5%" style="border:0px; padding-top: 180px; background-color: #F9F9F9">
+                    <div class="mini-fit" style="width: 100%">
+                        <a class="mini-button" iconcls="icon-left" onclick="addSelecteds"></a>
+                        <br><br><br><br>
+                        <a class="mini-button" iconcls="icon-right" onclick="removeSelected"></a>
+                    </div>
+                </div>
+                <div showcollapsebutton="false" size="95%" style="">
+                    <div class="mini-toolbar" style="border-top: 0px; border-bottom: 0px; border-left:0px;">
+                        <input class="mini-buttonedit searchbox" id="key" emptytext="请输入编号或名称" style="width: 100%"
+                               onenter="quickSearch('Code,Name', { gridId: 'sealList' });" onbuttonclick="quickSearch('Code,Name', { gridId: 'sealList' });" />
+                    </div>
+                    <div class="mini-fit">
+                        <div id="sealGrid" class="mini-datagrid" style="width: 100%; height: 100%;" url="GetSealList" onload="onSealLoad"
+                             borderstyle="border-left:0px;border-bottom:0px" multiselect="true" showfooter="false" showpager="false">
+                            <div property="columns">
+                                <div type="checkcolumn"></div>
+                                <div field="Type" width="80" align="center" headeralign="center" allowsort='true'>
+                                    类型
+                                </div>
+                                <div field="BlockKey" width="80" align="center" headeralign="center" allowsort='true'>
+                                    主章图块Key
+                                </div>
+                                <div field="Code" width="80" align="left" headeralign="center" allowsort='true'>
+                                    编号
+                                </div>
+                                <div field="Name" width="120" align="left" headeralign="center" allowsort='true'>
+                                    名称
+                                </div>
+                                <div field="Remark" width="200" align="left" headeralign="center" allowsort='true'>
+                                    备注
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.Raw(ViewBag.PlotSealType);
+</script>
+<script type="text/javascript">
+    addGridEnum('sealGrid', 'Type', 'PlotSealType');
+    addGridEnum('dataGrid', 'Type', 'PlotSealType');
+
+    var isShow = false;
+    function showOrHide() {
+        var parent = mini.get("parent");
+        if (isShow)
+            parent.collapsePane(2);
+        else
+            parent.expandPane(2);
+        isShow = !isShow;
+    }
+
+    function returnValue() {
+        var allIDs = []; var gIDs = []; var sIDs = []; var names = []; var keys = [];
+        var dataGrid = mini.get("dataGrid");
+        var rows = dataGrid.getData();
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            if (row.Type == "Group") gIDs.push(row.ID);
+            else sIDs.push(row.ID);
+            allIDs.push(row.ID);
+            names.push(row.Name);
+            keys.push(row.BlockKey);
+        }
+        var id = { Groups: gIDs.join(","), Seals: sIDs.join(","), All: allIDs.join(",") };
+        var array = [{ ID: mini.encode(id), Name: names.join(","), BlockKey: keys.join(",") }];
+        closeWindow(array);
+    }
+
+    function addSelecteds() {
+        var baseGrid = mini.get("sealGrid");
+        var dataGrid = mini.get("dataGrid");
+        var rows = baseGrid.getSelecteds();
+        for (var i = 0; i < rows.length; i++) {
+            var row = dataGrid.findRow(function (r) {
+                if (r.BlockKey == rows[i].BlockKey) return true;
+            });
+            if (!row)
+                dataGrid.addRow({ BlockKey: rows[i].BlockKey, Code: rows[i].Code, Name: rows[i].Name, ID: rows[i].ID, Type: rows[i].Type });
+            else
+                dataGrid.updateRow(row, { Code: rows[i].Code, Name: rows[i].Name, ID: rows[i].ID, Type: rows[i].Type });
+        }
+    }
+
+    function removeSelected() {
+        var dataGrid = mini.get("dataGrid");
+        var rows = dataGrid.getSelecteds();
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].Pos)
+                dataGrid.updateRow(rows[i], { Code: "", Name: "", ID: "", Type: "" });
+            else
+                dataGrid.removeRow(rows[i]);
+        }
+    }
+
+    var selectedSealList = [];
+    function setData(data) {
+        selectedSealList = data;
+    }
+
+    function onSealLoad(e) {
+        var baseGrid = mini.get("sealGrid");
+        var dataGrid = mini.get("dataGrid");
+        for (var i = 0; i < selectedSealList.length; i++) {
+            var row = baseGrid.findRow(function (r) {
+                if (r.ID == selectedSealList[i].ID) return true;
+            });
+            if (row) {
+                selectedSealList[i]["Type"] = row["Type"];
+                selectedSealList[i]["Code"] = row["Code"];
+                selectedSealList[i]["Name"] = row["Name"];
+            }
+        }
+        dataGrid.setData(selectedSealList);
+    }
+</script>

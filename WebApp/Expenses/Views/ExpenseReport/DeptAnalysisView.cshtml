@@ -1,0 +1,131 @@
+﻿@{
+    ViewBag.Title = "DeptAnalysisView";
+}
+<script src="/CommonWebResource/CoreLib/HighCharts/highcharts.js" type="text/javascript"></script>
+<script src="/CommonWebResource/CoreLib/HighCharts/highcharts-3d.js" type="text/javascript"></script>
+<div id="mainlayout" class="mini-layout" style="width: 100%; height: 100%;">
+    <div title="" showheader="false" region="north" height="300" showspliticon="false">
+        <div class="mini-toolbar" style="padding: 0px;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 70px">统计期间：</td>
+                    <td style="width: 220px">
+                        
+                        <div name="AnalysisType" class="mini-radiobuttonlist" repeatitems="7" repeatlayout="table"
+                             repeatdirection="horizontal" textfield="text" valuefield="value" onvaluechanged="reloadData();"
+                             data="AnalysisType" value="Month">
+                        </div>
+                    </td>
+                    <td style="width: 80px">
+                      
+                    </td>
+                    <td>
+ 
+                    </td>
+                    <td style="white-space: nowrap; text-align:right;padding-right:5px; font-weight:bold">单位：元</td>
+                </tr>
+            </table>
+        </div>
+        <div id="xyChartContainer" class="mini-fit">
+        </div>
+    </div>
+    <div title="center" region="center">
+        <div class="gw-grid-toolbar mini-toolbar" style="padding: 0px; border:0px;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;">
+                        @Html.ExportButton()
+                    </td>
+                    <td style="white-space: nowrap; text-align:right;padding-right:5px; font-weight:bold">单位：元</td>
+                </tr>
+            </table>
+        </div>
+        <div class="mini-fit">
+            <div id="dataGrid" url="GetDeptAnalysisList" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID"
+                 multiselect="false" borderstyle="border-left:0px;border-right:0px;border-bottom:0px;" showpager="false"  onload="onGridLoad">
+                <div property="columns">
+                    <div type='indexcolumn' headeralign='center'>序号</div>
+                    <div name='Name' field='Name' header='部门名称' width='150' align='left' visible='true' allowsort='true' header='部门名称'></div>
+                    <div name='UserCount' field='UserCount' header='人数' width='80' align='right' visible='true' allowsort='true' datatype='int' header='人数'></div>
+                    <div name='ProjectCount' field='ProjectCount' header='参加项目数' width='80' align='right' visible='true' allowsort='true' datatype='int' header='参加项目数'></div>
+                    <div name='IncomeValue' field='IncomeValue' header='确认收入（元）' width='120' align='right' visible='true' allowsort='true' datatype='currency' header='确认收入（元）'></div>
+                    <div name='PersonIncomeValue' field='PersonIncomeValue' header='人均确认收入（元）' width='140' align='right' visible='true' allowsort='true' datatype='currency' header='人均确认收入（元）'></div>
+                    <div name='ReceiptValue' field='ReceiptValue' header='实际收款（元）' width='120' align='right' visible='true' allowsort='true' datatype='currency' header='实际收款（元）'></div>
+                    <div name='PersonReceiptValue' field='PersonReceiptValue' header='人均收款（元）' width='120' align='right' visible='true' allowsort='true' datatype='currency' header='人均收款（元）'></div>
+                    <div name='CostValue' visible='true' header='发生成本（元）' field='CostValue' width='120' align='right' allowsort='true' allowmove='true' allowresize='true' datatype='currency' header='发生成本（元）'></div>
+                    <div name='IncomeBiCost' visible='true' header='收入\成本（%）' field='IncomeBiCost' align='right'> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum(typeof(Expenses.Controllers.ExpenseReportController.AnalysisType))
+</script>
+<script type="text/javascript">
+    addGridLink('dataGrid', 'IncomeValue', '/MvcConfig/UI/List/PageView?TmplCode=DeptRevenueInfoListView&Dept={ID}&DateType={DateType}', { "width": "1000", "true": "true" });
+    addGridLink('dataGrid', 'ReceiptValue', '/MvcConfig/UI/List/PageView?TmplCode=EPDateTypeReceiptListView&Dept={ID}&DateType={DateType}', { "width": "1000", "true": "true" });
+    addGridLink('dataGrid', 'CostValue', '/MvcConfig/UI/List/PageView?TmplCode=DeptCostListView&Dept={ID}&DateType={DateType}', { "width": "1000", "true": "true" });    
+    function onGridLoad(e) {
+        if (e.result && e.result.chartData) {
+            loadingChart("xyChartContainer", e.result.chartData);
+        }
+    }
+
+    function reloadData() {
+        var dataGrid = mini.get("dataGrid");
+        dataGrid.load({ AnalysisType: mini.getbyName("AnalysisType").getValue() });
+    }
+
+    function loadingChart(divID, option) {
+
+        $("#" + divID).highcharts($.extend(true,
+            option,
+            {
+                yAxis: {
+                    labels: {
+                        formatter: function () {
+                            return this.value / 10000 + '万';
+                        }
+                    }
+                }
+            }));
+    }
+
+    function viewDetailInfo(belongYear, belongMonth) {
+        var type = mini.getbyName("AnlysisValue").getValue();
+        var url = "/MvcConfig/UI/List/PageView?TmplCode=ReceiptInfo";
+        var title = belongYear + "年度到款查看";
+        if (belongMonth) title = belongYear + "年" + belongMonth + "月到款查看";
+        if (type == "ContractValue") {
+            url = "/MvcConfig/UI/List/PageView?TmplCode=ContractInfo";
+            title = belongYear + "年合同签订情况查看";
+            if (belongMonth) title = belongYear + "年" + belongMonth + "月合同签订情况查看";
+        }
+        url += "&BelongYear=" + belongYear;
+        if (belongMonth) {
+            url += "&BelongMonth=" + belongMonth;
+        }
+
+        openWindow(url, {
+            refresh: false, title: title, width: "90%", height: "90%",
+            onDestroy: function () { }
+        });
+    }
+
+    function viewDeptMonthInfo(belongYear) {
+        var type = mini.getbyName("AnlysisValue").getValue();
+        var url = "/Market/Analysis/DeptAnalysis/DeptMonthReceiptInfo";
+        var title = belongYear + "部门年度到款查看";
+        if (type == "ContractValue") {
+            url = "/Market/Analysis/DeptAnalysis/DeptMonthContractInfo";
+            title = belongYear + "部门年度合同签订情况查看";
+        }
+        url += "?BelongYear=" + belongYear;
+        openWindow(url, {
+            refresh: false, title: title, width: "90%", height: "90%",
+            onDestroy: function () { }
+        });
+    }
+
+</script>

@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "NodeStructEdit";
+}
+<div class="mini-toolbar" id="btnDiv" style="width: 100%; position: fixed; top: 0;
+    left: 0; z-index: 100;">
+    <table>
+        <tr>
+            <td>
+                <a class="mini-button" id="btnSave" plain="true" iconcls="icon-save" onclick="returnValue();">
+                    保存</a> <a class="mini-button" id="btnCancel" plain="true" iconcls="icon-cancel" onclick="closeWindow()">
+                        取消</a>
+            </td>
+            <td id="btnRight">
+                <a class="mini-button" id="btnHelp" onclick="showHelp()" iconcls="icon-help" plain="true">
+                    帮助</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<form id="dataForm" method="post" style="top: 30px; position: relative;">
+<input name="ID" class="mini-hidden" />
+<input name="SpaceID" class="mini-hidden" />
+<input name="ParentID" class="mini-hidden" />
+<div class="formDiv">
+    <div id="pageform" style="padding-left: 20px; padding-top: 10px;">
+        <table width="100%" border="0" cellpadding="0" cellspacing="2">
+            <tr>
+                <td width="15%">
+                    节点类型
+                </td>
+                <td width="85%">
+                    <input id="Node" name="NodeID" class="mini-combobox" data="DocumentNodeType" required="true"
+                        style="width: 90%;" textfield="text" valuefield="value" allowinput="true" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+</form>
+<script type="text/javascript">
+@Html.GetEnum("DocSystem.DocumentNodeType")
+</script>
+<script type="text/javascript">
+    function returnValue() {
+        var oxc = mini.get("Node");
+        var str = "({value:'" + oxc.getValue() + "',text:'" + oxc.getText() + "'})";
+        var returnData = eval(str);
+        closeWindow(returnData);
+    }
+</script>

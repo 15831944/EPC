@@ -1,0 +1,151 @@
+﻿@{
+    ViewBag.Title = "List";
+}
+<div class="mini-toolbar" style="padding: 0px; border-bottom: 0px;">
+    <table>
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" id="btnAdd" iconcls="icon-add" onclick="add({width: 850, height: '95%'});"
+                    plain="true">增加</a> <a class="mini-button" id="btnEdit" iconcls="icon-edit" onclick="edit({width: 850, height: '95%'})"
+                        plain="true">编辑</a> <a class="mini-button" id="btnDelete" iconcls="icon-remove" onclick="del()"
+                            plain="true">删除</a>
+            </td>
+            <td style="white-space: nowrap;">
+                <input class="mini-buttonedit searchbox" id="key" emptytext="请输入回访主题或事务" style="width: 200px;"
+                    onenter="quickSearch('Name,Content');" onbuttonclick="quickSearch('Name,Content');" />
+                <a class="mini-button" onclick="showWindow('queryWindow')" iconcls="icon-find" plain="true">
+                    详细查询</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit">
+    <div id="dataGrid" class="mini-datagrid" idfield="ID" url="GetList" style="width: 100%;
+        height: 100%;" pagesize="20" fitcolume allowmovecolumn="false" multiselect="true">
+        <div property="columns">
+            <div type="checkcolumn">
+            </div>
+            <div field="CustomerName" width="180" headeralign="center" allowsort="true" align="left">
+                客户名称</div>
+            <div field="Name" headeralign="center" width="100" allowsort="true" align="left"
+                renderer="onLinkRender">
+                回访主题</div>
+            <div field="VisitManName" width="80" headeralign="center" allowsort="true" align="center">
+                拜访人员</div>
+            <div field="Duties" width="80" headeralign="center" dateformat="yyyy-MM-dd" allowsort="true"
+                align="center">
+                职务</div>
+            <div field="DeptName" headeralign="center" align="left" width="100" allowsort="true">
+                部门</div>
+            <div field="ReturnVisitManName" headeralign="center" align="center" width="80" allowsort="true">
+                回访人员</div>
+            <div field="VisitDate" headeralign="center" dateformat="yyyy-MM-dd" align="center"
+                width="80" allowsort="true">
+                回访日期</div>
+            <div field="Content" headeralign="center" align="left" width="200" allowsort="true">
+                回访事务</div>
+            <div field="Record" headeralign="center" align="left" width="200" allowsort="true">
+                回访纪要</div>
+            <div field="Remark" headeralign="center" align="left" width="150" allowsort="true">
+                备注</div>
+            <div field="Register" headeralign="center" align="center" width="80" allowsort="true">
+                登记人</div>
+            <div field="RegisteDate" headeralign="center" dateformat="yyyy-MM-dd" align="left"
+                width="80" allowsort="true">
+                登记日期</div>
+        </div>
+    </div>
+</div>
+<div id="queryWindow" class="mini-window" title="详细查询" style="width: 690px; height: 200px;"
+    showmodal="true" allowresize="false" allowdrag="true">
+    <div class="queryDiv">
+        <form id="queryForm" method="post">
+        <table>
+            <tr>
+                <td width="10%" align="center">
+                    客户名称
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$CustomerName" class="mini-textbox" style="width: 85%" />
+                </td>
+                <td width="10%" align="center">
+                    回访主题
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$Name" style="width: 85%;" class="mini-textbox" />
+                </td>
+                <td width="10%" align="center">
+                    回访事务
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$Content" class="mini-textbox" style="width: 85%" />
+                </td>
+            </tr>
+            <tr>
+                <td width="10%" align="center">
+                    回访纪要
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$Record" class="mini-textbox" style="width: 85%" />
+                </td>
+                <td width="10%" align="center">
+                    回访日期
+                </td>
+                <td width="23%" align="left">
+                    <input class="mini-datepicker" name="$FR$VisitDate" id="VisitDateStart" style="width: 85%;"
+                        ondrawdate="onDrawStartDate(e,'VisitDateEnd')" />
+                </td>
+                <td width="10%" align="center">
+                    至
+                </td>
+                <td width="23%" align="left">
+                    <input class="mini-datepicker" name="$TO$VisitDate" id="VisitDateEnd" style="width: 85%;"
+                        ondrawdate="onDrawEndDate(e,'VisitDateStart')" />
+                </td>
+            </tr>
+            <tr>
+                <td width="10%" align="center">
+                    回访人员
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$ReturnVisitManName" class="mini-textbox" style="width: 85%" />
+                </td>
+            </tr>
+        </table>
+        </form>
+        <div>
+            <a class="mini-button" onclick="search()" iconcls="icon-find" style="margin-right: 20px;">
+                查询</a> <a class="mini-button" onclick="clearQueryForm('queryForm')" iconcls="icon-undo">
+                    清空</a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+</script>
+<script type="text/javascript">
+
+    //注册Grid链接列
+    addGridLink('dataGrid', 'Name', 'Edit?ID={ID}', { funcType: 'view', width: 850, height: '95%' });
+
+    function onDrawStartDate(e, endID) {
+        var date = e.date;
+        var end = mini.get(endID).value;
+        if (end == null || end == "" || end == undefined)
+            return;
+        if (date.getTime() > end.getTime()) {
+            e.allowSelect = false;
+        }
+    }
+
+    function onDrawEndDate(e, startID) {
+        var date = e.date;
+        var start = mini.get(startID).value;
+        if (start == null || start == "" || start == undefined)
+            return;
+        var date = e.date;
+        if (date.getTime() < start.getTime()) {
+            e.allowSelect = false;
+        }
+    }
+
+</script>

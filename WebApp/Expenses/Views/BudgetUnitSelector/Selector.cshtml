@@ -1,0 +1,155 @@
+﻿@{
+    ViewBag.Title = "CusContractSelector";
+}
+
+<div class="mini-fit">
+    <div class="mini-splitter" style="width: 100%; height: 100%;" borderstyle="border:0px">
+        <div size="70%" showcollapsebutton="false" style="border-right: 1px solid #ccc;">
+            <div id="mainlayout" class="mini-layout" style="width: 100%; height: 100%;" splitsize="3">
+                <div title="north" showheader="false" region="north" height="500" showspliticon="false">
+                    <div class="mini-toolbar" style="padding: 0px; border-top: 0; border-left: 0; border-right: 0;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="width: 100%;">
+                                    <a class="mini-button" iconcls="icon-add" onclick="returnValue();" plain="true">选择</a>
+                                    <a class="mini-button" iconcls="icon-cancel" onclick="closeWindow();" plain="true">取消</a>
+                                </td>
+                                <td style="white-space: nowrap;">
+                                    <input class="mini-buttonedit searchbox" id="key" emptytext="请输入名称或编号" style="width: 240px;"
+                                           onenter="quickSearch('Name,Code')" onbuttonclick="quickSearch('Name,Code')" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="mini-fit">
+                        <div id="dataGrid" url="GetBudgetUnitList" class="mini-datagrid" style="width: 100%;
+                height: 100%;" idfield="ID" multiselect="false" borderstyle="border-bottom: 0; border-left: 0; border-right: 0;" onselectionchanged="onSelectionChanged">
+                            <div property="columns">
+                                <div type="checkcolumn">
+                                </div>
+                                <div field="Name" width="250" allowsort="true" headeralign="center">
+                                    名称
+                                </div>
+                                <div field="Code" width="100" allowsort="true" headeralign="center">
+                                    编号
+                                </div>
+                                <div field="TotalBudgetValue" datatype="currency" currencyunit="￥" allowsort="true"
+                                     headeralign="center" align="right">
+                                    预算总额（元）
+                                </div>
+                                <div field="CreateDate" width="80" headeralign="center" dateformat="yyyy-MM-dd" allowsort="true" align="center">
+                                    编制日期
+                                </div>
+                                <div field="CreateUser" width="80" allowsort="true" headeralign="center">
+                                    编制人
+                                </div>
+                                <div field="ModifyUser" width="80" allowsort="true" headeralign="center">
+                                    修订人
+                                </div>
+                                <div field="ChargerUserName" width="80" allowsort="true" headeralign="center">
+                                    负责人
+                                </div>
+                                <div field="ChargerDeptName" width="100" allowsort="true" headeralign="center">
+                                    责任部门
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div title="center" region="center">
+                    <div class="mini-fit">
+                        <div id='versionGrid' class='mini-datagrid' style='width: 100%; height: 100%;' url='' multiselect='true' allowalternating='false' showpager='false' expandonload='true' ondrawsummarycell='onDrawSummaryCell'>
+                            <div property='columns'>
+                                <div name='Operate' field='Operate' header='操作' width='70' align='center' visible='true'></div>
+                                <div name='FlowPhase' field='FlowPhase' header='流程状态' width='70' align='center' visible='true' allowsort='true' header='流程状态'></div>
+                                <div name='CreateDate' field='CreateDate' header='编制日期' width='70' align='center' visible='true' allowsort='true' dateformat='yyyy-MM-dd' header='编制日期'></div>
+                                <div name='RegisterUserName' field='RegisterUserName' header='编制人' width='80' align='center' visible='true' allowsort='true' header='编制人'></div>
+                                <div name='VersionNumber' field='VersionNumber' header='版本号' width='70' align='right' visible='true' allowsort='true' header='版本号'></div>
+                                <div name='BudgetValue' field='BudgetValue' header='预算额（元）' width='100' align='right' visible='true' allowsort='true' datatype='currency' header='预算额（元）'></div>
+                                <div name='ContractValue' field='ContractValue' header='合金额（元）' width='100' align='right' visible='true' allowsort='true' datatype='currency' header='合金额（元）'></div>
+                                <div name='BudgetScale' field='BudgetScale' header='预算比例%' width='100' align='right' visible='true' allowsort='true' header='预算比例%'></div>
+                                @*<div name='Remark' field='Remark' header='备注' width='200' align='left' visible='true' allowsort='true' header='备注'></div>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div showcollapsebutton="false">
+            <div class="mini-fit">
+                <div id='versionGridSelect' class='mini-datagrid' style='width: 100%; height: 100%;' url='' istreegrid='false' multiselect='true' allowalternating='false' showpager='false' expandonload='true'  ondrawsummarycell='onDrawSummaryCell'>
+                    <div property='columns'>
+                        <div name='Operate' field='Operate' header='操作' width='70' align='center' visible='true'></div>
+                        <div field="Name" width="80" allowsort="true" headeralign="center">
+                            项目名称
+                        </div>
+                        <div field="Code" width="120" allowsort="true" headeralign="center">
+                            项目编号
+                        </div>
+                        <div name='FlowPhase' field='FlowPhase' header='流程状态' width='70' align='center' visible='true' allowsort='true' header='流程状态'></div>
+                        <div name='CreateDate' field='CreateDate' header='编制日期' width='70' align='center' visible='true' allowsort='true' dateformat='yyyy-MM-dd' header='编制日期'></div>
+                        <div name='RegisterUserName' field='RegisterUserName' header='编制人' width='80' align='center' visible='true' allowsort='true' header='编制人'></div>
+                        <div name='VersionNumber' field='VersionNumber' header='版本号' width='70' align='right' visible='true' allowsort='true' header='版本号'></div>
+                        <div name='BudgetValue' field='BudgetValue' header='预算额（元）' width='100' align='right' visible='true' allowsort='true' datatype='currency' header='预算额（元）'></div>
+                        <div name='ContractValue' field='ContractValue' header='合金额（元）' width='100' align='right' visible='true' allowsort='true' datatype='currency' header='合金额（元）'></div>
+                        <div name='BudgetScale' field='BudgetScale' header='预算比例%' width='100' align='right' visible='true' allowsort='true' header='预算比例%'></div>
+                       @* <div name='Remark' field='Remark' header='备注' width='200' align='left' visible='true' allowsort='true' header='备注'></div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    @Html.GetEnum("FlowPhase")
+    addGridEnum('versionGrid', 'FlowPhase', 'FlowPhase');
+    addGridEnum('versionGridSelect', 'FlowPhase', 'FlowPhase');
+    addGridLink('versionGrid', 'VersionNumber', '/Expenses/Budget/BudgetSubmit/PageView?TmplCode=ProjectBudget&ID={ID}&FuncType=View', { "width": "1000", "title": "查看", "mustSelectOneRow": "true" });
+    addGridLink('versionGridSelect', 'VersionNumber', '/Expenses/Budget/BudgetSubmit/PageView?TmplCode=ProjectBudget&ID={ID}&FuncType=View', { "width": "1000", "title": "查看", "mustSelectOneRow": "true" });
+
+    addGridButton("versionGrid", "Operate", {
+        linkText: '添加', onButtonClick: function (row) {
+            var dataGrid = mini.get("dataGrid");
+            var selectProj = dataGrid.getSelected();
+            if (!selectProj) return;
+
+            var grid = mini.get("versionGridSelect");
+            var find = grid.findRow(function (sRow) {
+                if (sRow.ID == row.ID) return true;
+            });
+            if (find) return msgUI('已添加');
+
+            row.Name = selectProj.Name;
+            row.ProjectID = selectProj.Id;
+            row.Code = selectProj.Code;
+            grid.addRow(row);
+        }
+    });
+    addGridButton("versionGridSelect", "Operate", {
+        linkText: '删除', onButtonClick: function (row) {
+            mini.get("versionGridSelect").removeRow(row);
+        }
+    });
+</script>
+<script type="text/javascript">
+
+    function returnValue() {
+        var unit = {};
+        var versiontList = mini.get("versionGridSelect").data;
+        unit.VersionList = versiontList;
+        closeWindow(unit);
+    }
+
+    //选择发生改变时
+    function onSelectionChanged(e) {
+        var row = e.selected;
+        if (row != null) {
+            var unitID = row.ID;
+            var url = "GetVersionList?UnitID=" + unitID;
+            var versionGrid = mini.get("versionGrid");
+            versionGrid.setUrl(url);
+            versionGrid.reload();
+        }
+    }
+</script>

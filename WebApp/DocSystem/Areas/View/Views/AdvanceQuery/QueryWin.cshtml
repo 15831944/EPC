@@ -1,0 +1,199 @@
+﻿@{
+    ViewBag.Title = "QueryWin";
+}
+
+<div class="mini-toolbar" style="padding: 2px; border-bottom: 0;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" onclick="opentree()" iconcls="icon-goto" plain="true" id="btnOpentree">打开树形图</a>
+                <a class="mini-button" onclick="borrow()" iconcls="icon-copy" plain="true" id="btnBorrow">借阅</a>
+                <a class="mini-button" onclick="download()" iconcls="icon-download" plain="true" id="btnDownload">下载</a>
+                <a class="mini-button" onclick="browse()" iconcls="icon-zoomin" plain="true" id="btnBrowse">浏览</a>
+            </td>
+            <td style="width: 100px;" id="BorrowCar">
+                <a class="mini-button" onclick="openBorrowCar" iconcls="icon-extend-car" style="width: 100px;" plain="true">
+                    借阅车(<span id="borrowNo" style="color: Red"></span>)</a>
+            </td>
+            <td style="width: 100px;" id="DownCar">
+                <a class="mini-button" onclick="openDownloadCar" iconcls="icon-extend-car" style="width: 100px;" plain="true">
+                    下载车(<span id="downNo" style="color: Red"></span>)</a>
+            </td>
+            <td style="white-space: nowrap;">
+                <a class="mini-button" onclick="addQueryAdvance()" iconcls="icon-find" plain="true">查询条件设置</a>
+            </td>
+        </tr>
+        <tr><td colspan="4" id="tdQueryStr"></td></tr>
+    </table>
+</div>
+<div class="mini-fit">
+    <div id="dataGrid" url="" class="mini-datagrid" style="width: 100%; height: 100%;"  multiselect="true"
+        allowresize="false" idfield="id" multiselect="true" onload="onGridLoad" ondrawcell="onGridDrawCell" >
+        <div property="columns">
+        </div>
+    </div>
+</div>
+
+<div style="display: none;">
+    <input class="mini-textbox" id="textboxEditor" />
+    <input class="mini-datepicker" id="datepickerEditor" />
+    <input class="mini-combobox" id="booleanEditor" valuefield="value" textfield="text" />
+</div>
+<script type="text/javascript">
+    var userdata = @Html.Raw(ViewBag.UserAdQueryData)
+</script>
+<script type="text/javascript">
+
+    var spaceID = getQueryString("SpaceID");
+
+    function pageLoad() {
+
+        $.extend(advanceQueryData, userdata);
+        addQueryAdvance();
+    }
+
+    var advanceQueryData = { QueryType: "", QueryTypeName: "", QueryNode: "", QueryNodeName: "", CanBorrow: "", CanDownload: "", List: [] };
+    function addQueryAdvance() {
+        var url = "AttrSelector?QueryType=" + advanceQueryData.QueryType + "&ConfigID=" + advanceQueryData.QueryNode;
+        openWindow(url, {
+            refresh: false, title: "查询条件设置", width: 1000, height: 600,data:advanceQueryData,
+            onDestroy: function (data) {
+                if (!data || data == "close" ) { return; }
+                $.extend(advanceQueryData, data);
+
+                ShowAvanceQueryString('tdQueryStr');
+                if (advanceQueryData.QueryType == "File") {
+                    $("#btnBrowse").show();
+                }
+                else {
+                    $("#btnBrowse").hide();
+                }
+                if (advanceQueryData.CanDownload == "True")
+                    $("#btnDownload").show();
+                else
+                    $("#btnDownload").hide();
+                if (advanceQueryData.CanBorrow == "True")
+                    $("#btnBorrow").show();
+                else
+                    $("#btnBorrow").hide();
+                
+                adSearch();
+                mini.layout();
+            }
+        });
+    }
+    
+    function adSearch() {
+
+        var queryItems = advanceQueryData.List;
+        var queryType = advanceQueryData.QueryType;
+        var queryNode = advanceQueryData.QueryNode; 
+                
+        var grid = mini.get("#dataGrid");
+        
+        grid.setUrl("GetList?QueryType=" + queryType + "&ConfigID=" + queryNode + "&SpaceID=" + spaceID);
+        grid.load({ AdvanceQueryList: mini.encode(queryItems) });
+        
+    }
+
+    function onGridLoad(e) {
+        var grid = e.sender;
+        var data = mini.decode(e.text);
+        $.each(data.enums, function (index, item) {
+            addGridEnum("dataGrid", item.Field, item.EnumName);
+            if (window.execScript) window.execScript(item.EnumData);
+            else window.eval(item.EnumData);
+           // with (window)eval(item.EnumData);//使得改变变量作用域为全局
+        });
+        grid.setColumns(data.columns);
+    }
+
+    function onGridDrawCell(e) {
+        if (e.field == "View") {
+            var record = e.record;
+            var url = "/DocSystem/Manager/FileManager/Edit";
+            if (advanceQueryData.QueryType == "Node") url = "/DocSystem/Manager/NodeManager/Edit";
+            url += "?FuncType=View&ID=" + record.ID + "&SpaceID=" + record.SpaceID + "&ConfigID=" + record.ConfigID;
+            var text = "查看";
+            e.cellHtml = '<a href="javascript:void(0)" onclick="openWindow(\'' + url + '\',{title:\'查看\'});">' + text + '</a>';
+        }
+    }
+
+    function borrow() {
+        var grid = mini.get("dataGrid");
+        var rows = grid.getSelecteds();
+        if (rows.length==0) { mini.alert("请选择需要借阅的记录"); return; }
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            if (row.Media == "纸版") {
+                alert(row.Name + "载体是纸版，不能浏览！"); return;
+            }
+        }
+        if (advanceQueryData.QueryType == "File")
+            BorrowFile(rows, row.SpaceID);
+        else
+            BorrowNode(rows, row.SpaceID);
+    }
+
+    function browse() {
+        var grid = mini.get("dataGrid");
+        var row = grid.getSelected();
+        if (!row) { mini.alert("请选择需要浏览的文件记录"); return; }
+        if (row.Media == "纸版") {
+            alert(row.Name + "载体是纸版，不能浏览！"); return;
+        }
+        Browse(row.ID, row.SpaceID);
+    }
+
+    function download() {
+        var grid = mini.get("dataGrid");
+        var rows = grid.getSelecteds();
+        if (rows.length == 0) { mini.alert("请选择需要下载的文件记录"); return; }
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            if (row.Media == "纸版") {
+                alert(row.Name + "载体是纸版，不能下载！"); return;
+            }
+        }
+
+        DownloadFiles(rows, spaceID);
+    }
+
+    function opentree() {
+        var grid = mini.get("dataGrid");
+        var row = grid.getSelected();
+        if (!row) { mini.alert("请选中一条记录"); return; }
+        var relateID = "";
+        if (row.NodeID)
+            relateID = row.NodeID;
+        else
+            relateID = row.ID;
+        var url = "/DocSystem/View/NodeView/Tree?ID=" + relateID + "&SpaceID=" + row.SpaceID;
+        openWindow(url, { title: '图档树形图', width: "90%", height: "90%", funcType: 'view' });
+    }
+
+    //获取借阅车下载车信息
+    loadCarInfo(spaceID, "");
+
+    function openBorrowCar() {
+        var url = "/DocSystem/Car/Car/Car";
+        openWindow(url, {
+            refresh: false, title: "借阅申请信息", width: "80%", height: "80%",
+            onDestroy: function (data) {
+                loadCarInfo(spaceID);
+            }
+        }
+                );
+    }
+
+    function openDownloadCar() {
+        var url = "/DocSystem/Car/Car/Car";
+        openWindow(url, {
+            refresh: false, title: "借阅申请信息", width: "80%", height: "80%",
+            onDestroy: function (data) {
+                loadCarInfo(spaceID);
+            }
+        }
+                );
+    }
+</script>

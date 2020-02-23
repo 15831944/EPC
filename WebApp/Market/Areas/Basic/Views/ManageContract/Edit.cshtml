@@ -1,0 +1,1077 @@
+﻿@{
+    ViewBag.Title = "Edit";
+}
+<div class="mini-toolbar" id="btnDiv" style="width: 100%; position: fixed; top: 0;
+    left: 0; z-index: 100;">
+    <table>
+        <tr>
+            <td>
+                <a class="mini-button" id="btnSave" plain="true" iconcls="icon-save" onclick="SaveContract();">
+                    保存 </a><a class="mini-button" id="btnCancel" plain="true" iconcls="icon-cancel" onclick="closeWindow()">
+                        取消 </a>
+            </td>
+            <td id="btnRight">
+            </td>
+        </tr>
+    </table>
+</div>
+<form id="dataForm" method="post" style="top: 40px; position: relative;">
+<input name="ID" class="mini-hidden" />
+<input name="PartyACode" class="mini-hidden" />
+<input class="mini-hidden" name="IsSigned" onvaluechanged="onIsSignedValueChanged" />
+<div class="formDiv">
+    <fieldset>
+        <legend>基本信息</legend>
+        <div>
+            <table>
+                <tr>
+                    <td width="10%">
+                        甲方
+                    </td>
+                    <td width="23%">
+                        <input name="PartyAID" class="mini-buttonedit" textname="PartyA" onbuttonclick="onSelecting"
+                            style="width: 100%" required="true" allowinput="false" />
+                    </td>
+                    <td width="10%">
+                        乙方
+                    </td>
+                    <td width="23%">
+                        <input name="PartyBID" class="mini-buttonedit" textname="PartyB" onbuttonclick="onSelecting"
+                            style="width: 100%" required="true" allowinput="true" />
+                    </td>
+                    <td width="10%">
+                        丙方
+                    </td>
+                    <td width="23%">
+                        <input name="PartyC" class="mini-textbox" style="width: 100%" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        合同编号
+                    </td>
+                    <td>
+                        <input name="Code" class="mini-textbox" style="width: 100%" required="true" vtype="maxLength:50" />
+                    </td>
+                    <td>
+                        合同类型
+                    </td>
+                    <td>
+                        <input class="mini-combobox" name="ContractType" style="width: 100%;" valuefield="value"
+                            textfield="text" data="ContractType" onvaluechanged="onContractTypeValueChanged"
+                            required="true" shownullitem="true" />
+                    </td>
+                    <td>
+                        发票类型
+                    </td>
+                    <td>
+                        <input class="mini-combobox" name="InvoiceType" style="width: 100%;" valuefield="value"
+                            textfield="text" data="InvoiceType" shownullitem="false" required="true" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        合同名称
+                    </td>
+                    <td colspan="5">
+                        <input name="Name" style="width: 100%" class="mini-textbox" required="true" vtype="maxLength:200" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        关联主合同
+                    </td>
+                    <td colspan="5">
+                        <input name="RelationContractID" textname="RelationContractName" class="mini-buttonedit"
+                            onbuttonclick="onSelecting" style="width: 100%" allowinput="false" vtype="maxLength:200" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        合同性质
+                    </td>
+                    <td>
+                        <input class="mini-combobox" name="NewOrAdded" style="width: 100%;" valuefield="value"
+                            textfield="text" data="NewOrAdded" shownullitem="true" required="true" onvaluechanged="onNewOrAddedValueChanged" />
+                    </td>
+                    <td>
+                        所属行业
+                    </td>
+                    <td>
+                        <input class="mini-combobox" name="Industry" style="width: 100%;" valuefield="value"
+                            textfield="text" data="Industry" shownullitem="true" />
+                    </td>
+                    <td>
+                        是否国外项目
+                    </td>
+                    <td>
+                        <input class="mini-combobox" name="IsAbroad" style="width: 100%;" valuefield="value"
+                            textfield="text" data="YesOrNo" shownullitem="true" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        合同状态
+                    </td>
+                    <td>
+                        <input class="mini-combobox" name="State" style="width: 100%;" valuefield="value"
+                            textfield="text" data="ContractState" shownullitem="true" required="true" onvaluechanged="onStateValueChanged" />
+                    </td>
+                    <td>
+                        签约日期
+                    </td>
+                    <td>
+                        <input name="SignDate" class="mini-datepicker" style="width: 100%" onvaluechanged="onSignDateValueChanged" />
+                    </td>
+                    <td>
+                        签约地点
+                    </td>
+                    <td>
+                        <input name="SignAddress" style="width: 100%" class="mini-textbox" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        起始日期
+                    </td>
+                    <td>
+                        <input name="StartDate" class="mini-datepicker" style="width: 100%" required="false"
+                            ondrawdate="onDrawStartDate(e,'EndDate')" />
+                    </td>
+                    <td>
+                        截止日期
+                    </td>
+                    <td>
+                        <input name="EndDate" class="mini-datepicker" style="width: 100%" required="false"
+                            ondrawdate="onDrawEndDate(e,'StartDate')" />
+                    </td>
+                    <td>
+                        合同来源
+                    </td>
+                    <td>
+                        <input class="mini-combobox" name="ContractSource" style="width: 100%;" valuefield="value"
+                            textfield="text" data="ContractSource" shownullitem="true" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </fieldset>
+    <fieldset style="overflow: hidden">
+        <legend style="font-weight: bold">金额信息</legend>
+        <div>
+            <table>
+                <tr style="height: 0px">
+                    <td width="10%">
+                    </td>
+                    <td width="23%">
+                    </td>
+                    <td width="10%">
+                    </td>
+                    <td width="23%">
+                    </td>
+                    <td width="10%">
+                    </td>
+                    <td width="23%">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        合同金额<span id="ContractAmountTypeOfMoney">(元)</span>
+                    </td>
+                    <td>
+                        <input name="ContractAmount" onvaluechanged="CalculateRMB" class="mini-textbox" style="width: 100%;"
+                            required="true" vtype="float;rangeLength:0,18;" />
+                    </td>
+                    <td>
+                        币种
+                    </td>
+                    <td>
+                        <input class="mini-combobox" name="ContractCurrency" style="width: 100%;" valuefield="value"
+                            textfield="text" data="ContractCurrency" shownullitem="false" onblur="CalculateRMB"
+                            onvaluechanged="SetExchangeRate" />
+                    </td>
+                    <td>
+                        汇率(%)
+                    </td>
+                    <td>
+                        <input class="mini-textbox" name="ExchangeRate" style="width: 100%;" vtype="float;rangeLength:0,18;"
+                            data="ExchangeRate" onvaluechanged="CalculateRMB" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        折合人民币<br />
+                        合同金额(元)
+                    </td>
+                    <td>
+                        <input name="ContractRMBAmount" class="mini-textbox" style="width: 100%" vtype="float;rangeLength:0,18;"
+                            required="true" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </fieldset>
+    <fieldset style="overflow: hidden;">
+        <legend style="font-weight: bold">相关方及人员</legend>
+        <div>
+            <table>
+                <tr style="height: 0px">
+                    <td width="10%">
+                    </td>
+                    <td width="23%">
+                    </td>
+                    <td width="10%">
+                    </td>
+                    <td width="23%">
+                    </td>
+                    <td width="10%">
+                    </td>
+                    <td width="23%">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        甲方法人代表
+                    </td>
+                    <td>
+                        <input name="PartyALegalPerson" class="mini-textbox" style="width: 100%" />
+                    </td>
+                    <td>
+                        乙方法人代表
+                    </td>
+                    <td>
+                        <input name="PartyBLegalPersonID" class="mini-buttonedit" textname="PartyBLegalPerson"
+                            style="width: 100%" vtype="maxLength:200" />
+                    </td>
+                    <td>
+                        丙方法人代表
+                    </td>
+                    <td>
+                        <input name="PartyCLegalPerson" class="mini-textbox" style="width: 100%" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        甲方委托代理人
+                    </td>
+                    <td>
+                        <input name="PartyAHusbandingAgentName" class="mini-textbox" style="width: 100%" />
+                    </td>
+                    <td>
+                        乙方委托代理人
+                    </td>
+                    <td>
+                        <input name="PartyBHusbandingAgentID" class="mini-buttonedit" textname="PartyBHusbandingAgentName"
+                            style="width: 100%" vtype="maxLength:200" />
+                    </td>
+                    <td>
+                        丙方委托代理人
+                    </td>
+                    <td>
+                        <input name="PartyCHusbandingAgentName" class="mini-textbox" style="width: 100%" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        商务负责部门
+                    </td>
+                    <td>
+                        <input name="HeadOfSalesDeptID" required="true" textname="HeadOfSalesDeptName" class="mini-buttonedit"
+                            style="width: 100%" vtype="maxLength:200" />
+                    </td>
+                    <td>
+                        商务责任人
+                    </td>
+                    <td>
+                        <input name="HeadOfSalesID" textname="HeadOfSalesName" class="mini-buttonedit" allowinput="true"
+                            style="width: 100%" required="true" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        生产负责部门
+                    </td>
+                    <td>
+                        <input name="ProductionUnitID" required="true" textname="ProductionUnitName" class="mini-buttonedit"
+                            style="width: 100%" vtype="maxLength:200" />
+                    </td>
+                    <td>
+                        生产负责人
+                    </td>
+                    <td>
+                        <input name="ProduceMasterID" textname="ProduceMasterName" class="mini-buttonedit"
+                            allowinput="true" style="width: 100%" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </fieldset>
+    <fieldset style="overflow: hidden;">
+        <legend style="font-weight: bold">关联项目</legend>
+        <table class="ke-zeroborder" style="width: 100%;" cellpadding="2" border="0">
+            <tr>
+                <td width="10%">
+                </td>
+                <td width="23%">
+                </td>
+                <td width="10%">
+                </td>
+                <td width="23%">
+                </td>
+                <td width="10%">
+                </td>
+                <td width="23%">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    所属工程
+                </td>
+                <td colspan="3">
+                    <input name="EngineeringInfo" textname="EngineeringInfoName" class="mini-buttonedit"
+                        style="width: 100%" allowinput="false" vtype="maxLength:200" />
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <div class="mini-toolbar" style="padding: 0px; border-bottom: 0;">
+                        <a class="mini-button" iconcls="icon-add" onclick="addProject" name="BtnAddProject"
+                            plain="true">增加</a> <a class="mini-button" iconcls="icon-remove" onclick="removeProject()"
+                                plain="true">删除</a>
+                    </div>
+                    <div class="mini-fit" style="height: 200px; overflow: hidden;" id="gridProjectArea">
+                        <div id="projectGrid" class="mini-datagrid" idfield="ID" url="GetProjectList" style="height: 100%;"
+                            multiselect="true" showfooter="false" pagesize="20" showpager="false" allowcelledit="true"
+                            allowcellselect="true" showsummaryrow="true" ondrawsummarycell="onDrawSummaryCell">
+                            <div property="columns">
+                                <div type="indexcolumn">
+                                </div>
+                                <div field="ProjectCode" headeralign="center" width="80px" renderer="onLinkRender"
+                                    align="center">
+                                    项目编号
+                                </div>
+                                <div field="ProjectName" width="180px" headeralign="center" align="left">
+                                    项目名称
+                                </div>
+                                <div field="ProjectPercent" headeralign="center" summarytype='sum' vtype="float;min:0.0"
+                                    width="100px" align="right">
+                                    占比(%)<input name="ProjectPercent" property="editor" class="mini-textbox" style="width: 100%;"
+                                        onvaluechanged="setProjectGridValue" />
+                                </div>
+                                <div field="ProjectValue" name="ProjectValue" headeralign="center" datatype="currency"
+                                    summarytype='sum' currencyunit="￥" vtype="float;min:0.0" width="100px" align="right">
+                                    合同金额(元)<input property="editor" class="mini-textbox" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset style="overflow: hidden;">
+        <legend style="font-weight: bold">所属分包合同</legend>
+        <table class="ke-zeroborder" style="width: 100%;" cellpadding="2" border="0">
+            <tr>
+                <td>
+                    <div id="SupplierContractGrid" class="mini-datagrid" idfield="ID" url="GetSupplierContractList"
+                        showpager="false" style="height: 270px; width: 100%" allowcellselect="true" multiselect="false"
+                        showsummaryrow="true" ondrawsummarycell="onDrawSummaryCell">
+                        <div property="columns">
+                            <div type="indexcolumn">
+                            </div>
+                            <div field="Code" headeralign="center" width="100px" align="left">
+                                分包合同编号
+                            </div>
+                            <div field="Name" headeralign="center" width="230px" align="left">
+                                分包合同名称
+                            </div>
+                            <div field="Supplier" displayfield="SupplierName" width="200px" headeralign="center"
+                                align="left">
+                                合作单位
+                            </div>
+                            <div field="SupplierDept" displayfield="SupplierDeptName" width="120px" headeralign="center"
+                                align="left">
+                                分包部门
+                            </div>
+                            <div field="ContractValue" summarytype="sum" datatype="currency" currencyunit="￥"
+                                headeralign="center" width="100px" align="right">
+                                合同金额（元）
+                            </div>
+                            <div field="State" headeralign="center" align="center" width="60px" data="ContractState">
+                                合同状态
+                            </div>
+                            <div field="SignDate" dateformat="yyyy-MM-dd" headeralign="center" width="80px"
+                                align="center">
+                                签约日期
+                            </div>
+                            <div field="ProjectInfoName" headeralign="center" width="230px" align="left">
+                                项目名称
+                            </div>
+                            <div field="Remark" headeralign="center" align="left" width="200px">
+                                备注说明
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset style="overflow: hidden;">
+        <legend style="font-weight: bold;">合同收款项</legend>
+        <table class="ke-zeroborder" style="width: 100%;" cellpadding="2" border="0">
+            <tr>
+                <td>
+                    <div class="mini-toolbar" style="padding: 0px;">
+                        <a class=" mini-button" iconcls="icon-add" onclick="addReceiptObject" name="BtnAddReceiptPlan"
+                            plain="true">增加</a> <a class="mini-button" iconcls="icon-remove" onclick="removePlanReceipt"
+                                plain="true">删除</a>
+                    </div>
+                    <div id="PlanReceiptGrid" class="mini-datagrid" idfield="ID" url="GetPlanRecieptList"
+                        showpager="false" style="height: 270px; width: 100%" allowcelledit="true" editnextonenterkey="true"
+                        editnextrowcell="true" allowcellselect="true" multiselect="false" showsummaryrow="true"
+                        ondrawsummarycell="onDrawSummaryCell" ondrawcell="OnReceiptGridDrawing" oncellbeginedit="OnReceiptObjectCellBeginEdit"
+                        oncellendedit="OnReceiptObjectCellEndEdit">
+                        <div property="columns">
+                            <div type="checkcolumn">
+                            </div>
+                            <div field="Code" headeralign="center" width="100px" align="left" vtype="string">
+                                收款项编号<input property="editor" class="mini-textbox" style="width: 100%;" />
+                            </div>
+                            <div field="Name" headeralign="center" width="180px" align="left" vtype="required;string">
+                                收款项名称<input property="editor" class="mini-textbox" style="width: 100%;" />
+                            </div>
+                            <div displayfield="ChargeUserName" field="ChargeUserID" width="80px" headeralign="center"
+                                align="center" vtype="string">
+                                负责人<input property="editor" valuefield="ID" textfield="Name" url="/MvcConfig/Auth/User/SelectUsers"
+                                    class="mini-autocomplete" style="width: 100%;" />
+                            </div>
+                            <div field="ReceiptPercent" summarytype="sum" datatype="float" headeralign="center"
+                                width="100px" align="right" vtype="float">
+                                比例(%)<input property="editor" class="mini-textbox" style="width: 100%;" />
+                            </div>
+                            <div field="ReceiptValue" summarytype="sum" datatype="currency" currencyunit="￥"
+                                headeralign="center" width="100px" align="right" vtype="float">
+                                收款项金额（元）<input property="editor" class="mini-textbox" style="width: 100%;" />
+                            </div>
+                            <div field="FactInvoiceValue" summarytype="sum" datatype="currency" currencyunit="￥"
+                                headeralign="center" width="100px" align="right">
+                                已开票（元）
+                            </div>
+                            <div field="FactReceiptValue" summarytype="sum" datatype="currency" currencyunit="￥"
+                                headeralign="center" width="100px" align="right">
+                                已到款（元）
+                            </div>
+                            <div field="BadDebtValue" summarytype="sum" datatype="currency" currencyunit="￥"
+                                headeralign="center" width="100px" align="right">
+                                坏账（元）
+                            </div>
+                            <div field="OriginalPlanFinishDate" dateformat="yyyy-MM" headeralign="center" width="100px"
+                                align="right">
+                                原计划年月
+                            </div>
+                            <div field="PlanFinishDate" dateformat="yyyy-MM" headeralign="center" width="100px"
+                                align="center">
+                                计划年月
+                                <input property="editor" class="mini-monthpicker" style="width: 100%;" />
+                            </div>
+                            <div field="ProjectInfoID" displayfield="ProjectInfoName" headeralign="center" width="260px"
+                                align="left">
+                                关联项目<input property="editor" class="mini-combobox" style="width: 100%;" valuefield="value"
+                                    textfield="text" />
+                            </div>
+                            <div field="MileStoneName" headeralign="center" align="left" width="200">
+                                关联里程碑
+                            </div>
+                            <div field="Remark" headeralign="center" align="left" width="200">
+                                备注<input property="editor" class="mini-textbox" style="width: 100%;" />
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset style="overflow: hidden;">
+        <legend style="font-weight: bold">合同文本存档</legend>
+        <table>
+            <tr style="height: 0px">
+                <td width="15%">
+                </td>
+                <td width="35%">
+                </td>
+                <td width="15%">
+                </td>
+                <td width="35%">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    合同文本
+                </td>
+                <td colspan="3">
+                    <span name="ContractAttachment" class="mini-multifile" style="width: 100%"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    相关资料
+                </td>
+                <td colspan="3">
+                    <span name="Attachment" class="mini-multifile" style="width: 100%"></span>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset style="overflow: hidden;">
+        <legend style="font-weight: bold">其它信息</legend>
+        <table>
+            <tr style="height: 0px">
+                <td width="15%">
+                </td>
+                <td width="35%">
+                </td>
+                <td width="15%">
+                </td>
+                <td width="35%">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    备注
+                </td>
+                <td colspan="3">
+                    <span name="Remark" class="mini-textarea" style="width: 100%; height: 100px;"></span>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</div>
+</form>
+<script language="javascript" type="text/javascript">
+    @Html.GetEnum("YearEnum")
+    @Html.GetEnum("Market.ContractType")
+    @Html.GetEnum("Project.Phase")
+    @Html.GetEnum("Market.Industry")
+    @Html.GetEnum("Market.Importance")
+    @Html.GetEnum("Market.NewOrAdded")
+    @Html.GetEnum("Market.ContractSource")
+    @Html.GetEnum(typeof(Market.Logic.YesOrNo))
+    @Html.GetEnum(typeof(Market.Logic.ContractState))
+    @Html.GetEnum("Market.ContractCurrency")
+    @Html.GetEnum("Market.ExchangeRate")
+    @Html.GetEnum(typeof(Market.Logic.InvoiceType))
+    @Html.GetEnum("NumMonth")
+    @Html.GetEnum("Market.ContractState")
+</script>
+<script type="text/javascript">
+
+    addGridEnum("PlanReceiptGrid", "DutyType", "PlanReceiptDutyType");
+    addGridEnum("SupplierContractGrid", "State", "ContractState");
+    addSingleOrgSelector("PartyBID"); //乙方
+    addSingleUserSelector("PartyBLegalPersonID"); //乙方法人代表
+    addSingleUserSelector("PartyBHusbandingAgentID"); //乙方委托人
+    addSingleOrgSelector("ProductionUnitID");
+    addSingleOrgSelector("HeadOfSalesDeptID");
+    addSingleUserSelector("HeadOfSalesID");
+    addSingleUserSelector("ProduceMasterID");
+    addSingleUserSelector("FirstDutyManID");
+
+    addSelector("PartyAID", "/Market/Basic/Selector/CustomerSingle", { returnParams: "value:ID,text:Name,PartyACode:Code", onUserSelectChanged: selectPartyAEngineering }); //甲方
+    addSelector("RelationContractID", "/Market/Basic/Selector/ManageContractSingle", { relateField: "RelationContractName" });
+
+    addSelector("EngineeringInfo", "/MvcConfig/UI/List/PageView?TmplCode=EngineeringInfoSelector", {
+        relateField: "EngineeringInfoName", onSelected: function (resultData) {
+            if (resultData == "close") return;
+            var dataGrid = mini.get("projectGrid");
+            if (!resultData || resultData.length == 0) {
+                mini.getbyName("EngineeringInfo").setValue("");
+                mini.getbyName("EngineeringInfo").setText("");
+                dataGrid.clearRows();
+                dataGrid.commitEdit(); dataGrid.accept();
+                return;
+            }
+            dataGrid.commitEdit(); dataGrid.accept();
+            var existData = dataGrid.getData();
+            var data = resultData[0];
+            if (mini.getbyName("EngineeringInfo").getValue() != data.ID) {
+                dataGrid.clearRows();
+            }
+            mini.getbyName("EngineeringInfo").setValue(data.ID);
+            mini.getbyName("EngineeringInfo").setText(data.Name);
+            addExecuteParam("EngineeringInfoID", data.ID);
+            execute("GetProjectInfoListByEngineeringID", {
+                showLoading: true, refresh: false, onComplete: function (result) {
+                    if (!result || result.length == 0) return;
+                    if (result.length == 1 && existData.length == 0) {
+                        var project = result[0];
+                        var row = {
+                            ProjectID: project.ID, ProjectCode: project.Code, ProjectName: project.Name, ProjectPercent: 100,
+                            ProjectValue: mini.getbyName("ContractRMBAmount").getValue()
+                        };
+                        dataGrid.addRow(row);
+                    }
+                    else {
+                        for (var i = 0; i < result.length; i++) {
+                            var project = result[i];
+                            var exist = false;
+                            for (var j = 0; j < existData.length; j++) {
+                                if (existData[j].ProjectID == project.ID) {
+                                    exist = true; continue;
+                                }
+                            }
+                            if (exist) continue;
+                            var row = {
+                                ProjectID: project.ID, ProjectCode: project.Code, ProjectName: project.Name, ProjectPercent: 0,
+                                ProjectValue: 0
+                            };
+                            dataGrid.addRow(row);
+                        }
+                    }
+                }, validateForm: false
+            });
+        }
+    });
+
+
+    addGridLink('PlanReceiptGrid', 'ChangedCount', '/Market/PlanReceipt/PlanReceiptChangeRecord?PlanReceiptID={ID}', { funcType: 'view', height: '90%', width: '80%' });
+
+    addGridEnum("PlanReceiptGrid", "RiskLevel", "RiskLevel");
+    addGridEnum("PlanReceiptGrid", "Importance", "Importance");
+
+    addGridLink('SupplierContractGrid', 'Name', '/Market/MarketUI/SupplierContract/PageView?TmplCode=SP_SupplierContract&ID={ID}', { funcType: 'View', height: '90%', width: '80%' });
+
+    var contractSignedString = "Signed";
+    var contractUnSignedString = "UnSigned";
+
+    function onFormSetData(data) {
+        setFormItemDisabled("ContractRMBAmount");
+        if (data.IsSigned == contractSignedString) {
+            mini.getbyName("SignDate").setRequired(true);
+
+        }
+        else {
+            mini.getbyName("SignDate").setRequired(false);
+            mini.getbyName("SignDate").setValue();
+        }
+        mini.getbyName("NewOrAdded").doValueChanged();
+        selectPartyAEngineering()
+    }
+
+    function selectPartyAEngineering() {
+        SetSelectorURL("EngineeringInfo", null, "TmplCode=EngineeringInfoSelector&CustomerInfo=" + mini.getbyName("PartyAID").getValue())
+
+    }
+    //币种发生改变时的响应方法
+    function SetExchangeRate(e) {
+        var exchangeRate = null;
+        for (var i in ExchangeRate) {
+            if (ExchangeRate[i].value == e.value) {
+                mini.getbyName("ExchangeRate").setValue(ExchangeRate[i].text);
+                exchangeRate = ExchangeRate[i].text;
+            }
+        }
+        if (exchangeRate == null || exchangeRate == undefined) {
+            mini.getbyName("ExchangeRate").setValue("");
+            mini.get("#ContractRMBAmount").setValue("");
+        }
+        var unit = "(" + e.value + ")";
+        if (e.value == "人民币")
+            unit = "(元)"
+        $("#ContractAmountTypeOfMoney").html(unit);
+        CalculateRMB();
+    }
+
+    //合同金额改变时,计算折合RMB值
+    function CalculateRMB(e) {
+        //设置名义合同额的值
+        var amount = parseFloat(mini.getbyName("ContractAmount").getValue());
+        var rate = parseFloat(mini.getbyName("ExchangeRate").getValue());
+        if (amount >= 0 && rate) {
+            mini.getbyName("ContractRMBAmount").setValue((amount * rate).toFixed(2));
+            mini.getbyName("ContractRMBAmount").doValueChanged();
+        }
+        else {
+            mini.getbyName("ContractRMBAmount").setValue((0 * 0).toFixed(2));
+            mini.getbyName("ContractRMBAmount").doValueChanged();
+        }
+        setProjectGridValue();
+        setPlanReceiptGridValue();
+    }
+
+
+
+    //计算利润率
+    function SetRateOfProfit() {
+        //名义合同额
+        var nominalContractAmount = mini.getbyName("NominalContractAmount").getValue();
+        //成本评估金额
+        var finishedProductReviewAmount = mini.getbyName("FinishedProductReviewAmount").getValue();
+        if (!isNaN(parseFloat(nominalContractAmount)) && !isNaN(parseFloat(finishedProductReviewAmount))) {
+            var rateOfProfit = 0;
+            var evaluativeCostCmount = parseFloat(finishedProductReviewAmount);
+            var contractAmount = parseFloat(nominalContractAmount);
+            if (nominalContractAmount > 0)
+                rateOfProfit = parseFloat(1 - (evaluativeCostCmount / contractAmount).toFixed(2)).toFixed(2) * 100;
+            mini.getbyName("RateOfProfit").setValue(rateOfProfit);
+        }
+    }
+
+    //合同类型改变时同步更改发票类型
+    function onContractTypeValueChanged(e) {
+        var contractType = e.value;
+        var invoiceTypeValue = "";
+        for (var i = 0; i < InvoiceType.length; i++) {
+            if (InvoiceType[i].Category == contractType) {
+                invoiceTypeValue = InvoiceType[i].value;
+                break;
+            }
+        }
+        var invoiceType = mini.getbyName("InvoiceType");
+        invoiceType.setValue(invoiceTypeValue);
+    }
+
+    //合同起始日期
+    function onDrawStartDate(e, endID) {
+        var date = e.date;
+        var end = mini.getbyName(endID).value;
+        if (end == null || end == "" || end == undefined)
+            return;
+        if (date.getTime() > end.getTime()) {
+            e.allowSelect = false;
+        }
+    }
+
+    //合同截止日期
+    function onDrawEndDate(e, startID) {
+        var date = e.date;
+        var start = mini.getbyName(startID).value;
+        if (start == null || start == "" || start == undefined)
+            return;
+        var date = e.date;
+        if (date.getTime() < start.getTime()) {
+            e.allowSelect = false;
+        }
+    }
+
+    //是否已签约值发生改变时响应的方法
+    function onIsSignedValueChanged() {
+        var value = mini.getbyName("IsSigned").getValue();
+        if (value == contractSignedString) {
+            mini.getbyName("SignDate").setRequired(true);
+            var date = new Date();
+            mini.getbyName("SignDate").setValue(date);
+            //关联归属年份，归属月字段
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+        }
+        else {
+            mini.getbyName("SignDate").setRequired(false);
+            mini.getbyName("SignDate").setValue("");
+        }
+    }
+
+    //合同性质
+    function onNewOrAddedValueChanged(e) {
+        if (e.sender.value == "主合同") {
+            setFormItemDisabled("RelationContractID");
+            mini.getbyName("RelationContractID").setRequired(false);
+            mini.getbyName("RelationContractID").setValue();
+            mini.getbyName("RelationContractID").setText();
+        }
+        else {
+            setFormItemEditabled("RelationContractID");
+            mini.getbyName("RelationContractID").setRequired(true);
+            mini.getbyName("RelationContractID").setValue();
+        }
+    }
+
+    //合同状态
+    function onStateValueChanged(e) {
+        var value = e.sender.value;
+        if (value && value == "Sign") {
+            mini.getbyName("IsSigned").setValue(contractSignedString);
+            mini.getbyName("SignDate").setRequired(true);
+            var myDate = new Date();
+            mini.getbyName("SignDate").setValue(myDate.toLocaleDateString());
+        }
+        else {
+            mini.getbyName("IsSigned").setValue(contractUnSignedString);
+            mini.getbyName("SignDate").setRequired(false);
+            mini.getbyName("SignDate").setValue();
+        }
+    }
+
+    //签约日期不为空时，IsSign设置为已签约
+    function onSignDateValueChanged(e) {
+        var value = e.sender.value;
+        if (value) {
+            mini.getbyName("IsSigned").setValue(contractSignedString);
+        }
+        else {
+            mini.getbyName("IsSigned").setValue(contractUnSignedString);
+        }
+        //关联归属年份，归属月字段
+        if (value) {
+            var year = e.sender.value.getFullYear();
+            var month = e.sender.value.getMonth() + 1;
+        }
+        else {
+        }
+    }
+
+
+    function onDrawSummaryCell(e) {
+        e.cellStyle = " text-align: right;color:red";
+    }
+
+    function OnReceiptGridDrawing(e) {
+        var rec = e.record;
+        var field = e.field;
+        if ((rec.FactReceiptValue > 0 || rec.BadDebtValue > 0 || rec.FactInvoiceValue > 0) && field != "ProjectInfoID" && field != "Remark") {
+            e.cellStyle = "background:#ecedef";
+        }
+        else if (rec.MileStoneID && field == "ProjectInfoID") {
+            e.cellStyle = "background:#ecedef";
+        }
+        else if (field == "MileStoneName") {
+            e.cellStyle = "background:#ecedef";
+        }
+    }
+
+    function OnReceiptGridDrawing(e) {
+        var rec = e.record;
+        var field = e.field;
+        if ((rec.FactReceiptValue > 0 || rec.BadDebtValue > 0 || rec.FactInvoiceValue > 0) && field != "ProjectInfoID" && field != "Remark") {
+            e.cellStyle = "background:#ecedef";
+        }
+        else if (rec.MileStoneID && field == "ProjectInfoID") {
+            e.cellStyle = "background:#ecedef";
+        }
+        else if (field == "MileStoneName") {
+            e.cellStyle = "background:#ecedef";
+        }
+    }
+
+    function OnReceiptObjectCellBeginEdit(e) {
+        var grid = e.sender;
+        var field = e.field;
+        var rec = e.record;
+        if ((rec.FactReceiptValue > 0 || rec.BadDebtValue > 0 || rec.FactInvoiceValue > 0) && field != "ProjectInfoID" && field != "Remark") {
+            e.cancel = true; return;
+        }
+        else if (rec.MileStoneID && field == "ProjectInfoID") {
+            e.cancel = true; return;
+        }
+        var editor = e.editor;
+        if (field == "ProjectInfoID") {
+            var dataGrid = mini.get("projectGrid");
+            dataGrid.commitEdit(); dataGrid.accept();
+            var data = dataGrid.getData();
+            var enumData = new Array();
+            for (var i = 0; i < data.length; i++) {
+                var emunDi = { value: data[i].ProjectID, text: data[i].ProjectName };
+                enumData.push(emunDi);
+            }
+            editor.setData(enumData);
+        }
+    }
+
+    function OnReceiptObjectCellEndEdit(e) {
+        var grid = e.sender;
+        var field = e.field;
+        var row = e.row;
+        if (field == "ReceiptPercent") {
+            var contractRMBAmount = mini.getbyName("ContractRMBAmount").getValue();
+            var curAmount = contractRMBAmount * e.value / 100;
+            grid.updateRow(row, { "ReceiptValue": curAmount });
+
+        }
+    }
+
+    function SaveContract() {
+        if (!ValidateData()) return;
+        var projectGrid = mini.get("projectGrid"); projectGrid.commitEdit(); projectGrid.accept();
+        var planGrid = mini.get("PlanReceiptGrid"); planGrid.commitEdit(); planGrid.accept();
+        var planData = planGrid.getData();
+        var projectData = projectGrid.getData();
+        addExecuteParam("ProjectData", mini.encode(projectData));
+        addExecuteParam("ReceiptObjectData", mini.encode(planData));
+        execute("Save", {
+            showLoading: true, refresh: false, onComplete: function (data) {
+                var contractInfoID = data.ID;
+                projectGrid.setUrl("GetProjectList?ID=" + contractInfoID);
+                projectGrid.load();
+                var url = "GetPlanRecieptList?ID=" + contractInfoID;
+                planGrid.setUrl("GetPlanRecieptList?ID=" + contractInfoID);
+                planGrid.load();
+                msgUI("保存成功，是否关闭页面？", 2, function (data) {
+                    if (data != "ok") return;
+                    closeWindow();
+                });
+            }, validateForm: true
+        });
+    }
+
+    function ValidateData() {
+        var contractValue = parseFloat(mini.getbyName("ContractAmount").getValue());
+        if (isNaN(contractValue)) { msgUI("合同金额输入非法"); return false; }
+        var projectGrid = mini.get("projectGrid"); projectGrid.commitEdit(); projectGrid.accept();
+        var planGrid = mini.get("PlanReceiptGrid"); planGrid.commitEdit(); planGrid.accept();
+        var planData = planGrid.getData();
+        var projectData = projectGrid.getData();
+        var planSummary = 0;
+        var projectSummary = 0;
+        for (var i = 0; i < planData.length; i++) {
+            var receiptValue = parseFloat(planData[i].ReceiptValue);
+            if (isNaN(receiptValue)) continue;
+            planSummary += receiptValue;
+        }
+        if (planSummary > contractValue) { msgUI("收款项金额合计不能大于合同金额"); return false; }
+        for (var i = 0; i < projectData.length; i++) {
+            var projectValue = parseFloat(projectData[i].ProjectValue);
+            if (isNaN(projectValue)) continue;
+            projectSummary += projectValue;
+        }
+        if (projectSummary > contractValue) { msgUI("项目划分金额不能大于合同金额"); return false; }
+        return true;
+    }
+
+    function addReceiptObject() {
+        var planGrid = mini.get("PlanReceiptGrid");
+        var projectGrid = mini.get("projectGrid");
+        projectGrid.commitEdit(); projectGrid.accept();
+        var contractCode = mini.getbyName("Code").getValue();
+        var projects = projectGrid.getData();
+        var row = {};
+        if (projects.length > 0) {
+            row.ProjectInfoID = projects[0].ProjectID;
+            row.ProjectInfoName = projects[0].ProjectName;
+            row.ProjectInfoCode = projects[0].ProjectCode;
+        }
+        row.Code = contractCode;
+        planGrid.addRow(row);
+    }
+
+    function removePlanReceipt() {
+        var dataGrid = mini.get("PlanReceiptGrid");
+        var rows = dataGrid.getSelecteds();
+        if (rows.length == 0) { msgUI("请至少选择一条记录"); return; }
+        msgUI("您确定需要删除吗？", 2, function (data) {
+            if (data != "ok") return;
+            addExecuteParam("PlanReceiptData", mini.encode(rows));
+            execute("DeletePlanReceipt", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    dataGrid.removeRows(rows, true);
+                    dataGrid.commitEdit();
+                    dataGrid.accept();
+                }, validateForm: false
+            });
+        });
+    }
+
+    function setProjectGridValue() {
+        var dataGrid = mini.get("projectGrid");
+        dataGrid.accept(); dataGrid.commitEdit();
+        var data = dataGrid.getData();
+        for (var i = 0; i < data.length; i++) {
+            var row = data[i];
+            if (!row.ProjectPercent) continue;
+            row.ProjectValue = (parseFloat(mini.getbyName("ContractRMBAmount").getValue()) * parseFloat(row.ProjectPercent) / 100).toFixed(2);
+            dataGrid.updateRow(row);
+        }
+    }
+
+    function setPlanReceiptGridValue() {
+        var dataGrid = mini.get("PlanReceiptGrid");
+        dataGrid.accept(); dataGrid.commitEdit();
+        var data = dataGrid.getData();
+        for (var i = 0; i < data.length; i++) {
+            var row = data[i];
+            if (!row.ReceiptPercent) continue;
+            row.ReceiptValue = (parseFloat(mini.getbyName("ContractRMBAmount").getValue()) * parseFloat(row.ReceiptPercent) / 100).toFixed(2);
+            dataGrid.updateRow(row);
+        }
+    }
+
+    function addProject() {
+        var engineeringInfoID = mini.getbyName("EngineeringInfo").getValue();
+        if (!engineeringInfoID) { msgUI("请先选择工程"); return; }
+        var url = "/Market/Basic/Selector/MarketProjectSelector?EngineeringInfo=" + engineeringInfoID;
+        var dataGrid = mini.get("projectGrid");
+        dataGrid.commitEdit(); dataGrid.accept();
+        var existData = dataGrid.getData();
+        openWindow(url, {
+            refresh: false, title: "项目选择", width: 950, height: 500,
+            onDestroy: function (data) {
+                if (!data || data == "close") return;
+                //当只关联一个项目时默认占比100%
+                if (data.length == 1 && existData.length == 0) {
+                    var project = data[0];
+                    var row = {
+                        ProjectID: project.ID, ProjectCode: project.Code, ProjectName: project.Name, ProjectPercent: 100,
+                        ProjectValue: mini.getbyName("ContractAmount").getValue()//, NominalProjectValue: mini.getbyName("NominalContractAmount").getValue()
+                    };
+                    dataGrid.addRow(row);
+                }
+                else {
+                    for (var i = 0; i < data.length; i++) {
+                        var project = data[i];
+                        var exist = false;
+                        for (var j = 0; j < existData.length; j++) {
+                            if (existData[j].ProjectID == project.ID) {
+                                exist = true; continue;
+                            }
+                        }
+                        if (exist) continue;
+                        var row = { ProjectID: project.ID, ProjectCode: project.Code, ProjectName: project.Name };
+                        dataGrid.addRow(row);
+                    }
+                }
+            }
+        });
+    }
+
+    function removeProject() {
+        var dataGrid = mini.get("projectGrid");
+        var rows = dataGrid.getSelecteds();
+        if (rows.length == 0) { msgUI("请至少选择一条记录"); return; }
+
+        msgUI("请确定需要删除该项目吗？", 2, function (result) {
+            if (result != "ok") return;
+            var contractID = mini.getbyName("ID").getValue();
+            addExecuteParam("ProjectInfoData", mini.encode(rows));
+            addExecuteParam("ContractID", contractID);
+            execute("DeleteProject", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    var planReceiptGrid = mini.get("PlanReceiptGrid");
+                    for (var i = 0; i < rows.length; i++) {
+                        var projectRow = rows[i];
+                        var planReceiptRows = planReceiptGrid.findRows(function (row) {
+                            if (row.ProjectInfoID == projectRow.ProjectID)
+                            { return true; }
+                        });
+                        for (var m = 0; m < planReceiptRows.length; m++) {
+                            var planReceiptRow = planReceiptRows[m];
+                            planReceiptRow.ProjectInfoID = "";
+                            planReceiptRow.ProjectInfoName = "";
+                            planReceiptGrid.updateRow(planReceiptRow);
+                        }
+                    }
+
+                    dataGrid.removeRows(rows);
+                    dataGrid.commitEdit();
+                    dataGrid.accept();
+
+                    planReceiptGrid.commitEdit();
+                    planReceiptGrid.accept();
+
+                }, validateForm: false
+            });
+        });
+    }
+</script>

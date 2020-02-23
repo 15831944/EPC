@@ -1,0 +1,794 @@
+﻿@{
+    ViewBag.Title = "List";
+}
+<div class="mini-toolbar" style="padding: 0px; border: 0px;">
+    <table>
+        <tr>
+            <td style="width: 100%;">
+                <a class="mini-button" id="btnAdd" iconcls="icon-add" onclick="add({ height: '90%',width: '80%'});"
+                    plain="true">增加</a> <a class="mini-button" id="btnEdit" iconcls="icon-edit" onclick="edit({ height: '90%',width: '80%'});"
+                        plain="true">编辑</a> <a class="mini-button" id="btnDelete" iconcls="icon-remove" onclick="del()"
+                            plain="true">删除</a> @*<a class="mini-button"  iconcls="icon-add" onclick="flowAdd('ContractReview', { url: '/Market/MarketUI/ContractReview/PageView?TmplCode=ContractReview&ContractID={ID}', mustSelectOneRow: true, title: '启动评审' });" plain="true">启动评审</a>*@
+                <a class="mini-button" iconcls="icon-add" onclick="pushTaskForMP();" plain="true">任务下达</a>
+                <span class="separator"></span>
+                @Html.ExportButton()
+            </td>
+            <td style="white-space: nowrap;">
+                <div id="gridPattern" class="mini-checkbox" style="width: 60px;" checked="true" readonly="false"
+                    text="简洁视图" onvaluechanged="gridPatternChanged()">
+                </div>
+                &nbsp;&nbsp;&nbsp; 分组：
+                <input class="mini-combobox" id="cbGroupType" style="width: 90px;" valuefield="value"
+                    textfield="text" data="groupType" onvaluechanged="groupTypeChanged()" />
+                <span class="separator"></span>
+            </td>
+            <td style="white-space: nowrap;">
+                <input class="mini-buttonedit searchbox" id="key" emptytext="请输入合同名称或编号" style="width: 200px;"
+                    onenter="quickSearch('Name,Code');" onbuttonclick="quickSearch('Name,Code');" />
+                <a class="mini-button" onclick="showWindow('queryWindow')" iconcls="icon-find" plain="true">
+                    详细查询 </a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="mini-fit">
+    <div id="dataGrid" class="mini-datagrid" idfield="ID" url="GetList" style="width: 100%;
+        height: 100%;" allowresize="false" pagesize="50" allowmovecolumn="false" ondrawcell="OnDrawCell"
+        ondrawgroup="onDrawGroup" showsummaryrow="true" onshowrowdetail="onShowRowDetail"
+        ondrawsummarycell="onDrawSummaryCell" onload="onDataGridLoad" multiselect="true">
+        <div property="columns">
+            <div type="checkcolumn">
+            </div>
+            <div type="expandcolumn">
+            </div>
+            <div field="ContractState" name="State" headeralign="center" align="center" width="75" allowsort="true">
+                合同状态
+            </div>
+            <div field="FlowPhase" name="FlowPhase" headeralign="center" width="80" allowsort="true"
+                 align="center">
+                评审状态
+            </div>
+            <div field="SerialNumber" name="Code" headeralign="center" width="100" allowsort="true" align="left">
+                合同编号
+            </div>         
+            <div field="Name" name="Name" width="200" headeralign="center" allowsort="true" align="left"
+                renderer="onLinkRender">
+                合同名称
+            </div>
+            <div field="ContractRMBAmount" name="ContractRMBAmount" datatype="currency" headeralign="center"
+                width="100" allowsort="true" align="right">
+                合同金额(元)
+            </div>
+            <div field="SummaryInvoiceValue" name="ReceiptAmount" datatype="currency" headeralign="center"
+                width="100" allowsort="true" align="right">
+                开票金额(元)
+            </div>
+            <div field="SummaryReceiptValue" name="ReceiptAmount" datatype="currency" headeralign="center"
+                width="100" allowsort="true" align="right">
+                到款金额(元)
+            </div>
+            <div field="SummaryReceiveValue" name="ReceiveAmount" datatype="currency" headeralign="center"
+                width="100" allowsort="true" align="right">
+                应收款金额(元)
+            </div>
+            <div field="ReceiptRate" name="ReceiptRate" datatype="currency" headeralign="center"
+                width="70" allowsort="true" align="right">
+                到款率(%)
+            </div>
+            <div field="ContractBalanceAmount" name="ContractBalanceAmount" datatype="currency"
+                headeralign="center" width="100" allowsort="true" align="right">
+                剩余合同金额(元)
+            </div>
+            <div field="CurrentYearNotPlanReceiptAmount" name="CurrentYearNotPlanReceiptAmount"
+                datatype="currency" headeralign="center" width="140" allowsort="true" align="right">
+                当年计划未收款金额(元)
+            </div>
+            <div field="CurrentYearReceiptAmount" name="CurrentYearReceiptAmount" name="CurrentYearReceiptAmount"
+                datatype="currency" headeralign="center" width="120" allowsort="true" align="right">
+                当年已收款金额(元)
+            </div>
+            <div field="SummaryBadDebtValue" name="BadDebtAmount" datatype="currency" headeralign="center"
+                width="100" allowsort="true" align="right">
+                坏账金额(元)
+            </div>
+            <div field="NewOrAdded" name="NewOrAdded" headeralign="center" align="center" width="80"
+                allowsort="true">
+                合同性质
+            </div>
+        
+            <div field="HeadOfSalesName" name="HeadOfSalesName" headeralign="center" align="center"
+                width="80" allowsort="true">
+                商务负责人
+            </div>
+            <div field="ProductionUnitName" name="ProductionUnitName" headeralign="center" align="center"
+                width="90" allowsort="true">
+                生产负责部门
+            </div>
+            <div field="ProduceMasterName" name="ProduceMasterName" headeralign="center" align="center"
+                width="80" allowsort="true">
+                生产负责人
+            </div>
+            <div field="PartyACode" name="PartyACode" headeralign="center" align="center" width="90"
+                allowsort="true">
+                甲方编号
+            </div>
+            <div field="PartyA" name="PartyA" width="150" headeralign="center" allowsort="true"
+                align="left">
+                甲方名称
+            </div>
+            <div field="Province" name="Province" headeralign="center" align="center" width="90"
+                allowsort="true">
+                甲方所在省份
+            </div>
+            <div field="Industry" name="Industry" headeralign="center" align="center" width="80"
+                allowsort="true">
+                所属行业
+            </div>
+            <div field="SignDate" name="SignDate" headeralign="center" width="80" allowsort="true"
+                align="center" dateformat="yyyy-MM-dd">
+                签约日期
+            </div>
+            <div field="StartDate" name="StartDate" headeralign="center" width="80" allowsort="true"
+                align="center" dateformat="yyyy-MM-dd">
+                起始日期
+            </div>
+            <div field="EndDate" name="EndDate" headeralign="center" width="80" allowsort="true"
+                align="center" dateformat="yyyy-MM-dd">
+                截止日期
+            </div>
+            <div field="IsSigned" name="IsSigned" headeralign="center" align="center" width="80"
+                allowsort="true">
+                是否已签约
+            </div>
+            @*<div field="FlowPhase" name="FlowPhase" headeralign="center" align="center" width="90"
+                     allowsort="true">
+                    流程状态
+                </div>*@
+        </div>
+    </div>
+</div>
+<div id="queryWindow" class="mini-window" title="详细查询" style="width: 800px; display: none;"
+    showmodal="true" allowresize="false" allowdrag="true">
+    <div class="queryDiv">
+        <form id="queryForm" method="post">
+        <table>
+            <tr>
+                <td width="10%" align="center">
+                    合同编号
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$Code" style="width: 85%;" class="mini-textbox" />
+                </td>
+                <td width="10%" align="center">
+                    合同名称
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$Name" class="mini-textbox" style="width: 85%" />
+                </td>
+                <td width="10%" align="center">
+                    甲方名称
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$PartyA" style="width: 85%;" class="mini-textbox" />
+                </td>
+            </tr>
+            <tr>
+                <td width="10%" align="center">
+                    甲方编号
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$PartyACode" style="width: 85%;" class="mini-textbox" />
+                </td>
+                <td width="10%" align="center">
+                    所在行业
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$Industry" style="width: 85%;" class="mini-combobox" shownullitem="true"
+                        data="Industry" valuefield="value" textfield="text" />
+                </td>
+                <td width="12%" align="center">
+                    甲方所在省份
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$Province" id="Province" style="width: 85%;" class="mini-combobox"
+                        textfield="text" valuefield="value" data="Province" shownullitem="true" />
+                </td>
+            </tr>
+            <tr>
+                <td width="10%" align="center">
+                    合同性质
+                </td>
+                <td width="23%" align="left">
+                    <input class="mini-combobox" name="$EQ$NewOrAdded" style="width: 85%;" textfield="text"
+                        valuefield="value" data="NewOrAdded" shownullitem="true" />
+                </td>
+                <td width="10%" align="center">
+                    合同状态
+                </td>
+                <td width="23%" align="left">
+                    <input class="mini-combobox" name="$EQ$State" style="width: 85%;" textfield="text"
+                        valuefield="value" data="ContractState" shownullitem="true" />
+                </td>
+                <td width="10%" align="center">
+                    商务负责人
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$HeadOfSalesID" style="width: 85%;" class="mini-buttonedit" textname="HeadSalesOfName" />
+                </td>
+            </tr>
+            <tr>
+                <td width="10%" align="center">
+                    生产负责人
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$ProduceMasterID" style="width: 85%;" class="mini-buttonedit" textname="ProduceMasterName" />
+                </td>
+                <td width="12%" align="center">
+                    生产负责部门
+                </td>
+                <td width="23%" align="left">
+                    <input name="$LK$ProductionUnitID" style="width: 85%;" class="mini-buttonedit" textname="ProductionUnitName" />
+                </td>
+                <td align="center">
+                    是否已签约
+                </td>
+                <td align="left">
+                    <input class="mini-combobox" name="$EQ$IsSigned" style="width: 85%;" valuefield="value"
+                        textfield="text" data="ContractIsSigned" shownullitem="true" />
+                </td>
+            </tr>
+            <tr>
+                <td width="10%" align="center">
+                    签约日期
+                </td>
+                <td width="23%" align="left">
+                    <input class="mini-datepicker" name="$FR$SignDate" id="SignDateStart" style="width: 85%;"
+                        ondrawdate="onDrawStartDate(e,'SignDateEnd')" />
+                </td>
+                <td width="10%" align="center">
+                    至
+                </td>
+                <td width="23%" align="left">
+                    <input class="mini-datepicker" name="$TO$SignDate" id="SignDateEnd" style="width: 85%;"
+                        ondrawdate="onDrawEndDate(e,'SignDateStart')" />
+                </td>
+            </tr>
+            <tr>
+                <td width="10%" align="center">
+                    归属年月
+                </td>
+                <td width="23%" align="left">
+                    <input class="mini-textbox" name="$FR$BelongYear" style="width: 35%;" />年
+                    <input class="mini-textbox" name="$FR$BelongMonth" style="width: 35%;" />月
+                </td>
+                <td width="10%" align="center">
+                    至
+                </td>
+                <td width="23%" align="left">
+                    <input class="mini-textbox" name="$TO$BelongYear" style="width: 35%;" />年
+                    <input class="mini-textbox" name="$TO$BelongMonth" style="width: 35%;" />月
+                </td>
+            </tr>
+            <tr>
+                <td width="10%" align="center">
+                    合同金额
+                </td>
+                <td width="23%" align="left">
+                    <input class="mini-textbox" name="$FR$ContractRMBAmount" style="width: 85%;" />
+                </td>
+                <td width="10%" align="center">
+                    至
+                </td>
+                <td width="23%" align="left">
+                    <input class="mini-textbox" name="$TO$ContractRMBAmount" style="width: 85%;" />
+                </td>
+            </tr>
+        </table>
+        </form>
+        <div>
+            <a class="mini-button" onclick="search()" iconcls="icon-find" style="margin-right: 20px;">
+                查询 </a><a class="mini-button" onclick="clearQueryForm()" iconcls="icon-undo">清空</a>
+        </div>
+    </div>
+</div>
+<div id="editForm" style="display: none; margin-left: 47px; width: 1000px; padding-top: 0px;">
+    <form id="dataForm" method="post" style="position: relative;">
+    <input name="ID" class="mini-hidden" />
+    <fieldset style="width: 1000px">
+        <legend style="font-weight: bold;">合同其它信息</legend>
+        <div class="mini-toolbar" style="width: 990px; border: 0px; padding: 0px;">
+            <a class="mini-button" id="btnSave" plain="true" iconcls="icon-save" onclick="save({closeWindow:false});">
+                保存 </a>
+        </div>
+        <div id="formTable" style="width: 100%; height: 100%;">
+            <table>
+                <tr class="hideRow">
+                    <td width="10%">
+                    </td>
+                    <td width="23%">
+                    </td>
+                    <td width="10%">
+                    </td>
+                    <td width="23%">
+                    </td>
+                    <td width="10%">
+                    </td>
+                    <td width="23%">
+                    </td>
+                </tr>
+                <tr id="CustomerInfo">
+                    <td>
+                        甲方编号
+                    </td>
+                    <td>
+                        <input name="PartyACode" class="mini-textbox" style="width: 100%;" enabled="false" />
+                    </td>
+                    <td>
+                        甲方名称
+                    </td>
+                    <td>
+                        <input name="PartyA" class="mini-textbox" style="width: 100%" enabled="false" />
+                    </td>
+                    <td>
+                        甲方所在省份
+                    </td>
+                    <td>
+                        <input name="Province" class="mini-textbox" style="width: 100%" enabled="false" />
+                    </td>
+                </tr>
+                <tr id="InvoiceInfo">
+                    <td>
+                        开票金额(元)
+                    </td>
+                    <td>
+                        <input name="InvoiceAmount" class="mini-textbox" style="width: 100%;" enabled="false" />
+                    </td>
+                    <td>
+                        未开票金额(元)
+                    </td>
+                    <td>
+                        <input name="NoInvoiceAmount" class="mini-textbox" style="width: 100%;" enabled="false" />
+                    </td>
+                    <td>
+                        合同性质
+                    </td>
+                    <td>
+                        <input name="NewOrAdded" class="mini-combobox" textfield="text" valuefield="value"
+                            data="NewOrAdded" shownullitem="true" style="width: 100%;" enabled="false" />
+                    </td>
+                </tr>
+                <tr id="ReceiptInfo">
+                    <td>
+                        已到款金额(元)
+                    </td>
+                    <td>
+                        <input name="ReceiptAmount" class="mini-textbox" style="width: 100%;" enabled="false" />
+                    </td>
+                    <td>
+                        未到款金额(元)
+                    </td>
+                    <td>
+                        <input name="ShouldPlanReceipt" class="mini-textbox" style="width: 100%;" enabled="false" />
+                    </td>
+                    <td>
+                        合同状态
+                    </td>
+                    <td>
+                        <input name="State" class="mini-combobox" textfield="text" valuefield="value" data="ContractState"
+                            shownullitem="true" style="width: 100%;" required="true" onvaluechanged="onStateValueChanged" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        合同编号
+                    </td>
+                    <td>
+                        <input name="Code" class="mini-textbox" required="true" style="width: 100%;" />
+                    </td>
+                    <td>
+                        合同名称
+                    </td>
+                    <td colspan="3">
+                        <input name="Name" class="mini-textbox" required="true" style="width: 100%;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        所属行业
+                    </td>
+                    <td>
+                        <input name="Industry" class="mini-combobox" textfield="text" valuefield="value"
+                            data="Industry" shownullitem="true" style="width: 100%;" />
+                    </td>
+                    <td>
+                        起始日期
+                    </td>
+                    <td>
+                        <input name="StartDate" class="mini-datepicker" style="width: 100%;" />
+                    </td>
+                    <td>
+                        截至日期
+                    </td>
+                    <td>
+                        <input name="EndDate" class="mini-datepicker" style="width: 100%;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        商务负责人
+                    </td>
+                    <td>
+                        <input name="HeadOfSalesID" style="width: 100%;" class="mini-buttonedit" textname="HeadOfSalesName"
+                            required="true" />
+                    </td>
+                    <td>
+                        生产负责部门
+                    </td>
+                    <td>
+                        <input name="ProductionUnitID" style="width: 100%;" class="mini-buttonedit" textname="ProductionUnitName"
+                            required="true" />
+                    </td>
+                    <td>
+                        生产负责人
+                    </td>
+                    <td>
+                        <input name="ProduceMasterID" style="width: 100%;" class="mini-buttonedit" textname="ProduceMasterName" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        签约日期
+                    </td>
+                    <td>
+                        <input id="SignDate" name="SignDate" class="mini-datepicker" style="width: 100%;"
+                            onvaluechanged="ValidateSignDate" />
+                    </td>
+                    <td style="display: none">
+                        归属年月
+                    </td>
+                    <td style="display: none">
+                        <input name="BelongYear" id="BelongYear" class="mini-combobox" url="/Market/Common/GetYearEnum"
+                                   style="width: 90px;" vtype="int" @*required="true" *@ />年 &nbsp;&nbsp;&nbsp;&nbsp;
+                        <input name="BelongMonth" id="BelongMonth" class="mini-combobox" style="width: 60px;"
+                                   valuefield="value" textfield="text" data="NumMonth" shownullitem="true" @*required="true"*@ />月
+                    </td>
+                    <td>
+                        <input class="mini-hidden" id="IsSigned" name="IsSigned" data="ContractIsSigned"
+                            onvaluechanged="ValidateIsSigned" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </fieldset>
+    </form>
+</div>
+<style type="text/css">
+    body
+    {
+        overflow-y: hidden;
+    }
+</style>
+<script type="text/javascript">
+    //枚举定义
+    @Html.GetEnum("Market.Industry")
+    @Html.GetEnum("Market.ContractType")
+    @Html.GetEnum("Market.NewOrAdded")
+    @Html.GetEnum(typeof(Market.Logic.ContractIsSigned))
+    @Html.GetEnum(typeof(Market.Logic.YesOrNo))
+    @Html.GetEnum("FlowPhase")
+    @Html.GetEnum("System.Province")
+    @Html.GetEnum(typeof(Market.Logic.ContractState))
+    @Html.GetEnum("NumMonth")
+    var FlowPhaseReview = [{ "id": "Start", "value": "Start", "text": "启动评审", "Category": "", "SubCategory": "", "sortindex": 0.0 },
+        { "id": "Processing", "value": "Processing", "text": "评审中", "Category": "", "SubCategory": "", "sortindex": 1.0 },
+        { "id": "End", "value": "End", "text": "已评审", "Category": "", "SubCategory": "", "sortindex": 2.0 }];
+</script>
+<script type="text/javascript">
+    addSingleUserSelector("$LK$HeadOfSalesID");
+    addSingleUserSelector("$LK$ProduceMasterID");
+    addSingleOrgSelector("$LK$ProductionUnitID");
+    addSingleUserSelector("HeadOfSalesID");
+    addSingleUserSelector("ProduceMasterID");
+    addSingleOrgSelector("ProductionUnitID");
+    addGridEnum("dataGrid", "IsSigned", "ContractIsSigned");
+    addGridEnum("dataGrid", "SplitState", "YesOrNo");
+    addGridEnum('dataGrid', 'ContractState', 'ContractState');
+
+
+
+    function pushTaskForMP() {
+        var Grid = mini.get("dataGrid");
+        var rows = Grid.getSelecteds();
+        if (rows.length != 1)
+            return msgUI("请选择一条合同记录下达！", 1);
+
+        var row = rows[0];
+
+        msgUI("您确认要下达任务单吗？", 2, function (result) {
+            if (result != "ok") return;
+            addExecuteParam("ContractInfoID", row.ID);
+            execute("SetEngineeringInfo", {
+                showLoading: true, refresh: false, onComplete: function (data) {
+                    var url = "/Project/AutoUI/TaskNotice/PageView?TmplCode=TaskNotice&FlowCode=TaskNotice&Code=" + data.Code + "&EngineeringInfoID=" + data.ID + "&RelateID=" + row.ID; ;
+                    openWindow(url, {
+                        refresh: false, title: "设计任务通知单", width: "70%", height: "80%",
+                        onDestroy: function () {
+                            Grid.reload();
+                        }
+                    });
+                }, validateForm: false
+            });
+        });
+    }
+    //计算合计
+    function onDrawSummaryCell(e) {
+        var result = e.result;
+        if (result.sumData && e.field) {
+            if (result.sumData[e.field] != undefined) {
+                e.cellHtml = result.sumData[e.field];
+                e.cellStyle = "text-align:right; color:Brown";
+            }
+            else if (result.avgData[e.field] != undefined) {
+                e.cellHtml = result.avgData[e.field];
+                e.cellStyle = "text-align:center; color:Brown";
+            }
+            else {
+                e.cellHtml = "";
+                e.cellStyle = "text-align:right; color:Brown";
+            }
+        }
+        if (e.field == "Name") {
+            e.cellHtml = "总计：";
+            e.cellStyle = "text-align:right; color:Brown";
+        }
+
+    }
+
+
+    //为Grid枚举列指定枚举定义
+    addGridEnum("dataGrid", "Industry", "Industry");
+    addGridEnum("dataGrid", "State", "ContractState");
+    addGridEnum("dataGrid", "ContractType", "ContractType");
+    addGridEnum("dataGrid", "IsContractReview", "YesOrNo");
+    addGridEnum("dataGrid", "IsContractArchive", "YesOrNo");
+    addGridEnum("dataGrid", "NewOrAdded", "NewOrAdded");
+    addGridEnum("dataGrid", "FlowPhase", "FlowPhaseReview");
+
+    var groupType = [{ value: "Customer", text: "甲方" }, { value: "HeadOfSalesName", text: "商务负责人" }, { value: "NoGroup", text: "不分组"}];
+    //注册Grid链接列
+    addGridLink('dataGrid', 'Name', 'Index?ID={ID}&CustomerID={PartyAID}', { funcType: 'view', height: '90%', width: '80%' });
+    addGridButton("dataGrid", "FlowPhase", {
+        onButtonClick: function (row) {
+            if (row.FlowPhase === "Start") {
+                flowAdd('ContractReview', { url: '/Market/MarketUI/ContractReview/PageView?TmplCode=ContractReview&ContractID={ID}', mustSelectOneRow: true, title: '启动评审' });
+                //msgUI("该合同还未进行评审");
+                return;
+            }
+            addExecuteParam("contractID", row.ID);
+            execute("GetManageContractExamine", {
+                onComplete: function (data) {
+                    if (data.length == 1)
+                        openWindow('/MvcConfig/Workflow/Trace/Diagram?FuncType=FlowTrace&ID=' + data[0].ID, { title: '流程跟踪' });
+                    else
+                        msgUI("获取合同审批记录错误！");
+                }
+            });
+        }
+    });
+
+    function OnDrawCell(e) {
+        if (e.field == "Operate" && (e.row.HTMC == "" || e.row.HTMC == null || e.row.HTMC == undefined)) {
+            e.cellHtml = "";
+        }
+    }
+
+    function FlowAdd() {
+        var grid = mini.get("#dataGrid");
+        var rows = grid.getSelecteds();
+        if (rows.length <= 0 || rows.length > 1)
+            return msgUI("请选择需要一条合同进行审批！", 1);
+
+        addExecuteParam("ContractID", rows[0].ID);
+        execute("GetManageContractExamine", {
+            onComplete: function (data) {
+                msgUI("合同评审单尚未配置完成");
+                //                if (data == null || data == undefined || data.length == 0)
+                //                    flowAdd('HTPSD', { url: '/MvcConfig/UI/Form/PageView?TmplCode=HTPSD&FlowCode=HTPSD&ContractInfoID={ID}', title: '合同审批流程', width: 800, onDestroy: function () {
+                //                        mini.get("dataGrid").reload();
+                //                    }
+                //                    });
+                //                else if (data.length == 1)
+                //                    flowEdit('HTPSD', { url: '/MvcConfig/UI/Form/PageView?TmplCode=HTPSD&FlowCode=HTPSD&ID=' + data[0].ID, title: '合同审批流程', width: 800, onDestroy: function () {
+                //                        mini.get("dataGrid").reload();
+                //                    }
+                //                    });
+                //                else if (data.length > 1)
+                //                    msgUI("获取合同审批记录错误！");
+            }
+        });
+    }
+
+    //流程跟踪
+    function FlowTrace() {
+        var grid = mini.get("#dataGrid");
+        var rows = grid.getSelecteds();
+        if (rows.length <= 0 || rows.length > 1)
+            return msgUI("请选择需要一条合同进行审批流程跟踪！", 1);
+
+        addExecuteParam("ContractID", rows[0].ID);
+        execute("GetManageContractExamine", {
+            onComplete: function (data) {
+                if (data == null || data == undefined || data.length == 0)
+                    msgUI("合同尚未审批")
+                else if (data.length == 1)
+                    openWindow('/MvcConfig/Workflow/Trace/Diagram?ID=' + data[0].ID + '&FuncType=FlowTrace', { width: 800 });
+                else if (data.length > 1)
+                    msgUI("获取合同审批记录错误！");
+            }
+        });
+    }
+
+    //分组
+    function groupTypeChanged(e) {
+        var grid = mini.get("dataGrid");
+        var value = mini.get("cbGroupType").value;
+        if (value == "Customer") {
+            grid.groupBy("PartyA", "");
+            grid.collapseGroups();
+        } else if (value == "HeadOfSalesName") {
+            grid.groupBy("HeadOfSalesName", "");
+            grid.collapseGroups();
+        } else if (value == "NoGroup") {
+            grid.clearGroup();
+        }
+    }
+
+    //分组
+    function onDrawGroup(e) {
+        var grid = mini.get("dataGrid");
+        var value = mini.get("cbGroupType").value;
+        var type = "";
+        if (value == "Customer") {
+            type = "甲方名称：";
+        } else if (value == "HeadOfSalesName") {
+            type = "销售责任人：";
+        }
+        e.cellHtml = type + e.value + "<font style='color:#FF4500' > (" + e.rows.length + ")</font>";
+    }
+
+    function onDrawStartDate(e, endID) {
+        var date = e.date;
+        var end = mini.get(endID).value;
+        if (end == null || end == "" || end == undefined)
+            return;
+        if (date.getTime() > end.getTime()) {
+            e.allowSelect = false;
+        }
+    }
+
+    function onDrawEndDate(e, startID) {
+        var date = e.date;
+        var start = mini.get(startID).value;
+        if (start == null || start == "" || start == undefined)
+            return;
+        var date = e.date;
+        if (date.getTime() < start.getTime()) {
+            e.allowSelect = false;
+        }
+    }
+
+    var editForm = document.getElementById("editForm");
+    function onShowRowDetail(e) {
+        var row = e.record;
+        addExecuteParam("ID", row.ID);
+        execute("GetModel", {
+            showLoading: false, refresh: false, onComplete: function (data) {
+                var grid = mini.get("dataGrid");
+                var td = grid.getRowDetailCellEl(row);
+                editForm.style.display = "block";
+                td.appendChild(editForm);
+                var form = new mini.Form("#dataForm");
+                form.setData(data);
+
+                if (data.IsSigned == "Signed") {
+                    mini.getbyName("SignDate").setRequired(true);
+                }
+                else {
+                    mini.getbyName("SignDate").setRequired(false);
+                    mini.getbyName("SignDate").setValue();
+                    mini.getbyName("BelongYear").setValue();
+                    mini.getbyName("BelongMonth").setValue();
+                }
+            }, validateForm: false
+        });
+    }
+
+    var partViewHideColumns = "PartyA,PartyACode,Province,StartDate,EndDate,IsSigned,Industry,FinishedProductReviewAmount,ProduceMasterName,ProductionUnitName";
+    //简洁视图隐藏指定列
+    function onDataGridLoad(e) {
+        gridPatternChanged();
+    }
+
+    //显示模式改变
+    function gridPatternChanged() {
+        var grid = mini.get("dataGrid");
+        var ck = mini.get("gridPattern");
+        if (ck.checked == true) {
+            ck.setText("简洁视图");
+            for (var i = 0; i < partViewHideColumns.split(",").length; i++) {
+                grid.hideColumn(grid.getColumn(partViewHideColumns.split(",")[i]));
+            }
+        }
+        else {
+            ck.setText("简洁视图");
+            for (var i = 0; i < partViewHideColumns.split(",").length; i++) {
+                grid.showColumn(grid.getColumn(partViewHideColumns.split(",")[i]));
+            }
+        }
+    }
+
+    //合同状态
+    function onStateValueChanged(e) {
+        var value = e.sender.value;
+        if (value && value == "Sign") {
+            mini.getbyName("IsSigned").setValue("Signed");
+            mini.getbyName("SignDate").setRequired(true);
+            var myDate = new Date();
+            mini.getbyName("SignDate").setValue(myDate.toLocaleDateString());
+            mini.getbyName("BelongYear").setValue(myDate.getFullYear());
+            mini.getbyName("BelongMonth").setValue(myDate.getMonth() + 1);
+        }
+        else {
+            mini.getbyName("IsSigned").setValue("UnSigned");
+            mini.getbyName("SignDate").setRequired(false);
+            mini.getbyName("SignDate").setValue();
+            mini.getbyName("BelongYear").setValue();
+            mini.getbyName("BelongMonth").setValue();
+        }
+    }
+
+    //若IsSign值为已签约，则签约日期必填
+    function ValidateIsSigned() {
+        var value = mini.getbyName("IsSigned").value;
+        if (value == "Signed") {
+            mini.getbyName("SignDate").setRequired(true);
+            var myDate = new Date();
+            mini.getbyName("SignDate").setValue(myDate.toLocaleDateString());
+            //关联归属年份，归属月字段
+            mini.getbyName("BelongYear").setValue(myDate.getFullYear());
+            mini.getbyName("BelongMonth").setValue(myDate.getMonth() + 1);
+
+        }
+        else {
+            mini.getbyName("SignDate").setRequired(false);
+            mini.getbyName("SignDate").setValue();
+            mini.getbyName("BelongYear").setValue();
+            mini.getbyName("BelongMonth").setValue();
+        }
+    }
+
+    //签约日期不为空时，IsSign设置为已签约
+    function ValidateSignDate(e) {
+        var value = mini.getbyName("SignDate").value;
+        if (value != null && value != "" && value != undefined) {
+            mini.getbyName("IsSigned").setValue("已签约");
+            mini.getbyName("SignDate").setRequired(true);
+        }
+        else {
+            mini.getbyName("IsSigned").setValue("未签约");
+            mini.getbyName("SignDate").setRequired(false);
+        }
+        if (value) {
+            //关联归属年份，归属月字段
+            var year = e.sender.value.getFullYear();
+            var month = e.sender.value.getMonth() + 1;
+            mini.getbyName("BelongYear").setValue(year);
+            mini.getbyName("BelongMonth").setValue(month);
+        }
+        else {
+            mini.getbyName("BelongYear").setValue();
+            mini.getbyName("BelongMonth").setValue();
+        }
+    }
+
+</script>

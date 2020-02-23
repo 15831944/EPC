@@ -1,0 +1,8 @@
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\Common.Logic\bin\Debug\Common.Logic.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\Common.Logic\bin\Debug\Common.Logic.pdb
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\Common.Logic\bin\Debug\EntityFramework.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\Common.Logic\bin\Debug\log4net.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\Common.Logic\bin\Debug\Newtonsoft.Json.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\Common.Logic\obj\Debug\Common.Logic.csprojResolveAssemblyReference.cache
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\Common.Logic\obj\Debug\Common.Logic.dll
+E:\产品代码\EPM\Tools\ScheduleJob\MIS\FileSignStampJob\Common.Logic\obj\Debug\Common.Logic.pdb

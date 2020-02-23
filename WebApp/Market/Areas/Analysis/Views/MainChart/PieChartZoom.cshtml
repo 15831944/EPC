@@ -1,0 +1,89 @@
+﻿@{
+    ViewBag.Title = "PieChartZoom";
+}
+<script src="/CommonWebResource/CoreLib/HighCharts/highcharts.js" type="text/javascript"></script>
+<script src="/CommonWebResource/CoreLib/HighCharts/highcharts-3d.js" type="text/javascript"></script>
+<link href="/market/Scripts/Market.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+    .descDiv
+    {
+        width: 120px;
+        height: 20px;
+        text-align: right;
+        background-color: #eeeeee;
+        border-bottom: 1px #fff solid;
+    }
+    .valueDiv
+    {
+        line-height: 20px;
+        text-align: left;
+        padding-left: 10px;
+        margin: 0px;
+        table-layout: fixed;
+        background-color: #ffffff;
+        border-right: 1px #eeeeee solid;
+        border-bottom: 1px #eeeeee solid;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .titleDiv
+    {
+        height: 20px;
+        font-family: Microsoft YaHei, Arial, Helvetica, sans-serif;
+        padding: 0px 10px 0px 10px;
+        font-weight: bold;
+        font-size: 12px;
+        background: url(/market/Scripts/images/file_top_titlebg.gif) #eeeeee;
+        border-right: 1px #fff solid;
+        border-bottom: 1px #fff solid;
+        text-align: center;
+    }
+    .mini-radiobuttonlist table
+    {
+        line-height: 14px;
+        cellpadding: 0px;
+        cellspace: 0px;
+    }
+</style>
+<div class="file_search_bg">
+    <div name="PieDimensionType" multiselect="false" class="mini-checkboxlist" repeatitems="2" repeatlayout="float"
+        textfield="text" style="width: 110px; float: left;" valuefield="value" data="GraphicPieGroupType"
+        value="Industry" onvaluechanged="UpdatePieChart()">
+    </div>
+    部门&nbsp;
+    <input class="mini-combobox" name="PieDept" style="width: 120px" valuefield="value" textfield="text"
+                data="ManufactureDept" value="@ViewBag.DefaultDeptID" allowInput="false" popupwidth="150" onvaluechanged="UpdatePieChart()" />
+    <input class="mini-combobox" name="PieAnlysisValue" style="width: 150px" valuefield="value" textfield="text"
+                data="PieAnlysisType" allowinput="false" value="@Market.Logic.PieAnlysisType.CurrentYearReceiptValue" onvaluechanged="UpdatePieChart()" />
+</div>
+<div id="pieContainer">
+</div>
+<script type="text/javascript">
+var pieOption = @Html.Raw(ViewBag.PieOption)
+@Html.GetEnum(typeof(Market.Logic.GraphicPieGroupType));
+@Html.GetEnum("System.ManufactureDept");
+@Html.GetEnum(typeof(Market.Logic.PieAnlysisType));
+</script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        loadingChart("pieContainer", pieOption);
+    });
+
+    function UpdatePieChart() {
+        var queryData = {};
+        queryData["PieDept"] = mini.getbyName("PieDept").getValue();
+        queryData["PieAnlysisValue"] = mini.getbyName("PieAnlysisValue").getValue();
+        queryData["PieDimensionType"] = mini.getbyName("PieDimensionType").getValue();
+        addExecuteParam("QueryData", mini.encode(queryData));
+        execute("GetPieChart", { showLoading: false, refresh: false, onComplete: function (data) {
+            loadingChart("pieContainer", data);
+        }, validateForm: false
+        });
+    }
+
+    function loadingChart(divID, option) {
+        $("#" + divID).highcharts(option);
+
+    }
+</script>

@@ -1,0 +1,408 @@
+﻿时间：2015-11-24 11:31:06,867 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：-------用户同步---同步时间：15-11-24 11:31:06 
+
+时间：2015-11-24 11:31:09,083 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户汪超明已添加 
+
+时间：2015-11-24 11:31:09,105 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户王一冰已添加 
+
+时间：2015-11-24 11:31:09,114 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户张大海已添加 
+
+时间：2015-11-24 11:31:09,122 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户李兵已添加 
+
+时间：2015-11-24 11:31:09,131 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户李宁已添加 
+
+时间：2015-11-24 11:31:09,139 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户周康已添加 
+
+时间：2015-11-24 11:31:09,147 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户张红已添加 
+
+时间：2015-11-24 11:31:09,157 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户陈辽海已添加 
+
+时间：2015-11-24 11:31:09,189 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户测试数据已添加 
+
+时间：2015-11-24 11:31:09,206 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户曹斌已添加 
+
+时间：2015-11-24 11:31:09,215 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户李斌已添加 
+
+时间：2015-11-24 11:31:09,225 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户彭波已添加 
+
+时间：2015-11-24 11:31:09,233 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户孙波已添加 
+
+时间：2015-11-24 11:31:09,243 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户华晨已添加 
+
+时间：2015-11-24 11:31:09,251 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户王超已添加 
+
+时间：2015-11-24 11:31:09,261 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户王传军已添加 
+
+时间：2015-11-24 11:31:09,271 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户陈冬已添加 
+
+时间：2015-11-24 11:31:09,280 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户何东已添加 
+
+时间：2015-11-24 11:31:09,290 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户龙芬已添加 
+
+时间：2015-11-24 11:31:09,300 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户杨帆已添加 
+
+时间：2015-11-24 11:31:09,308 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户雷富明已添加 
+
+时间：2015-11-24 11:31:09,320 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户费贵芳已添加 
+
+时间：2015-11-24 11:31:09,333 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户纪郭军已添加 
+
+时间：2015-11-24 11:31:09,343 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户陈国忠已添加 
+
+时间：2015-11-24 11:31:09,354 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户桂骅已添加 
+
+时间：2015-11-24 11:31:09,366 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户刘红培已添加 
+
+时间：2015-11-24 11:31:09,379 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户卞红伟已添加 
+
+时间：2015-11-24 11:31:09,393 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户陈娟已添加 
+
+时间：2015-11-24 11:31:09,406 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户薛健已添加 
+
+时间：2015-11-24 11:31:09,417 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户杜建飞已添加 
+
+时间：2015-11-24 11:31:09,429 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户唐俊杰已添加 
+
+时间：2015-11-24 11:31:09,440 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户何金泽已添加 
+
+时间：2015-11-24 11:31:09,450 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户赵康已添加 
+
+时间：2015-11-24 11:31:09,466 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户乐可达已添加 
+
+时间：2015-11-24 11:31:09,476 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户陈雷已添加 
+
+时间：2015-11-24 11:31:09,486 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户孙磊已添加 
+
+时间：2015-11-24 11:31:09,495 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户王雷已添加 
+
+时间：2015-11-24 11:31:09,506 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户章琳已添加 
+
+时间：2015-11-24 11:31:09,517 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户黄兰安已添加 
+
+时间：2015-11-24 11:31:09,527 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户陈磊已添加 
+
+时间：2015-11-24 11:31:09,538 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户徐露君已添加 
+
+时间：2015-11-24 11:31:09,548 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户李明已添加 
+
+时间：2015-11-24 11:31:09,557 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户张敏已添加 
+
+时间：2015-11-24 11:31:09,568 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户郑明已添加 
+
+时间：2015-11-24 11:31:09,582 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户王鹏飞已添加 
+
+时间：2015-11-24 11:31:09,595 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户沈佩夏已添加 
+
+时间：2015-11-24 11:31:09,612 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户qb1已添加 
+
+时间：2015-11-24 11:31:09,630 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户qb2已添加 
+
+时间：2015-11-24 11:31:09,642 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户李其明已添加 
+
+时间：2015-11-24 11:31:09,653 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户杨庆云已添加 
+
+时间：2015-11-24 11:31:09,665 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户张锐已添加 
+
+时间：2015-11-24 11:31:09,678 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户韩如意已添加 
+
+时间：2015-11-24 11:31:09,688 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户陈式超已添加 
+
+时间：2015-11-24 11:31:09,699 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户张思金已添加 
+
+时间：2015-11-24 11:31:09,715 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户桂淑荣已添加 
+
+时间：2015-11-24 11:31:09,726 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户王苏皖已添加 
+
+时间：2015-11-24 11:31:09,737 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户华思尧已添加 
+
+时间：2015-11-24 11:31:09,748 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户临时账号已添加 
+
+时间：2015-11-24 11:31:09,761 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户陶庭飞已添加 
+
+时间：2015-11-24 11:31:09,772 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户廖伟翔已添加 
+
+时间：2015-11-24 11:31:09,784 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户章武云已添加 
+
+时间：2015-11-24 11:31:09,796 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户郭翔已添加 
+
+时间：2015-11-24 11:31:09,811 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户程训兵已添加 
+
+时间：2015-11-24 11:31:09,824 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户宿旭光已添加 
+
+时间：2015-11-24 11:31:09,837 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户张小海已添加 
+
+时间：2015-11-24 11:31:09,848 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户段心明已添加 
+
+时间：2015-11-24 11:31:09,863 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户蔡小涛已添加 
+
+时间：2015-11-24 11:31:09,876 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户陈先翔已添加 
+
+时间：2015-11-24 11:31:09,887 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户张晓雨已添加 
+
+时间：2015-11-24 11:31:09,901 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户陈煜已添加 
+
+时间：2015-11-24 11:31:09,913 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户陆颖已添加 
+
+时间：2015-11-24 11:31:09,929 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户万源已添加 
+
+时间：2015-11-24 11:31:09,941 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户肖勇已添加 
+
+时间：2015-11-24 11:31:09,953 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户狄元超已添加 
+
+时间：2015-11-24 11:31:10,302 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户荣玉光已添加 
+
+时间：2015-11-24 11:31:10,322 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户郭益林已添加 
+
+时间：2015-11-24 11:31:10,336 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户肖阳陵已添加 
+
+时间：2015-11-24 11:31:10,348 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户仲运雷已添加 
+
+时间：2015-11-24 11:31:10,362 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户高宇庭已添加 
+
+时间：2015-11-24 11:31:10,375 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户卫壮已添加 
+
+时间：2015-11-24 11:31:10,387 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户钱则民已添加 
+
+时间：2015-11-24 11:31:10,404 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户李中杉已添加 
+
+时间：2015-11-24 11:31:10,416 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户汪子畏已添加 
+
+时间：2015-11-24 11:31:10,434 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户张泽宇已添加 
+
+时间：2015-11-24 11:31:10,450 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户管理员已添加 
+
+时间：2015-11-24 11:31:10,463 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户程宝华已添加 
+
+时间：2015-11-24 11:31:10,475 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户王斌已添加 
+
+时间：2015-11-24 11:31:10,486 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户康超群已添加 
+
+时间：2015-11-24 11:31:10,498 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户林飞已添加 
+
+时间：2015-11-24 11:31:10,514 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户刘峰已添加 
+
+时间：2015-11-24 11:31:10,530 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户杨芬已添加 
+
+时间：2015-11-24 11:31:10,544 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户赵飞已添加 
+
+时间：2015-11-24 11:31:10,556 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户刘广文已添加 
+
+时间：2015-11-24 11:31:10,576 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户赵喜已添加 
+
+时间：2015-11-24 11:31:10,589 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户林虹已添加 
+
+时间：2015-11-24 11:31:10,607 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户张浩已添加 
+
+时间：2015-11-24 11:31:10,621 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户钱海涛已添加 
+
+时间：2015-11-24 11:31:10,633 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户刘俊已添加 
+
+时间：2015-11-24 11:31:10,647 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户周瑾已添加 
+
+时间：2015-11-24 11:31:10,659 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户何金龙已添加 
+
+时间：2015-11-24 11:31:10,671 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户徐建林已添加 
+
+时间：2015-11-24 11:31:10,684 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户贾杰男已添加 
+
+时间：2015-11-24 11:31:10,699 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户于凯已添加 
+
+时间：2015-11-24 11:31:10,713 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户范梦已添加 
+
+时间：2015-11-24 11:31:10,729 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户黄明已添加 
+
+时间：2015-11-24 11:31:10,742 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户杨敏已添加 
+
+时间：2015-11-24 11:31:10,757 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户姜鹏飞已添加 
+
+时间：2015-11-24 11:31:10,774 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户霍朋举已添加 
+
+时间：2015-11-24 11:31:10,788 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户齐琼已添加 
+
+时间：2015-11-24 11:31:10,802 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户隋强已添加 
+
+时间：2015-11-24 11:31:10,819 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户苏容已添加 
+
+时间：2015-11-24 11:31:10,834 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户戴韬已添加 
+
+时间：2015-11-24 11:31:10,847 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户杨炜已添加 
+
+时间：2015-11-24 11:31:10,860 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户张伟峰已添加 
+
+时间：2015-11-24 11:31:10,872 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户张文华已添加 
+
+时间：2015-11-24 11:31:10,884 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户吴文君已添加 
+
+时间：2015-11-24 11:31:10,896 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户殷文峻已添加 
+
+时间：2015-11-24 11:31:10,909 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户何欣已添加 
+
+时间：2015-11-24 11:31:10,922 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户李星辰已添加 
+
+时间：2015-11-24 11:31:10,936 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户丁晓辉已添加 
+
+时间：2015-11-24 11:31:10,956 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户庹新亮已添加 
+
+时间：2015-11-24 11:31:10,971 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户张晓林已添加 
+
+时间：2015-11-24 11:31:10,985 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户张小伟已添加 
+
+时间：2015-11-24 11:31:11,004 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户刘禹已添加 
+
+时间：2015-11-24 11:31:11,019 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户唐宜已添加 
+
+时间：2015-11-24 11:31:11,036 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户顾尤佳已添加 
+
+时间：2015-11-24 11:31:11,052 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户杨玉亭已添加 
+
+时间：2015-11-24 11:31:11,066 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户傅赟赟已添加 
+
+时间：2015-11-24 11:31:11,083 线程:[DefaultQuartzScheduler_Worker-1] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：用户王峥已添加 
+
+时间：2015-11-24 11:31:59,999 线程:[DefaultQuartzScheduler_Worker-2] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：-------用户同步---同步时间：15-11-24 11:31:59 
+
+时间：2015-11-24 11:33:00,000 线程:[DefaultQuartzScheduler_Worker-3] 出错类：CollaCloud.Quartz.Jobs.UserJob 
+错误描述：-------用户同步---同步时间：15-11-24 11:33:00 
+
+时间：2015-11-24 11:33:01,220 线程:[20] 出错类：Quartz.Core.QuartzScheduler 
+错误描述：Scheduler DefaultQuartzScheduler_$_NON_CLUSTERED shutting down. 
+
+时间：2015-11-24 11:33:01,220 线程:[20] 出错类：Quartz.Core.QuartzScheduler 
+错误描述：Scheduler DefaultQuartzScheduler_$_NON_CLUSTERED paused. 
+
+时间：2015-11-24 11:33:01,586 线程:[20] 出错类：Quartz.Core.QuartzScheduler 
+错误描述：Scheduler DefaultQuartzScheduler_$_NON_CLUSTERED Shutdown complete. 
+
+时间：2015-11-24 11:33:01,586 线程:[20] 出错类：Quartz.Server.QuartzServer 
+错误描述：结束任务作业成功 
+

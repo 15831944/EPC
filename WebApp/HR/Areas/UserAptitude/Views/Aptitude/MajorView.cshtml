@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "MajorView";
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+}
+<div id="fitTab" class="mini-fit" style="height: 100px;">
+    <div id="dataGrid" url="GetViewList" class="mini-datagrid" style="width: 100%; height: 100%;" idfield="ID">
+        <div property="columns">
+            <div type="indexcolumn">
+            </div>
+            <div field="AptitudeLevel" width="80" headeralign="center" allowsort="true" align="center">
+                项目规模
+            </div>
+            <div field="ProjectClass" width="100" headeralign="center" allowsort="true" align="center">
+                业务类型
+            </div>
+            <div field="Major" width="120" headeralign="center" allowsort="true" align="center">
+                专业
+            </div>
+            @{
+                var columnDt = ViewBag.ColumnTable as System.Data.DataTable;
+                foreach (System.Data.DataRow row in columnDt.Rows)
+                {
+                    var field = row["value"].ToString();
+                    var title = row["text"].ToString();
+                    <div field="@field" width="*" headeralign="center" allowsort="true" align="left">
+                        @title
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    @Html.GetEnum("Project.Major");
+    @Html.GetEnum("System.AptitudeLevel");
+    @Html.GetEnum("Market.BusinessType");
+</script>
+<script type="text/javascript">
+    addGridEnum("dataGrid", "AptitudeLevel", "AptitudeLevel");
+    addGridEnum("dataGrid", "ProjectClass", "BusinessType");
+    addGridEnum("dataGrid", "Major", "Major");
+</script>

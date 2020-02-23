@@ -1,0 +1,1 @@
+﻿ <br>发  送  人：{SenderName} <br>发送时间：{SendTime} <br>发送内容：{ContentText} || <br> 【{ReceiverName}】您好，截止到 {EndTime} <br>您有 {MsgCount}条未读消息。
